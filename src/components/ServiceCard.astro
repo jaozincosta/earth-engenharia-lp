@@ -1,0 +1,39 @@
+---
+import { ArrowUpRight } from '@lucide/astro';
+import Icon from './Icon.astro';
+import { categories } from '@/config/site';
+import { serviceUrl, type Service } from '@/lib/services';
+
+interface Props {
+  service: Service;
+  delay?: number;
+}
+const { service, delay = 0 } = Astro.props;
+const { data } = service;
+const searchText = [data.title, data.summary, ...data.keywords].join(' ').toLowerCase();
+---
+
+<a
+  href={serviceUrl(service)}
+  class="card card-hover group relative flex flex-col p-6"
+  data-reveal
+  data-service
+  data-category={data.category}
+  data-search={searchText}
+  style={`--reveal-delay:${delay}ms`}
+>
+  <div class="flex items-start justify-between gap-4">
+    <span class="icon-badge transition duration-300 group-hover:scale-105 motion-reduce:group-hover:scale-100">
+      <Icon name={data.icon} size={24} />
+    </span>
+    <span class="rounded-full bg-mist px-2.5 py-1 text-[11px] font-semibold tracking-wide text-brand-600 uppercase">
+      {categories[data.category].short}
+    </span>
+  </div>
+  <h3 class="mt-5 text-lg leading-snug">{data.title}</h3>
+  <p class="mt-2 flex-1 text-[15px] leading-relaxed text-muted">{data.summary}</p>
+  <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
+    Saiba mais
+    <ArrowUpRight size={16} class="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+  </span>
+</a>

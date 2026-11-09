@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ServiceFilter from '@/components/ServiceFilter.astro';
+import CtaBanner from '@/components/CtaBanner.astro';
+import { site } from '@/config/site';
+import { getServices, serviceUrl } from '@/lib/services';
+
+const services = await getServices();
+
+const listSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Serviços da ${site.name}`,
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.data.title,
+    url: new URL(serviceUrl(s), Astro.site).href,
+  })),
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Início', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Serviços', item: new URL('/servicos/', Astro.site).href },
+  ],
+};
+---
+
+<BaseLayout
+  title="Serviços de Engenharia Ambiental e Segurança do Trabalho"
+  description={`Conheça os serviços da ${site.name}: licenciamento ambiental, PGRS, outorga, estudos ambientais, PGR, LTCAT, treinamentos de NRs, prevenção de incêndio e eSocial SST.`}
+  schema={[listSchema, breadcrumbSchema]}
+>
+  <section class="bg-hero relative overflow-hidden text-white">
+    <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="container-x relative py-12 sm:py-16 lg:py-20">
+      <Breadcrumbs items={[{ label: 'Serviços', href: '/servicos/' }]} />
+      <h1 class="mt-5 max-w-3xl text-4xl text-white sm:text-5xl">Serviços de engenharia ambiental e segurança do trabalho</h1>
+      <p class="mt-4 max-w-2xl text-lg text-white/80">
+        {site.slogans.partner} Escolha uma área ou busque pelo documento que você precisa.
+      </p>
+    </div>
+  </section>
+
+  <section class="section pt-10 sm:pt-12">
+    <div class="container-x">
+      <ServiceFilter services={services} />
+    </div>
+  </section>
+
+  <CtaBanner title="Não sabe qual serviço sua empresa precisa?" text="Conte sobre sua atividade e indicamos o caminho — licença, laudo, programa ou treinamento." />
+</BaseLayout>

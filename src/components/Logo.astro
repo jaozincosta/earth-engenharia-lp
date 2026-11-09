@@ -1,0 +1,14 @@
+---
+/**
+ * Logo da marca. Arquivo-fonte: /src/assets/logo.svg (PLACEHOLDER — troque pelo logo oficial).
+ * O SVG é inline para herdar `currentColor` (texto claro no rodapé/escuro no header).
+ */
+import LogoSvg from '@/assets/logo.svg';
+
+interface Props {
+  class?: string;
+}
+const { class: className = 'h-9 w-auto' } = Astro.props;
+---
+
+<LogoSvg class={className} aria-label="EARTH Engenharia" role="img" />

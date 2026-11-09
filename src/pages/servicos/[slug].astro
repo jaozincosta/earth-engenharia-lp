@@ -1,0 +1,194 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import { Check, CircleCheck, Users, ArrowRight, Phone } from '@lucide/astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import Icon from '@/components/Icon.astro';
+import BrandIcon from '@/components/BrandIcon.astro';
+import Faq from '@/components/Faq.astro';
+import ServiceCard from '@/components/ServiceCard.astro';
+import CtaBanner from '@/components/CtaBanner.astro';
+import { categories, site, whatsappUrl } from '@/config/site';
+import { getServices, serviceUrl, type Service } from '@/lib/services';
+
+export const getStaticPaths = (async () => {
+  const services = await getServices();
+  return services.map((service) => ({ params: { slug: service.id }, props: { service, all: services } }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  service: Service;
+  all: Service[];
+}
+
+const { service, all } = Astro.props;
+const { data } = service;
+const { Content } = await render(service);
+const cat = categories[data.category];
+const url = new URL(serviceUrl(service), Astro.site).href;
+
+const related = [
+  ...all.filter((s) => s.id !== service.id && s.data.category === data.category),
+  ...all.filter((s) => s.id !== service.id && s.data.category !== data.category),
+].slice(0, 3);
+
+const message = `Olá! Vim pelo site e gostaria de um orçamento para: ${data.title}.`;
+
+const schema: Record<string, unknown>[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: data.title,
+    serviceType: data.title,
+    description: data.seoDescription,
+    url,
+    category: cat.label,
+    provider: { '@id': new URL('/#organizacao', Astro.site).href },
+    areaServed: site.areaServed.map((name) => ({ '@type': 'City', name })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: new URL('/servicos/', Astro.site).href },
+      { '@type': 'ListItem', position: 3, name: data.title, item: url },
+    ],
+  },
+];
+if (data.faq.length) {
+  schema.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: data.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  });
+}
+---
+
+<BaseLayout title={data.seoTitle} description={data.seoDescription} schema={schema}>
+  <!-- Hero do serviço -->
+  <section class="bg-hero relative overflow-hidden text-white">
+    <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="container-x relative py-12 sm:py-16 lg:py-20">
+      <Breadcrumbs items={[{ label: 'Serviços', href: '/servicos/' }, { label: data.title, href: serviceUrl(service) }]} />
+      <div class="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-3xl">
+          <a href={`/servicos/?area=${data.category}`} class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-leaf-200 uppercase backdrop-blur hover:bg-white/20">
+            <Icon name={data.icon} size={14} />
+            {cat.label}
+          </a>
+          <h1 class="mt-4 text-[2rem] leading-tight text-white sm:text-5xl">{data.title}</h1>
+          <p class="mt-4 text-lg leading-relaxed text-white/80">{data.summary}</p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+          <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary" data-track="whatsapp-service">
+            <BrandIcon name="whatsapp" /> Pedir orçamento
+          </a>
+          <a href={`tel:${site.contact.phoneHref}`} class="btn btn-ghost"><Phone size={18} aria-hidden="true" /> Ligar agora</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container-x grid gap-12 py-12 sm:py-16 lg:grid-cols-12 lg:gap-16">
+    <!-- Conteúdo principal -->
+    <article class="lg:col-span-8">
+      <div class="prose-earth" data-reveal>
+        <Content />
+      </div>
+
+      {
+        data.benefits.length > 0 && (
+          <section class="mt-12" aria-labelledby="beneficios">
+            <h2 id="beneficios" class="text-2xl sm:text-3xl" data-reveal>Por que fazer com a EARTH</h2>
+            <div class="mt-6 grid gap-4 sm:grid-cols-2">
+              {data.benefits.map((b, i) => (
+                <div class="card p-5" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+                  <CircleCheck size={22} class="text-leaf-500" aria-hidden="true" />
+                  <h3 class="mt-3 text-base">{b.title}</h3>
+                  <p class="mt-1 text-[15px] leading-relaxed text-muted">{b.text}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        data.deliverables.length > 0 && (
+          <section class="mt-12" aria-labelledby="entregas" data-reveal>
+            <h2 id="entregas" class="text-2xl sm:text-3xl">O que está incluído</h2>
+            <ul class="mt-6 space-y-3">
+              {data.deliverables.map((d) => (
+                <li class="flex gap-3 rounded-2xl bg-mist p-4">
+                  <span class="grid size-6 shrink-0 place-items-center rounded-full bg-leaf-400 text-brand-950">
+                    <Check size={14} stroke-width={3} aria-hidden="true" />
+                  </span>
+                  <span class="text-ink/90">{d}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        data.faq.length > 0 && (
+          <section class="mt-12" aria-labelledby="faq" data-reveal>
+            <h2 id="faq" class="text-2xl sm:text-3xl">Perguntas frequentes sobre {data.title.split(' – ')[0]}</h2>
+            <div class="mt-6">
+              <Faq items={data.faq} />
+            </div>
+          </section>
+        )
+      }
+    </article>
+
+    <!-- Lateral -->
+    <aside class="space-y-6 lg:col-span-4">
+      <div class="lg:sticky lg:top-28 space-y-6">
+        {
+          data.audience.length > 0 && (
+            <div class="card p-6" data-reveal>
+              <p class="flex items-center gap-2 font-bold text-brand-900">
+                <Users size={20} class="text-leaf-500" aria-hidden="true" /> Para quem é
+              </p>
+              <ul class="mt-4 space-y-2.5 text-[15px] text-muted">
+                {data.audience.map((a) => (
+                  <li class="flex gap-2">
+                    <span class="mt-2 size-1.5 shrink-0 rounded-full bg-leaf-400" />
+                    {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+        <div class="relative overflow-hidden rounded-3xl bg-brand-800 p-6 text-white" data-reveal>
+          <div class="absolute -top-10 -right-10 size-32 rounded-full bg-leaf-400/20" aria-hidden="true"></div>
+          <p class="relative text-lg font-bold">Precisa de {data.title.split(' – ')[0]}?</p>
+          <p class="relative mt-2 text-sm text-white/75">Atendemos {site.address.city} e região. Resposta rápida pelo WhatsApp.</p>
+          <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary relative mt-5 w-full">
+            <BrandIcon name="whatsapp" /> Falar com especialista
+          </a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Relacionados -->
+  <section class="bg-mist py-14 sm:py-20" aria-labelledby="relacionados">
+    <div class="container-x">
+      <div class="flex items-end justify-between gap-4">
+        <h2 id="relacionados" class="text-2xl sm:text-3xl">Serviços relacionados</h2>
+        <a href="/servicos/" class="hidden items-center gap-1 font-semibold text-brand-600 sm:inline-flex">Ver todos <ArrowRight size={16} aria-hidden="true" /></a>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((s, i) => <ServiceCard service={s} delay={i * 80} />)}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner title={`Fale com a EARTH sobre ${data.title.split(' – ')[0]}`} message={message} />
+</BaseLayout>

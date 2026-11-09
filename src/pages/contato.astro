@@ -1,0 +1,134 @@
+---
+import { Mail, MapPin, Phone, Clock, Send } from '@lucide/astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import BrandIcon from '@/components/BrandIcon.astro';
+import { site, whatsappUrl } from '@/config/site';
+import { getServices } from '@/lib/services';
+
+const services = await getServices();
+const { contact: c, address: a } = site;
+const addressLine = [a.street, a.district].filter(Boolean).join(' – ');
+const mapQuery = encodeURIComponent([a.street, a.district, `${a.city} - ${a.state}`].filter(Boolean).join(', '));
+
+const contactPage = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: `Contato — ${site.name}`,
+  url: new URL('/contato/', Astro.site).href,
+};
+---
+
+<BaseLayout
+  title={`Contato e Orçamento — ${site.name}`}
+  description={`Fale com a ${site.name} pelo WhatsApp, telefone ou e-mail e solicite um orçamento de serviços ambientais e de segurança do trabalho em ${a.city}/${a.state}.`}
+  schema={[contactPage]}
+>
+  <section class="bg-hero relative overflow-hidden text-white">
+    <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="container-x relative py-12 sm:py-16">
+      <Breadcrumbs items={[{ label: 'Contato', href: '/contato/' }]} />
+      <h1 class="mt-5 text-4xl text-white sm:text-5xl">Fale com a EARTH</h1>
+      <p class="mt-4 max-w-2xl text-lg text-white/80">Conte o que sua empresa precisa. O jeito mais rápido é pelo WhatsApp.</p>
+    </div>
+  </section>
+
+  <section class="section pt-10 sm:pt-14">
+    <div class="container-x grid gap-10 lg:grid-cols-12">
+      <!-- Canais -->
+      <div class="space-y-4 lg:col-span-5">
+        <a href={whatsappUrl()} target="_blank" rel="noopener" class="card card-hover flex items-center gap-4 p-5" data-track="whatsapp-contato">
+          <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#25D366] text-white"><BrandIcon name="whatsapp" class="size-6" /></span>
+          <span>
+            <span class="block font-bold text-brand-900">WhatsApp</span>
+            <span class="text-muted">{c.phoneDisplay} · resposta rápida</span>
+          </span>
+        </a>
+        <a href={`tel:${c.phoneHref}`} class="card card-hover flex items-center gap-4 p-5">
+          <span class="icon-badge"><Phone size={22} aria-hidden="true" /></span>
+          <span><span class="block font-bold text-brand-900">Telefone</span><span class="text-muted">{c.phoneDisplay}</span></span>
+        </a>
+        <a href={`mailto:${c.email}`} class="card card-hover flex items-center gap-4 p-5">
+          <span class="icon-badge"><Mail size={22} aria-hidden="true" /></span>
+          <span class="min-w-0"><span class="block font-bold text-brand-900">E-mail</span><span class="block break-all text-muted">{c.email}</span></span>
+        </a>
+        <div class="card flex items-start gap-4 p-5">
+          <span class="icon-badge"><MapPin size={22} aria-hidden="true" /></span>
+          <span>
+            <span class="block font-bold text-brand-900">Endereço</span>
+            <span class="text-muted">{addressLine && <>{addressLine}<br /></>}{a.city}/{a.state}</span>
+            <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noopener" class="mt-1 block text-sm font-semibold text-brand-600 underline decoration-leaf-400 underline-offset-4">Abrir no Google Maps</a>
+          </span>
+        </div>
+        <div class="flex items-center gap-3 px-1 text-sm text-muted">
+          <Clock size={18} class="text-leaf-500" aria-hidden="true" /> {site.hours.days}, das {site.hours.open} às {site.hours.close}
+        </div>
+      </div>
+
+      <!-- Formulário → envia a mensagem pronta para o WhatsApp (sem backend) -->
+      <div class="lg:col-span-7">
+        <form id="contact-form" class="card space-y-5 p-6 sm:p-8" novalidate>
+          <div>
+            <h2 class="text-2xl">Solicite um orçamento</h2>
+            <p class="mt-1 text-sm text-muted">Preencha e enviaremos sua mensagem pelo WhatsApp.</p>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-semibold text-brand-900">Nome *</span>
+              <input name="nome" required autocomplete="name" class="mt-1.5 h-12 w-full rounded-2xl border border-brand-200 bg-white px-4 text-base focus:border-brand-500 focus:outline-none" />
+            </label>
+            <label class="block">
+              <span class="text-sm font-semibold text-brand-900">Empresa</span>
+              <input name="empresa" autocomplete="organization" class="mt-1.5 h-12 w-full rounded-2xl border border-brand-200 bg-white px-4 text-base focus:border-brand-500 focus:outline-none" />
+            </label>
+          </div>
+          <label class="block">
+            <span class="text-sm font-semibold text-brand-900">Cidade</span>
+            <input name="cidade" autocomplete="address-level2" class="mt-1.5 h-12 w-full rounded-2xl border border-brand-200 bg-white px-4 text-base focus:border-brand-500 focus:outline-none" />
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-brand-900">Serviço de interesse</span>
+            <select name="servico" class="mt-1.5 h-12 w-full rounded-2xl border border-brand-200 bg-white px-4 text-base focus:border-brand-500 focus:outline-none">
+              <option value="">Não sei / preciso de orientação</option>
+              {services.map((s) => <option value={s.data.title}>{s.data.title}</option>)}
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-sm font-semibold text-brand-900">Mensagem *</span>
+            <textarea name="mensagem" required rows="4" class="mt-1.5 w-full rounded-2xl border border-brand-200 bg-white p-4 text-base focus:border-brand-500 focus:outline-none" placeholder="Conte um pouco sobre sua atividade e necessidade"></textarea>
+          </label>
+          <p id="form-error" class="hidden text-sm font-medium text-red-700" role="alert">Preencha seu nome e a mensagem.</p>
+          <button type="submit" class="btn btn-primary w-full sm:w-auto">
+            <Send size={18} aria-hidden="true" /> Enviar pelo WhatsApp
+          </button>
+          <p class="text-xs text-muted">Seus dados são usados apenas para responder ao seu contato. Veja nossa <a href="/politica-de-privacidade/" class="underline">política de privacidade</a>.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script define:vars={{ phone: c.whatsapp }}>
+  const form = document.getElementById('contact-form');
+  const err = document.getElementById('form-error');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const d = new FormData(form);
+    const nome = String(d.get('nome') || '').trim();
+    const msg = String(d.get('mensagem') || '').trim();
+    if (!nome || !msg) {
+      err.classList.remove('hidden');
+      return;
+    }
+    err.classList.add('hidden');
+    const lines = [
+      `Olá! Meu nome é ${nome}.`,
+      d.get('empresa') && `Empresa: ${d.get('empresa')}`,
+      d.get('cidade') && `Cidade: ${d.get('cidade')}`,
+      d.get('servico') && `Serviço: ${d.get('servico')}`,
+      '',
+      msg,
+    ].filter((l) => typeof l === 'string');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
+  });
+</script>
