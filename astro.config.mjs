@@ -14,7 +14,7 @@ export default defineConfig({
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   integrations: [
     sitemap({
-      filter: (page) => !page.includes('/404') && !page.includes('/contato/obrigado') && !page.includes('/creditos'),
+      filter: (page) => !page.includes('/404') && !page.includes('/contato/obrigado'),
       i18n: { defaultLocale: 'pt-BR', locales: { 'pt-BR': 'pt-BR' } },
     }),
   ],

@@ -5,7 +5,7 @@
  *  Para usar fotos reais da EARTH: coloque o arquivo em src/assets/media/ e
  *  troque o import correspondente (ou substitua o arquivo mantendo o nome).
  *  O Astro gera AVIF/WebP em vários tamanhos automaticamente.
- *  Créditos/licenças das imagens atuais: src/data/media-credits.json (página /creditos/).
+ *  Origem/licença das mídias atuais (registro interno): src/data/media-credits.json.
  *  Lista completa e sugestões de busca: MEDIA.md
  */
 import type { ImageMetadata } from 'astro';

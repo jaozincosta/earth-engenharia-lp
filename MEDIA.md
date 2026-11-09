@@ -3,7 +3,7 @@
 Todas as imagens são mapeadas em **um único arquivo: [`src/config/media.ts`](src/config/media.ts)**.
 Para trocar uma foto, substitua o arquivo em `src/assets/media/` **mantendo o nome** (ou aponte o import para um arquivo novo). O Astro gera AVIF/WebP em vários tamanhos no build — envie o JPG em boa resolução (ideal: 1920px de largura).
 
-As mídias atuais vieram do **Wikimedia Commons**, com licenças que permitem uso comercial (domínio público, CC BY e CC BY-SA). Licenças CC exigem crédito ao autor: os créditos ficam em [`src/data/media-credits.json`](src/data/media-credits.json) e são exibidos na página **/creditos/** (link no rodapé). Ao trocar uma imagem por foto própria da EARTH, remova a entrada correspondente desse JSON.
+As mídias atuais vieram do **Wikimedia Commons**, com licenças que permitem uso comercial (domínio público, CC BY e CC BY-SA). A origem, o autor e a licença de cada arquivo estão registrados em [`src/data/media-credits.json`](src/data/media-credits.json) (registro interno, não exibido no site). Observação: as licenças CC BY / CC BY-SA preveem atribuição ao autor; o site optou por não exibir créditos — substituir essas mídias por fotos próprias ou de domínio público elimina a questão.
 
 > 💡 O ideal é substituir aos poucos por **fotos reais da equipe em campo** — elas transmitem mais confiança que bancos de imagem.
 

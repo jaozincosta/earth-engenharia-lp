@@ -23,7 +23,7 @@ src/
   config/site.ts            ← TODOS os dados da empresa (NAP, WhatsApp, redes, formulário, números)
   config/media.ts           ← mapa único de imagens/vídeo (serviço → foto, hero, seções)
   assets/media/             ← fotos (otimizadas no build); vídeo do hero em public/media/
-  data/media-credits.json   ← créditos/licenças exibidos em /creditos/
+  data/media-credits.json   ← registro interno de origem/licença das mídias
   content/servicos/*.md     ← os 8 serviços (Content Collections, schema em src/content.config.ts)
   components/SEO.astro      ← <head>: title, description, canonical, OG, Twitter, preloads, JSON-LD
   lib/schema.ts             ← geradores de JSON-LD (LocalBusiness, Service, Course, FAQPage, Breadcrumb, Organization)
