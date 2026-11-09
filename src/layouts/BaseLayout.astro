@@ -4,6 +4,7 @@ import SEO, { type PreloadImage } from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
+import BackToTop from '@/components/BackToTop.astro';
 import { site } from '@/config/site';
 import { breadcrumbs as breadcrumbSchema, localBusiness, website } from '@/lib/schema';
 
@@ -42,6 +43,7 @@ const jsonLd = [localBusiness(base), website(base), ...(breadcrumbs ? [breadcrum
       <slot />
     </main>
     <Footer />
+    <BackToTop />
     <WhatsAppFloat message={whatsappMessage} />
 
     <script>
