@@ -1,49 +1,42 @@
 ---
 import { Picture } from 'astro:assets';
-import { Target, Eye, HeartHandshake, Leaf, ShieldCheck, Scale } from '@lucide/astro';
+import { Leaf, ShieldCheck, Scale } from '@lucide/astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import PageHero from '@/components/PageHero.astro';
 import CtaBanner from '@/components/CtaBanner.astro';
 import { site } from '@/config/site';
 import sobreImg from '@/assets/fotos/sobre.jpg';
 
 // TODO: revisar missão, visão e valores com a direção da empresa.
 const pillars = [
-  { icon: Target, title: 'Missão', text: 'Oferecer soluções técnicas em meio ambiente e segurança do trabalho que mantenham nossos clientes em conformidade e operando com responsabilidade.' },
-  { icon: Eye, title: 'Visão', text: 'Ser referência regional como parceiro técnico integrado em sustentabilidade, segurança e conformidade.' },
-  { icon: HeartHandshake, title: 'Valores', text: 'Ética, rigor técnico, transparência, proximidade com o cliente e compromisso com as próximas gerações.' },
+  { title: 'Missão', text: 'Oferecer soluções técnicas em meio ambiente e segurança do trabalho que mantenham nossos clientes em conformidade e operando com responsabilidade.' },
+  { title: 'Visão', text: 'Ser referência em São Paulo como parceiro técnico integrado em sustentabilidade, segurança e conformidade.' },
+  { title: 'Valores', text: 'Ética, rigor técnico, transparência, proximidade com o cliente e compromisso com as próximas gerações.' },
 ];
 
 const areas = [
-  { icon: Leaf, title: 'Meio Ambiente', text: 'Licenciamento, resíduos, recursos hídricos, estudos e monitoramento ambiental.' },
+  { icon: Leaf, title: 'Meio Ambiente', text: 'Licenciamento CETESB, resíduos, recursos hídricos, estudos e monitoramento ambiental.' },
   { icon: ShieldCheck, title: 'Segurança do Trabalho', text: 'PGR, LTCAT, laudos de insalubridade e periculosidade e treinamentos de NRs.' },
-  { icon: Scale, title: 'Conformidade', text: 'Prevenção de incêndio, eSocial SST e gestão de requisitos legais.' },
+  { icon: Scale, title: 'Conformidade', text: 'AVCB/CLCB, eSocial SST e gestão de requisitos legais.' },
 ];
 ---
 
 <BaseLayout
   title="Sobre a EARTH Engenharia"
-  description={`Conheça a ${site.name}: consultoria em engenharia ambiental e segurança do trabalho em ${site.address.city}/${site.address.state}. ${site.slogans.main}.`}
+  description={`Conheça a ${site.name}: engenharia ambiental e segurança do trabalho em São Paulo/SP. ${site.slogans.main}.`}
 >
-  <section class="bg-hero relative overflow-hidden text-white">
-    <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
-    <div class="container-x relative py-12 sm:py-16 lg:py-20">
-      <Breadcrumbs items={[{ label: 'Sobre', href: '/sobre/' }]} />
-      <h1 class="mt-5 max-w-3xl text-4xl text-white sm:text-5xl">{site.slogans.future}</h1>
-      <p class="mt-4 max-w-2xl text-lg text-white/80">{site.slogans.main}.</p>
-    </div>
-  </section>
+  <PageHero label="Sobre" title={`${site.slogans.future}.`} lead={`${site.slogans.main}.`} crumbs={[{ label: 'Sobre', href: '/sobre/' }]} />
 
   <section class="section">
-    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
-      <div data-reveal>
-        <span class="eyebrow">Quem somos</span>
-        <h2 class="mt-4 text-3xl sm:text-4xl">Engenharia que une meio ambiente, pessoas e resultados</h2>
+    <div class="container-x grid items-center gap-12 lg:grid-cols-12">
+      <div class="lg:col-span-6" data-reveal>
+        <p class="label">Quem somos</p>
+        <h2 class="h-section mt-4">Engenharia que une meio ambiente, pessoas e resultados.</h2>
         <!-- TODO: substituir pelo texto institucional real (história, fundação, responsáveis técnicos e registros no CREA). -->
         <div class="prose-earth mt-6">
           <p>
-            A <strong>{site.name}</strong> é uma empresa de engenharia ambiental e segurança do trabalho que ajuda organizações a
-            cumprir a legislação, proteger pessoas e reduzir impactos — com soluções técnicas, práticas e sustentáveis.
+            A <strong>{site.name}</strong> é uma empresa de engenharia ambiental e segurança do trabalho sediada em São Paulo, que ajuda
+            organizações a cumprir a legislação, proteger pessoas e reduzir impactos — com soluções técnicas, práticas e sustentáveis.
           </p>
           <p>
             Atuamos de forma integrada: o mesmo time que conduz o seu licenciamento ambiental entende os riscos ocupacionais da sua
@@ -51,52 +44,46 @@ const areas = [
           </p>
         </div>
       </div>
-      <div class="relative" data-reveal>
+      <div class="lg:col-span-6" data-reveal>
         <Picture
           src={sobreImg}
           formats={['avif', 'webp']}
           widths={[400, 700, 1000]}
           sizes="(min-width: 1024px) 45vw, 92vw"
           alt="Equipe técnica da EARTH Engenharia"
-          class="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-card"
+          class="aspect-[4/3] w-full rounded-xl object-cover"
         />
       </div>
     </div>
   </section>
 
-  <section class="section bg-mist">
-    <div class="container-x">
-      <div class="grid gap-4 md:grid-cols-3 md:gap-5">
-        {
-          pillars.map((p, i) => (
-            <div class="card p-6" data-reveal style={`--reveal-delay:${i * 90}ms`}>
-              <span class="icon-badge">
-                <p.icon size={22} aria-hidden="true" />
-              </span>
-              <h2 class="mt-5 text-xl">{p.title}</h2>
-              <p class="mt-2 text-muted">{p.text}</p>
-            </div>
-          ))
-        }
-      </div>
+  <section class="border-y border-line bg-mist">
+    <div class="container-x grid md:grid-cols-3">
+      {
+        pillars.map((p, i) => (
+          <div class:list={['py-10 md:pr-8', i > 0 && 'border-t border-line md:border-t-0 md:border-l md:pl-8']} data-reveal style={`--reveal-delay:${i * 80}ms`}>
+            <p class="font-mono text-xs text-brand-600">0{i + 1}</p>
+            <h2 class="mt-3 text-2xl">{p.title}</h2>
+            <p class="mt-3 text-muted">{p.text}</p>
+          </div>
+        ))
+      }
     </div>
   </section>
 
   <section class="section">
     <div class="container-x">
       <div class="max-w-2xl" data-reveal>
-        <span class="eyebrow">Áreas</span>
-        <h2 class="mt-4 text-3xl sm:text-4xl">{site.slogans.partner}</h2>
+        <p class="label">Áreas</p>
+        <h2 class="h-section mt-4">{site.slogans.partner}</h2>
       </div>
-      <div class="mt-10 grid gap-4 md:grid-cols-3">
+      <div class="mt-10 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-3">
         {
-          areas.map((a, i) => (
-            <div class="flex gap-4 rounded-3xl border border-brand-100 p-6" data-reveal style={`--reveal-delay:${i * 90}ms`}>
-              <a.icon size={28} class="shrink-0 text-leaf-500" aria-hidden="true" />
-              <div>
-                <h3 class="text-lg">{a.title}</h3>
-                <p class="mt-1 text-[15px] text-muted">{a.text}</p>
-              </div>
+          areas.map((a) => (
+            <div class="bg-white p-6" data-reveal>
+              <a.icon size={24} class="text-brand-500" aria-hidden="true" />
+              <h3 class="mt-5 text-xl">{a.title}</h3>
+              <p class="mt-2 text-muted">{a.text}</p>
             </div>
           ))
         }

@@ -1,52 +1,34 @@
 ---
 import { Picture } from 'astro:assets';
-import {
-  ArrowRight,
-  BadgeCheck,
-  ClipboardCheck,
-  Factory,
-  HardHat,
-  Leaf,
-  MapPin,
-  Construction,
-  Store,
-  Tractor,
-  Stethoscope,
-  Building,
-  Search,
-  FileText,
-  Handshake,
-  RefreshCw,
-  ShieldCheck,
-  Layers,
-} from '@lucide/astro';
+import { ArrowRight, ArrowUpRight, Factory, Construction, Store, Tractor, Stethoscope, Building } from '@lucide/astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BrandIcon from '@/components/BrandIcon.astro';
+import ComplianceDashboard from '@/components/ComplianceDashboard.astro';
+import SolutionTabs from '@/components/SolutionTabs.astro';
 import ServiceFilter from '@/components/ServiceFilter.astro';
 import Faq from '@/components/Faq.astro';
 import CtaBanner from '@/components/CtaBanner.astro';
-import { site, whatsappUrl, categories } from '@/config/site';
+import { site, whatsappUrl } from '@/config/site';
 import { getServices } from '@/lib/services';
-import heroImg from '@/assets/fotos/equipe-campo.jpg';
-import ambientalImg from '@/assets/fotos/licenciamento.jpg';
+import campoImg from '@/assets/fotos/equipe-campo.jpg';
 import segurancaImg from '@/assets/fotos/seguranca.jpg';
 
 const services = await getServices();
 
-const areaIcons = { 'meio-ambiente': Leaf, 'seguranca-do-trabalho': HardHat, conformidade: ClipboardCheck } as const;
+const frameworks = ['CETESB', 'CONAMA', 'SP Águas', 'PNRS', 'NR-01', 'NR-15', 'NR-16', 'NR-35', 'eSocial SST', 'Bombeiros SP'];
 
-const differentials = [
-  { icon: Layers, title: 'Tudo em um só parceiro', text: 'Meio ambiente, segurança do trabalho e conformidade integrados — menos fornecedores, menos ruído.' },
-  { icon: BadgeCheck, title: 'Responsabilidade técnica', text: 'Laudos, projetos e estudos assinados por profissionais habilitados, com ART.' },
-  { icon: MapPin, title: 'Atendimento em campo', text: 'Vamos até a sua operação para entender a realidade antes de entregar qualquer documento.' },
-  { icon: RefreshCw, title: 'Gestão de prazos', text: 'Controlamos vencimentos de licenças, laudos e treinamentos para nada ficar para trás.' },
+const facts = [
+  { value: String(services.length), label: 'serviços técnicos', note: 'ambientais e de SST' },
+  { value: '3', label: 'áreas integradas', note: 'meio ambiente, segurança, conformidade' },
+  { value: '1', label: 'parceiro', note: 'para toda a sua conformidade' },
+  { value: 'ART', label: 'em cada laudo', note: 'responsável técnico habilitado' },
 ];
 
 const steps = [
-  { icon: Search, title: 'Diagnóstico', text: 'Entendemos sua atividade, documentos existentes e pendências.' },
-  { icon: FileText, title: 'Proposta clara', text: 'Escopo, prazos e investimento definidos, sem surpresas.' },
-  { icon: Handshake, title: 'Execução técnica', text: 'Levantamentos em campo, elaboração e protocolo dos documentos.' },
-  { icon: ShieldCheck, title: 'Acompanhamento', text: 'Condicionantes, renovações e atualizações sob controle.' },
+  { title: 'Diagnóstico', text: 'Mapeamos sua atividade, documentos existentes e pendências legais.' },
+  { title: 'Proposta', text: 'Escopo, prazos e investimento claros — sem surpresas.' },
+  { title: 'Execução', text: 'Levantamentos em campo, elaboração e protocolo dos documentos.' },
+  { title: 'Monitoramento', text: 'Condicionantes, renovações e vencimentos sob controle contínuo.' },
 ];
 
 const segments = [
@@ -55,17 +37,17 @@ const segments = [
   { icon: Store, label: 'Comércio e serviços' },
   { icon: Tractor, label: 'Agronegócio' },
   { icon: Stethoscope, label: 'Saúde' },
-  { icon: Building, label: 'Condomínios e empreendimentos' },
+  { icon: Building, label: 'Condomínios' },
 ];
 
 const faq = [
   {
-    q: 'A EARTH Engenharia atende quais regiões?',
-    a: `Atendemos empresas em ${site.areaServed.slice(0, -1).join(', ')} e região, com visitas técnicas presenciais. Para outras localidades, consulte disponibilidade.`,
+    q: 'Quais regiões a EARTH Engenharia atende?',
+    a: `Atendemos ${site.address.city} capital e a Grande São Paulo — ${site.areaServed.slice(1, -1).join(', ')} e região — com visitas técnicas presenciais. Para outras localidades, consulte disponibilidade.`,
   },
   {
-    q: 'Preciso contratar empresas diferentes para meio ambiente e segurança do trabalho?',
-    a: 'Não. A EARTH integra as duas áreas: licenças, PGRS, PGR, LTCAT, treinamentos e eSocial ficam com um único parceiro, com informações consistentes entre si.',
+    q: 'Preciso de empresas diferentes para meio ambiente e segurança do trabalho?',
+    a: 'Não. A EARTH integra as duas áreas: licenças, PGRS, PGR, LTCAT, treinamentos, AVCB e eSocial ficam com um único parceiro, com informações consistentes entre si.',
   },
   {
     q: 'Como funciona o orçamento?',
@@ -85,99 +67,85 @@ const faqSchema = {
 ---
 
 <BaseLayout
-  title={`Engenharia Ambiental e Segurança do Trabalho em ${site.address.city}`}
-  description={`${site.name}: licenciamento ambiental, PGRS, PGR, LTCAT, laudos, treinamentos de NRs e prevenção de incêndio em ${site.address.city}/${site.address.state} e região. Solicite um orçamento.`}
+  title="Engenharia Ambiental e Segurança do Trabalho em São Paulo"
+  description={`${site.name}: licenciamento CETESB, PGRS, PGR, LTCAT, laudos, treinamentos de NRs, AVCB e eSocial em São Paulo/SP e Grande SP. Solicite um orçamento.`}
   schema={[faqSchema]}
 >
   <!-- HERO -->
-  <section class="bg-hero relative isolate overflow-hidden text-white">
-    <div class="bg-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
-    <div class="container-x grid items-center gap-12 pt-12 pb-16 sm:pt-16 lg:grid-cols-12 lg:gap-8 lg:pt-24 lg:pb-28">
-      <div class="lg:col-span-7">
-        <p class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-leaf-200 backdrop-blur">
-          <span class="size-1.5 rounded-full bg-leaf-400"></span>{site.slogans.main}
-        </p>
-        <h1 class="mt-5 text-[2.1rem] leading-[1.1] text-white sm:text-5xl lg:text-6xl">
-          Engenharia ambiental e <span class="text-gradient">segurança do trabalho</span> para sua empresa operar em conformidade
+  <section class="relative overflow-hidden border-b border-line">
+    <div class="bg-grid-light pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="container-x relative grid items-center gap-12 pt-10 pb-14 sm:pt-16 lg:grid-cols-12 lg:gap-10 lg:pt-20 lg:pb-24">
+      <div class="lg:col-span-6">
+        <p class="label">Engenharia · São Paulo/SP</p>
+        <h1 class="h-display mt-5">
+          Engenharia ambiental e segurança do trabalho, <span class="text-brand-600">sem pendências.</span>
         </h1>
-        <p class="mt-5 max-w-xl text-lg leading-relaxed text-white/80">
-          {site.slogans.partner} Licenças, resíduos, laudos, programas de SST e treinamentos com responsabilidade técnica e atendimento em campo.
+        <p class="lead mt-6 max-w-xl">
+          Licenças, resíduos, laudos, programas de SST e AVCB conduzidos por engenheiros — com controle de prazos para sua empresa operar em conformidade.
         </p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-primary" data-track="whatsapp-hero">
-            <BrandIcon name="whatsapp" /> Solicitar orçamento
+            <BrandIcon name="whatsapp" class="size-[18px]" /> Solicitar orçamento
           </a>
-          <a href="#servicos" class="btn btn-ghost">Ver serviços <ArrowRight size={18} aria-hidden="true" /></a>
+          <a href="#servicos" class="btn btn-secondary">Ver serviços <ArrowRight size={17} aria-hidden="true" /></a>
         </div>
-        <ul class="mt-10 grid grid-cols-1 gap-3 text-sm text-white/80 sm:grid-cols-3">
-          {
-            ['Profissionais habilitados com ART', 'Atendimento presencial', 'Ambiental + SST integrados'].map((t) => (
-              <li class="flex items-center gap-2">
-                <BadgeCheck size={18} class="shrink-0 text-leaf-400" aria-hidden="true" />
-                {t}
-              </li>
-            ))
-          }
-        </ul>
+        <p class="mt-8 font-mono text-xs text-muted">{site.slogans.partner}</p>
       </div>
-
-      <div class="relative lg:col-span-5">
-        <div class="relative overflow-hidden rounded-[2rem] border border-white/15 shadow-2xl">
-          <Picture
-            src={heroImg}
-            formats={['avif', 'webp']}
-            widths={[400, 640, 900]}
-            sizes="(min-width: 1024px) 40vw, 92vw"
-            alt="Equipe da EARTH Engenharia realizando vistoria técnica em campo"
-            loading="eager"
-            fetchpriority="high"
-            class="aspect-[4/3] w-full object-cover"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-brand-950/60 via-transparent" aria-hidden="true"></div>
-        </div>
-        <div class="glass absolute -bottom-6 left-4 right-4 flex items-center gap-3 rounded-2xl p-4 text-ink sm:left-auto sm:right-6 sm:w-72 lg:-left-8 lg:right-auto motion-safe:animate-float">
-          <span class="icon-badge size-11"><Leaf size={22} aria-hidden="true" /></span>
-          <div>
-            <p class="text-sm font-bold text-brand-900">{site.slogans.future}</p>
-            <p class="text-xs text-muted">Soluções técnicas e sustentáveis</p>
-          </div>
-        </div>
+      <div class="lg:col-span-6" data-reveal>
+        <ComplianceDashboard />
       </div>
     </div>
   </section>
 
-  <!-- ÁREAS DE ATUAÇÃO -->
-  <section class="section pb-0" aria-labelledby="areas-title">
+  <!-- NORMAS / ÓRGÃOS -->
+  <section aria-label="Normas e órgãos com que trabalhamos" class="border-b border-line">
+    <div class="container-x flex flex-col gap-4 py-6 lg:flex-row lg:items-center lg:gap-10">
+      <p class="shrink-0 font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Atuamos conforme</p>
+      <ul class="flex flex-wrap gap-x-6 gap-y-2 text-[15px] font-semibold tracking-tight text-ink/45">
+        {frameworks.map((f) => <li>{f}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- NÚMEROS -->
+  <section class="border-b border-line">
     <div class="container-x">
-      <div class="max-w-2xl" data-reveal>
-        <span class="eyebrow">Áreas de atuação</span>
-        <h2 id="areas-title" class="mt-4 text-3xl sm:text-4xl">Meio ambiente, segurança e conformidade em um só parceiro</h2>
-      </div>
-      <div class="mt-10 grid gap-4 md:grid-cols-3 md:gap-5">
+      <dl class="grid grid-cols-2 lg:grid-cols-4">
         {
-          Object.entries(categories).map(([key, c], i) => {
-            const Ico = areaIcons[key as keyof typeof areaIcons];
-            const count = services.filter((s) => s.data.category === key).length;
-            return (
-              <a
-                href={`/servicos/?area=${key}`}
-                class="card card-hover group relative overflow-hidden p-6"
-                data-reveal
-                style={`--reveal-delay:${i * 90}ms`}
-              >
-                <div class="absolute -top-16 -right-16 size-40 rounded-full bg-leaf-100 opacity-60 transition group-hover:scale-125" aria-hidden="true" />
-                <span class="icon-badge relative">
-                  <Ico size={24} aria-hidden="true" />
-                </span>
-                <h3 class="relative mt-5 text-xl">{c.label}</h3>
-                <p class="relative mt-2 text-muted">{c.description}</p>
-                <span class="relative mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
-                  {count} serviços <ArrowRight size={16} class="transition group-hover:translate-x-1" aria-hidden="true" />
-                </span>
-              </a>
-            );
-          })
+          facts.map((f, i) => (
+            <div
+              class:list={[
+                'py-8 pr-4 sm:py-10',
+                i % 2 === 1 && 'border-l border-line pl-4 sm:pl-6',
+                i >= 2 && 'border-t border-line lg:border-t-0',
+                i === 2 && 'lg:border-l lg:pl-6',
+              ]}
+              data-reveal
+              style={`--reveal-delay:${i * 70}ms`}
+            >
+              <dt class="sr-only">{f.label}</dt>
+              <dd>
+                <span class="block text-4xl font-semibold tracking-tight sm:text-5xl">{f.value}</span>
+                <span class="mt-2 block font-medium">{f.label}</span>
+                <span class="block text-sm text-muted">{f.note}</span>
+              </dd>
+            </div>
+          ))
         }
+      </dl>
+    </div>
+  </section>
+
+  <!-- SOLUÇÕES (abas) -->
+  <section class="relative overflow-hidden bg-brand-950 text-white" aria-labelledby="solucoes-title">
+    <div class="bg-grid-dark pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="container-x section relative">
+      <div class="max-w-2xl" data-reveal>
+        <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">01 — Soluções</p>
+        <h2 id="solucoes-title" class="h-section mt-4 text-white">Meio ambiente, segurança e conformidade em um só parceiro.</h2>
+      </div>
+      <div class="mt-12">
+        <SolutionTabs />
       </div>
     </div>
   </section>
@@ -185,83 +153,76 @@ const faqSchema = {
   <!-- SERVIÇOS -->
   <section id="servicos" class="section" aria-labelledby="servicos-title">
     <div class="container-x">
-      <div class="flex flex-col gap-4 md:flex-row md:items-end md:justify-between" data-reveal>
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between" data-reveal>
         <div class="max-w-2xl">
-          <span class="eyebrow">Serviços</span>
-          <h2 id="servicos-title" class="mt-4 text-3xl sm:text-4xl">Encontre o serviço que sua empresa precisa</h2>
-          <p class="mt-3 text-lg text-muted">Filtre por área ou busque pelo nome do documento.</p>
+          <p class="label">02 — Serviços</p>
+          <h2 id="servicos-title" class="h-section mt-4">Encontre o serviço que sua empresa precisa.</h2>
         </div>
-        <a href="/servicos/" class="btn btn-outline self-start md:self-auto">Todos os serviços <ArrowRight size={18} aria-hidden="true" /></a>
+        <p class="max-w-sm text-muted">Filtre por área ou busque pelo nome do documento — LO, PGR, LTCAT, AVCB…</p>
       </div>
-      <div class="mt-8">
+      <div class="mt-10">
         <ServiceFilter services={services} />
       </div>
     </div>
   </section>
 
-  <!-- POR QUE A EARTH -->
-  <section class="section bg-mist" aria-labelledby="dif-title">
-    <div class="container-x grid items-center gap-12 lg:grid-cols-2">
-      <div class="grid grid-cols-2 gap-3 sm:gap-4" data-reveal>
-        <Picture
-          src={ambientalImg}
-          formats={['avif', 'webp']}
-          widths={[320, 560]}
-          sizes="(min-width: 1024px) 24vw, 46vw"
-          alt="Vistoria ambiental realizada pela EARTH Engenharia"
-          class="aspect-[3/4] w-full rounded-3xl object-cover"
-        />
-        <Picture
-          src={segurancaImg}
-          formats={['avif', 'webp']}
-          widths={[320, 560]}
-          sizes="(min-width: 1024px) 24vw, 46vw"
-          alt="Inspeção de segurança do trabalho em campo"
-          class="mt-10 aspect-[3/4] w-full rounded-3xl object-cover"
-        />
+  <!-- EM CAMPO -->
+  <section class="section bg-mist" aria-labelledby="campo-title">
+    <div class="container-x grid gap-12 lg:grid-cols-12 lg:items-center">
+      <div class="lg:col-span-5" data-reveal>
+        <p class="label">03 — Em campo</p>
+        <h2 id="campo-title" class="h-section mt-4">Documentos que funcionam na prática.</h2>
+        <p class="lead mt-5">
+          Antes de qualquer laudo ou estudo, vamos até a sua operação. Medições, vistorias e levantamentos feitos por quem assina a responsabilidade técnica.
+        </p>
+        <a href="/sobre/" class="btn btn-secondary mt-8">Conheça a EARTH <ArrowUpRight size={17} aria-hidden="true" /></a>
       </div>
-      <div>
-        <div data-reveal>
-          <span class="eyebrow">Por que a EARTH</span>
-          <h2 id="dif-title" class="mt-4 text-3xl sm:text-4xl">Confiança técnica do diagnóstico à renovação</h2>
-          <p class="mt-4 text-lg text-muted">
-            Unimos engenharia, legislação e presença em campo para entregar documentos que funcionam na prática — e uma operação que dorme tranquila.
-          </p>
+      <div class="grid grid-cols-5 gap-3 lg:col-span-7" data-reveal>
+        <Picture
+          src={campoImg}
+          formats={['avif', 'webp']}
+          widths={[400, 700, 1000]}
+          sizes="(min-width: 1024px) 34vw, 56vw"
+          alt="Equipe da EARTH Engenharia realizando vistoria técnica em campo"
+          class="col-span-3 aspect-[4/5] w-full rounded-xl object-cover"
+        />
+        <div class="col-span-2 flex flex-col gap-3">
+          <Picture
+            src={segurancaImg}
+            formats={['avif', 'webp']}
+            widths={[300, 500]}
+            sizes="(min-width: 1024px) 22vw, 36vw"
+            alt="Inspeção de segurança do trabalho"
+            class="aspect-square w-full rounded-xl object-cover"
+          />
+          <div class="panel flex flex-1 flex-col justify-end p-4">
+            <p class="font-mono text-[10px] tracking-[0.14em] text-muted uppercase">Medições</p>
+            <p class="mt-1 text-sm font-medium">Ruído, calor, agentes químicos e efluentes com equipamentos calibrados.</p>
+          </div>
         </div>
-        <ul class="mt-8 grid gap-4 sm:grid-cols-2">
-          {
-            differentials.map((d, i) => (
-              <li class="card p-5" data-reveal style={`--reveal-delay:${i * 80}ms`}>
-                <d.icon size={22} class="text-leaf-500" aria-hidden="true" />
-                <h3 class="mt-3 text-base">{d.title}</h3>
-                <p class="mt-1 text-sm leading-relaxed text-muted">{d.text}</p>
-              </li>
-            ))
-          }
-        </ul>
       </div>
     </div>
   </section>
 
-  <!-- COMO TRABALHAMOS -->
+  <!-- PROCESSO -->
   <section class="section" aria-labelledby="proc-title">
     <div class="container-x">
-      <div class="mx-auto max-w-2xl text-center" data-reveal>
-        <span class="eyebrow">Como trabalhamos</span>
-        <h2 id="proc-title" class="mt-4 text-3xl sm:text-4xl">Um processo simples, do primeiro contato à conformidade</h2>
+      <div class="max-w-2xl" data-reveal>
+        <p class="label">04 — Processo</p>
+        <h2 id="proc-title" class="h-section mt-4">Do primeiro contato à conformidade contínua.</h2>
       </div>
-      <ol class="relative mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <ol class="mt-12 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">
         {
           steps.map((s, i) => (
-            <li class="card relative p-6" data-reveal style={`--reveal-delay:${i * 90}ms`}>
-              <span class="absolute top-5 right-5 text-4xl font-extrabold text-brand-100" aria-hidden="true">
-                0{i + 1}
-              </span>
-              <span class="icon-badge">
-                <s.icon size={22} aria-hidden="true" />
-              </span>
-              <h3 class="mt-5 text-lg">{s.title}</h3>
-              <p class="mt-2 text-[15px] text-muted">{s.text}</p>
+            <li
+              class:list={['relative border-b border-line py-8 sm:pr-6', i % 2 === 1 && 'sm:border-l sm:pl-6', i >= 1 && 'lg:border-l lg:pl-6']}
+              data-reveal
+              style={`--reveal-delay:${i * 80}ms`}
+            >
+              <span class="absolute -top-[5px] left-0 size-2.5 rounded-full border-2 border-white bg-leaf-400 sm:left-auto" aria-hidden="true" />
+              <span class="font-mono text-xs text-brand-600">Etapa 0{i + 1}</span>
+              <h3 class="mt-3 text-xl">{s.title}</h3>
+              <p class="mt-2 text-muted">{s.text}</p>
             </li>
           ))
         }
@@ -270,14 +231,14 @@ const faqSchema = {
   </section>
 
   <!-- SEGMENTOS -->
-  <section class="bg-brand-900 py-14 text-white" aria-labelledby="seg-title">
-    <div class="container-x">
-      <h2 id="seg-title" class="text-center text-xl font-semibold text-white sm:text-2xl" data-reveal>Segmentos que atendemos</h2>
-      <ul class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+  <section class="border-y border-line bg-mist" aria-labelledby="seg-title">
+    <div class="container-x grid gap-6 py-12 lg:grid-cols-12 lg:items-center">
+      <h2 id="seg-title" class="text-2xl lg:col-span-3">Segmentos atendidos</h2>
+      <ul class="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3 lg:col-span-9 lg:grid-cols-6">
         {
-          segments.map((s, i) => (
-            <li class="glass-dark flex flex-col items-center gap-2 rounded-2xl p-4 text-center text-sm font-medium" data-reveal style={`--reveal-delay:${i * 60}ms`}>
-              <s.icon size={26} class="text-leaf-400" aria-hidden="true" />
+          segments.map((s) => (
+            <li class="flex flex-col items-start gap-3 bg-white p-4 text-sm font-medium">
+              <s.icon size={22} class="text-brand-500" aria-hidden="true" />
               {s.label}
             </li>
           ))
@@ -290,9 +251,11 @@ const faqSchema = {
   <section class="section" aria-labelledby="faq-title">
     <div class="container-x grid gap-10 lg:grid-cols-12">
       <div class="lg:col-span-4" data-reveal>
-        <span class="eyebrow">Dúvidas frequentes</span>
-        <h2 id="faq-title" class="mt-4 text-3xl sm:text-4xl">Perguntas frequentes</h2>
-        <p class="mt-3 text-muted">Não encontrou sua resposta? <a href="/contato/" class="font-semibold text-brand-600 underline decoration-leaf-400 underline-offset-4">Fale com a gente</a>.</p>
+        <p class="label">05 — FAQ</p>
+        <h2 id="faq-title" class="h-section mt-4">Perguntas frequentes</h2>
+        <p class="mt-4 text-muted">
+          Não encontrou sua resposta? <a href="/contato/" class="font-medium text-brand-600 underline decoration-leaf-400 underline-offset-4">Fale com a gente</a>.
+        </p>
       </div>
       <div class="lg:col-span-8" data-reveal>
         <Faq items={faq} />

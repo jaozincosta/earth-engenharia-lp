@@ -1,26 +1,23 @@
 ---
-import { ChevronRight } from '@lucide/astro';
-
 interface Props {
   items: { label: string; href: string }[];
-  dark?: boolean;
 }
-const { items, dark = true } = Astro.props;
+const { items } = Astro.props;
 const all = [{ label: 'Início', href: '/' }, ...items];
 ---
 
-<nav aria-label="Você está em" class="text-sm">
-  <ol class:list={['flex flex-wrap items-center gap-1', dark ? 'text-white/70' : 'text-muted']}>
+<nav aria-label="Você está em" class="font-mono text-[11px] tracking-[0.1em] uppercase">
+  <ol class="flex flex-wrap items-center gap-1.5 text-muted">
     {
       all.map((item, i) => (
-        <li class="flex items-center gap-1">
-          {i > 0 && <ChevronRight size={14} aria-hidden="true" class="opacity-60" />}
+        <li class="flex items-center gap-1.5">
+          {i > 0 && <span aria-hidden="true" class="opacity-50">/</span>}
           {i === all.length - 1 ? (
-            <span aria-current="page" class={dark ? 'text-white' : 'text-brand-800'}>
+            <span aria-current="page" class="text-ink">
               {item.label}
             </span>
           ) : (
-            <a href={item.href} class="hover:underline">
+            <a href={item.href} class="hover:text-brand-600">
               {item.label}
             </a>
           )}

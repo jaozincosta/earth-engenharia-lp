@@ -1,10 +1,58 @@
-<!-- PLACEHOLDER — substitua por o logo oficial da EARTH Engenharia (mantenha o nome do arquivo). -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 48" width="220" height="48" role="img" aria-label="EARTH Engenharia">
-  <g transform="translate(2 2)">
-    <circle cx="22" cy="22" r="21" fill="#0F4D2E"/>
-    <path d="M22 7c-8 6-12 13-12 20a12 12 0 0 0 24 0c0-7-4-14-12-20Z" fill="#7AC943"/>
-    <path d="M22 13v24M22 25l-6-5M22 30l7-6" stroke="#0F4D2E" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 443 130" width="443" height="130" role="img" aria-label="EARTH Engenharia">
+<title>EARTH Engenharia</title>
+<g transform="translate(-5.5 5.599999999999994) scale(1.1)"><defs>
+  <radialGradient id="lo" cx="40%" cy="35%" r="70%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset=".65" stop-color="#EAF6E6"/><stop offset="1" stop-color="#BFE3B0"/>
+  </radialGradient>
+  <linearGradient id="lc" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#1C6741"/><stop offset="1" stop-color="#0F4D2E"/>
+  </linearGradient>
+  <linearGradient id="ll" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#3E8E2A"/><stop offset="1" stop-color="#7AC943"/>
+  </linearGradient>
+  <linearGradient id="ls" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#7AC943"/><stop offset=".55" stop-color="#3E9B3A"/><stop offset="1" stop-color="#0F4D2E"/>
+  </linearGradient>
+  <clipPath id="lg"><circle cx="64" cy="64" r="36"/></clipPath></defs>
+  <!-- arco envolvente -->
+  <path d="M27 40C17 58 20 84 38 99C56 114 84 114 101 98C86 107 61 108 45 94C29 80 25 58 27 40Z" fill="url(#ls)"/>
+  <!-- globo -->
+  <circle cx="64" cy="64" r="36" fill="url(#lo)"/>
+  <g clip-path="url(#lg)" fill="url(#lc)">
+    <!-- América do Norte -->
+    <path d="M33 46C38 36 52 31 66 33C73 34 76 39 71 43C67 46 66 51 61 54C57 56 56 60 59 64C55 64 51 61 47 57C42 53 34 53 33 46Z"/>
+    <!-- América Central -->
+    <path d="M59 64C61 66 63 68 66 69C65 70 62 70 60 68C59 67 58 65 59 64Z"/>
+    <!-- América do Sul -->
+    <path d="M66 70C74 68 82 72 84 78C86 84 80 90 76 96C73 100 70 100 70 94C70 88 66 84 64 78C63 74 63 71 66 70Z"/>
+    <!-- Europa / África (borda) -->
+    <path d="M89 38C95 37 101 42 103 50L103 74C97 72 93 66 90 60C87 54 84 44 89 38Z"/>
+    <!-- Groenlândia -->
+    <path d="M73 29C78 27 84 28 85 31C83 34 78 35 74 33C72 32 72 30 73 29Z"/>
   </g>
-  <text x="54" y="28" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="22" font-weight="800" fill="currentColor" letter-spacing="1">EARTH</text>
-  <text x="55" y="42" font-family="Plus Jakarta Sans, Arial, sans-serif" font-size="9.5" font-weight="600" fill="#7AC943" letter-spacing="3.2">ENGENHARIA</text>
+  <!-- linhas de latitude/longitude sutis (toque técnico) -->
+  <g clip-path="url(#lg)" fill="none" stroke="#0F4D2E" stroke-opacity=".12" stroke-width=".8">
+    <ellipse cx="64" cy="64" rx="36" ry="12"/><ellipse cx="64" cy="64" rx="14" ry="36"/><line x1="28" y1="64" x2="100" y2="64"/>
+  </g>
+  <circle cx="64" cy="64" r="36" fill="none" stroke="#0F4D2E" stroke-opacity=".35" stroke-width="1.2"/>
+  <!-- brilho -->
+  <path d="M42 40C48 33 57 30 65 30" stroke="#FFFFFF" stroke-opacity=".9" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <!-- folhas -->
+  <g transform="translate(30 34) rotate(-112) scale(0.9)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#ll)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g>
+  <g transform="translate(31 33) rotate(-78) scale(1.05)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#ll)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g>
+  <g transform="translate(32 34) rotate(-40) scale(0.85)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#ll)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g>
+  <g transform="translate(98 99) rotate(-20) scale(0.62)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#ll)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g></g>
+<path d="M184.86 76L139.90 76L139.90 20L183.82 20L183.82 32.24L155.58 32.24L155.58 41.68L180.46 41.68L180.46 53.52L155.58 53.52L155.58 63.76L184.86 63.76" fill="#0F4D2E"/><path d="M192.54000000000002 76L216.812 20L228.90800000000002 20L253.18 76L237.89649849543633 76L222.86 35.455999999999996L207.8235015045637 76Z" fill="#0F4D2E"/><path d="M222.86 55.84L235.35920000000002 76L210.3608 76Z" fill="#7AC943"/><path d="M279.10 76L263.26 76L263.26 20L288.30 20Q300.54 20 307.14 25.56Q313.74 31.12 313.74 40.72Q313.74 47.04 310.70 51.60Q307.82 56 302.78 58.40L314.86 76L297.90 76L287.74 61.12L279.10 61.12L279.10 76M279.10 32.48L279.10 48.88L287.90 48.88Q292.86 48.88 295.30 46.72Q297.74 44.56 297.74 40.72Q297.74 36.80 295.30 34.64Q292.86 32.48 287.90 32.48" fill="#0F4D2E"/><path d="M353.58 76L337.74 76L337.74 32.56L320.54 32.56L320.54 20L370.70 20L370.70 32.56L353.58 32.56" fill="#0F4D2E"/><path d="M433.26 76L417.42 76L417.42 54.16L395.82 54.16L395.82 76L379.98 76L379.98 20L395.82 20L395.82 41.04L417.42 41.04L417.42 20L433.26 20" fill="#0F4D2E"/><path d="M149.16 105.12L136.56 105.12L136.56 88.32L148.82 88.32L148.82 90.94L139.68 90.94L139.68 95.30L147.79 95.30L147.79 97.87L139.68 97.87L139.68 102.50L149.16 102.50" fill="#1C6741"/><path d="M170.67 105.12L167.57 105.12L167.57 88.32L170.14 88.32L179.40 99.70L179.40 88.32L182.50 88.32L182.50 105.12L179.93 105.12L170.67 93.74" fill="#1C6741"/><path d="M209.79 105.36Q207.82 105.36 206.18 104.72Q204.53 104.09 203.31 102.92Q202.09 101.76 201.41 100.18Q200.74 98.59 200.74 96.72Q200.74 94.85 201.41 93.26Q202.09 91.68 203.32 90.52Q204.56 89.35 206.21 88.72Q207.87 88.08 209.84 88.08Q211.97 88.08 213.69 88.78Q215.41 89.47 216.58 90.82L214.61 92.74Q213.63 91.75 212.49 91.28Q211.35 90.82 209.98 90.82Q208.66 90.82 207.53 91.25Q206.41 91.68 205.59 92.47Q204.77 93.26 204.33 94.34Q203.89 95.42 203.89 96.72Q203.89 97.99 204.33 99.07Q204.77 100.15 205.59 100.96Q206.41 101.76 207.51 102.19Q208.61 102.62 209.96 102.62Q211.21 102.62 212.38 102.22Q212.91 102.05 213.41 101.76L213.41 96.53L216.37 96.53L216.37 103.22Q215.05 104.28 213.31 104.82Q211.57 105.36 209.79 105.36" fill="#1C6741"/><path d="M248 105.12L235.40 105.12L235.40 88.32L247.67 88.32L247.67 90.94L238.52 90.94L238.52 95.30L246.64 95.30L246.64 97.87L238.52 97.87L238.52 102.50L248 102.50" fill="#1C6741"/><path d="M269.51 105.12L266.42 105.12L266.42 88.32L268.99 88.32L278.25 99.70L278.25 88.32L281.35 88.32L281.35 105.12L278.78 105.12L269.51 93.74" fill="#1C6741"/><path d="M315.72 105.12L312.60 105.12L312.60 97.92L303.91 97.92L303.91 105.12L300.79 105.12L300.79 88.32L303.91 88.32L303.91 95.26L312.60 95.26L312.60 88.32L315.72 88.32" fill="#1C6741"/><path d="M336 105.12L332.79 105.12L340.35 88.32L343.42 88.32L351 105.12L347.74 105.12L346.06 101.23L337.66 101.23L336 105.12M338.72 98.78L345.03 98.78L341.86 91.44" fill="#1C6741"/><path d="M371.19 105.12L368.07 105.12L368.07 88.32L374.96 88.32Q378.32 88.32 380.23 89.90Q382.14 91.49 382.14 94.30Q382.14 96.14 381.27 97.48Q380.41 98.81 378.83 99.50Q378.71 99.58 378.56 99.62L382.43 105.12L379.07 105.12L375.63 100.20Q375.32 100.22 374.99 100.22L371.19 100.22L371.19 105.12M371.19 90.96L371.19 97.66L374.84 97.66Q376.91 97.66 377.95 96.77Q378.99 95.88 378.99 94.30Q378.99 92.69 377.95 91.82Q376.91 90.96 374.84 90.96" fill="#1C6741"/><path d="M403.67 105.12L400.55 105.12L400.55 88.32L403.67 88.32" fill="#1C6741"/><path d="M423.98 105.12L420.76 105.12L428.32 88.32L431.40 88.32L438.98 105.12L435.72 105.12L434.04 101.23L425.64 101.23L423.98 105.12M426.69 98.78L433 98.78L429.84 91.44" fill="#1C6741"/>
 </svg>

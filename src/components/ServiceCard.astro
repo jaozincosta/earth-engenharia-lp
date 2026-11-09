@@ -1,4 +1,5 @@
 ---
+/** Linha de serviço em estilo "catálogo técnico" (lista com índice, área e seta). */
 import { ArrowUpRight } from '@lucide/astro';
 import Icon from './Icon.astro';
 import { categories } from '@/config/site';
@@ -6,34 +7,28 @@ import { serviceUrl, type Service } from '@/lib/services';
 
 interface Props {
   service: Service;
-  delay?: number;
+  index?: number;
 }
-const { service, delay = 0 } = Astro.props;
+const { service, index } = Astro.props;
 const { data } = service;
 const searchText = [data.title, data.summary, ...data.keywords].join(' ').toLowerCase();
 ---
 
 <a
   href={serviceUrl(service)}
-  class="card card-hover group relative flex flex-col p-6"
-  data-reveal
+  class="group grid grid-cols-[auto_1fr_auto] items-start gap-x-4 gap-y-1 border-b border-line py-5 transition-colors hover:bg-mist sm:grid-cols-[3.5rem_2.5rem_1fr_11rem_auto] sm:items-center sm:gap-x-5 sm:px-3"
   data-service
   data-category={data.category}
   data-search={searchText}
-  style={`--reveal-delay:${delay}ms`}
 >
-  <div class="flex items-start justify-between gap-4">
-    <span class="icon-badge transition duration-300 group-hover:scale-105 motion-reduce:group-hover:scale-100">
-      <Icon name={data.icon} size={24} />
-    </span>
-    <span class="rounded-full bg-mist px-2.5 py-1 text-[11px] font-semibold tracking-wide text-brand-600 uppercase">
-      {categories[data.category].short}
-    </span>
-  </div>
-  <h3 class="mt-5 text-lg leading-snug">{data.title}</h3>
-  <p class="mt-2 flex-1 text-[15px] leading-relaxed text-muted">{data.summary}</p>
-  <span class="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
-    Saiba mais
-    <ArrowUpRight size={16} class="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+  <span class="hidden font-mono text-xs text-muted sm:block">{index !== undefined && String(index + 1).padStart(2, '0')}</span>
+  <span class="grid size-10 place-items-center rounded-lg border border-line bg-white text-brand-600 transition-colors group-hover:border-brand-300">
+    <Icon name={data.icon} size={20} />
   </span>
+  <span class="min-w-0">
+    <span class="block text-[17px] font-semibold tracking-tight text-ink group-hover:text-brand-700">{data.title}</span>
+    <span class="mt-0.5 block text-sm leading-relaxed text-muted sm:line-clamp-1">{data.summary}</span>
+  </span>
+  <span class="hidden font-mono text-[11px] tracking-[0.12em] text-muted uppercase sm:block">{categories[data.category].label}</span>
+  <ArrowUpRight size={20} class="mt-2 text-brand-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-600 sm:mt-0" aria-hidden="true" />
 </a>

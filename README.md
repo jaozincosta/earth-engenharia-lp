@@ -15,7 +15,7 @@ npm run preview
 
 1. **Dados da empresa** — edite `src/config/site.ts` (todos os campos com `TODO`): WhatsApp, telefone, e-mail, endereço, CNPJ, redes sociais e cidades atendidas. Esses dados alimentam o Schema.org (`ProfessionalService`), rodapé, contato e botões de WhatsApp.
 2. **Domínio** — defina a variável `SITE_URL` (ex.: `https://www.earthengenharia.com.br`) na Vercel/Netlify. Ela gera canonical, Open Graph, sitemap e robots.txt.
-3. **Logo** — substitua `src/assets/logo.svg` (placeholder) mantendo o nome.
+3. **Logo** — vetorial, gerado por `node scripts/build-logo.mjs` (texto em curvas, Montserrat). Saídas: `src/assets/logo.svg`, `logo-white.svg`, `logo-mark.svg`, favicon, apple-touch-icon, `public/og-default.jpg` e versões com slogan em `brand/`.
 4. **Fotos** — substitua os JPGs em `src/assets/fotos/` por fotos reais da equipe em campo (mesmos nomes). O Astro gera AVIF/WebP em vários tamanhos automaticamente. `public/og-default.jpg` (1200×630) é a imagem de compartilhamento.
 5. **Textos institucionais** — revise `src/pages/sobre.astro` e `src/pages/politica-de-privacidade.astro` (marcados com `TODO`).
 

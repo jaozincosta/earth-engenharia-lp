@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 -4 116 116" width="116" height="116" role="img" aria-label="EARTH Engenharia"><title>EARTH Engenharia</title><defs>
+  <radialGradient id="ko" cx="40%" cy="35%" r="70%">
+    <stop offset="0" stop-color="#FFFFFF"/><stop offset=".65" stop-color="#EAF6E6"/><stop offset="1" stop-color="#BFE3B0"/>
+  </radialGradient>
+  <linearGradient id="kc" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#1C6741"/><stop offset="1" stop-color="#0F4D2E"/>
+  </linearGradient>
+  <linearGradient id="kl" x1="0" y1="1" x2="1" y2="0">
+    <stop offset="0" stop-color="#3E8E2A"/><stop offset="1" stop-color="#7AC943"/>
+  </linearGradient>
+  <linearGradient id="ks" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#7AC943"/><stop offset=".55" stop-color="#3E9B3A"/><stop offset="1" stop-color="#0F4D2E"/>
+  </linearGradient>
+  <clipPath id="kg"><circle cx="64" cy="64" r="36"/></clipPath></defs>
+  <!-- arco envolvente -->
+  <path d="M27 40C17 58 20 84 38 99C56 114 84 114 101 98C86 107 61 108 45 94C29 80 25 58 27 40Z" fill="url(#ks)"/>
+  <!-- globo -->
+  <circle cx="64" cy="64" r="36" fill="url(#ko)"/>
+  <g clip-path="url(#kg)" fill="url(#kc)">
+    <!-- América do Norte -->
+    <path d="M33 46C38 36 52 31 66 33C73 34 76 39 71 43C67 46 66 51 61 54C57 56 56 60 59 64C55 64 51 61 47 57C42 53 34 53 33 46Z"/>
+    <!-- América Central -->
+    <path d="M59 64C61 66 63 68 66 69C65 70 62 70 60 68C59 67 58 65 59 64Z"/>
+    <!-- América do Sul -->
+    <path d="M66 70C74 68 82 72 84 78C86 84 80 90 76 96C73 100 70 100 70 94C70 88 66 84 64 78C63 74 63 71 66 70Z"/>
+    <!-- Europa / África (borda) -->
+    <path d="M89 38C95 37 101 42 103 50L103 74C97 72 93 66 90 60C87 54 84 44 89 38Z"/>
+    <!-- Groenlândia -->
+    <path d="M73 29C78 27 84 28 85 31C83 34 78 35 74 33C72 32 72 30 73 29Z"/>
+  </g>
+  <!-- linhas de latitude/longitude sutis (toque técnico) -->
+  <g clip-path="url(#kg)" fill="none" stroke="#0F4D2E" stroke-opacity=".12" stroke-width=".8">
+    <ellipse cx="64" cy="64" rx="36" ry="12"/><ellipse cx="64" cy="64" rx="14" ry="36"/><line x1="28" y1="64" x2="100" y2="64"/>
+  </g>
+  <circle cx="64" cy="64" r="36" fill="none" stroke="#0F4D2E" stroke-opacity=".35" stroke-width="1.2"/>
+  <!-- brilho -->
+  <path d="M42 40C48 33 57 30 65 30" stroke="#FFFFFF" stroke-opacity=".9" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+  <!-- folhas -->
+  <g transform="translate(30 34) rotate(-112) scale(0.9)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#kl)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g>
+  <g transform="translate(31 33) rotate(-78) scale(1.05)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#kl)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g>
+  <g transform="translate(32 34) rotate(-40) scale(0.85)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#kl)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g>
+  <g transform="translate(98 99) rotate(-20) scale(0.62)">
+     <path d="M0 0C5-11 18-17 31-15C27-3 15 5 0 0Z" fill="url(#kl)"/>
+     <path d="M1-.5C10-5 19-9 27-13" stroke="#FFFFFF" stroke-opacity=".55" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+   </g></svg>

@@ -11,41 +11,40 @@ const addressLine = [a.street, a.district].filter(Boolean).join(' – ');
 const year = new Date().getFullYear();
 ---
 
-<footer class="relative overflow-hidden bg-brand-950 text-white/75">
-  <div class="bg-grid pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
-  <div class="container-x relative grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
+<footer class="bg-brand-950 text-white/65">
+  <div class="container-x grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
     <div class="sm:col-span-2 lg:col-span-4">
-      <Logo class="h-10 w-auto text-white" />
-      <p class="mt-4 max-w-sm text-sm leading-relaxed">{site.slogans.partner} {site.slogans.future}.</p>
-      <div class="mt-6 flex gap-3">
+      <Logo variant="dark" class="h-12 w-auto" />
+      <p class="mt-5 max-w-xs text-sm leading-relaxed">{site.slogans.main}. {site.slogans.partner}</p>
+      <div class="mt-6 flex gap-2">
+        <a href={whatsappUrl()} target="_blank" rel="noopener" aria-label="WhatsApp" class="grid size-10 place-items-center rounded-lg border border-white/10 transition-colors hover:border-leaf-400 hover:text-leaf-300">
+          <BrandIcon name="whatsapp" />
+        </a>
         {
           site.social.instagram && (
-            <a href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="glass-dark grid size-11 place-items-center rounded-full transition hover:text-leaf-300">
+            <a href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="grid size-10 place-items-center rounded-lg border border-white/10 transition-colors hover:border-leaf-400 hover:text-leaf-300">
               <BrandIcon name="instagram" />
             </a>
           )
         }
         {
           site.social.linkedin && (
-            <a href={site.social.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" class="glass-dark grid size-11 place-items-center rounded-full transition hover:text-leaf-300">
+            <a href={site.social.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" class="grid size-10 place-items-center rounded-lg border border-white/10 transition-colors hover:border-leaf-400 hover:text-leaf-300">
               <BrandIcon name="linkedin" />
             </a>
           )
         }
-        <a href={whatsappUrl()} target="_blank" rel="noopener" aria-label="WhatsApp" class="glass-dark grid size-11 place-items-center rounded-full transition hover:text-leaf-300">
-          <BrandIcon name="whatsapp" />
-        </a>
       </div>
     </div>
 
     {
       groups.map((g) => (
         <div class="lg:col-span-2">
-          <p class="text-sm font-bold text-white">{g.label}</p>
+          <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">{g.label}</p>
           <ul class="mt-4 space-y-2.5 text-sm">
             {g.services.map((s) => (
               <li>
-                <a href={serviceUrl(s)} class="transition hover:text-leaf-300">
+                <a href={serviceUrl(s)} class="transition-colors hover:text-white">
                   {s.data.title}
                 </a>
               </li>
@@ -56,29 +55,22 @@ const year = new Date().getFullYear();
     }
 
     <div class="lg:col-span-2">
-      <p class="text-sm font-bold text-white">Contato</p>
+      <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">Contato</p>
       <ul class="mt-4 space-y-3 text-sm">
-        <li>
-          <a href={`tel:${c.phoneHref}`} class="flex gap-2 transition hover:text-leaf-300"><Phone size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.phoneDisplay}</a>
-        </li>
-        <li>
-          <a href={`mailto:${c.email}`} class="flex gap-2 break-all transition hover:text-leaf-300"><Mail size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.email}</a>
-        </li>
-        <li class="flex gap-2">
-          <MapPin size={16} class="mt-0.5 shrink-0" aria-hidden="true" />
-          <span>{addressLine && <>{addressLine}<br /></>}{a.city}/{a.state}</span>
-        </li>
+        <li><a href={`tel:${c.phoneHref}`} class="flex gap-2 hover:text-white"><Phone size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.phoneDisplay}</a></li>
+        <li><a href={`mailto:${c.email}`} class="flex gap-2 break-all hover:text-white"><Mail size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.email}</a></li>
+        <li class="flex gap-2"><MapPin size={16} class="mt-0.5 shrink-0" aria-hidden="true" /><span>{addressLine && <>{addressLine}<br /></>}{a.city}/{a.state}</span></li>
         <li class="flex gap-2"><Clock size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{site.hours.days}, {site.hours.open}–{site.hours.close}</li>
       </ul>
     </div>
   </div>
 
-  <div class="relative border-t border-white/10">
-    <div class="container-x flex flex-col gap-3 py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
-      <p>© {year} {site.legalName}{site.cnpj && ` · CNPJ ${site.cnpj}`}. Todos os direitos reservados.</p>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2" aria-label="Rodapé">
-        {nav.map((i) => <a href={i.href} class="hover:text-leaf-300">{i.label}</a>)}
-        <a href="/politica-de-privacidade/" class="hover:text-leaf-300">Privacidade</a>
+  <div class="border-t border-white/10">
+    <div class="container-x flex flex-col gap-3 py-6 font-mono text-[11px] tracking-wide sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {site.legalName}{site.cnpj && ` · CNPJ ${site.cnpj}`}</p>
+      <nav class="flex flex-wrap gap-x-5 gap-y-2 uppercase" aria-label="Rodapé">
+        {nav.map((i) => <a href={i.href} class="hover:text-white">{i.label}</a>)}
+        <a href="/politica-de-privacidade/" class="hover:text-white">Privacidade</a>
       </nav>
     </div>
   </div>

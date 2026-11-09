@@ -1,0 +1,102 @@
+---
+/**
+ * Abas de soluções por área (seção escura). JS mínimo e acessível (role="tablist").
+ * Sem JS, todos os painéis aparecem em sequência.
+ */
+import { ArrowUpRight, Check } from '@lucide/astro';
+import Icon from './Icon.astro';
+import { getServicesByCategory, serviceUrl } from '@/lib/services';
+
+const groups = await getServicesByCategory();
+
+const highlights: Record<string, string[]> = {
+  'meio-ambiente': ['Licenças CETESB e municipais', 'Gestão de resíduos com MTR', 'Outorgas e monitoramentos'],
+  'seguranca-do-trabalho': ['PGR conforme a nova NR-01', 'Laudos com medições quantitativas', 'Treinamentos in company'],
+  conformidade: ['AVCB / CLCB no Corpo de Bombeiros', 'Eventos SST no eSocial', 'Controle centralizado de prazos'],
+};
+---
+
+<div data-tabs>
+  <div class="flex gap-1 overflow-x-auto border-b border-white/10 [scrollbar-width:none]" role="tablist" aria-label="Áreas de atuação">
+    {
+      groups.map((g, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${g.key}`}
+          aria-controls={`panel-${g.key}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          class="relative shrink-0 px-4 pt-2 pb-4 text-[15px] font-medium whitespace-nowrap text-white/55 transition-colors hover:text-white aria-selected:text-white after:absolute after:inset-x-4 after:-bottom-px after:h-0.5 after:bg-leaf-400 after:opacity-0 aria-selected:after:opacity-100"
+        >
+          <span class="mr-2 font-mono text-[11px] text-leaf-300">0{i + 1}</span>
+          {g.label}
+        </button>
+      ))
+    }
+  </div>
+
+  {
+    groups.map((g, i) => (
+      <div id={`panel-${g.key}`} role="tabpanel" aria-labelledby={`tab-${g.key}`} class="grid gap-10 pt-10 lg:grid-cols-12" data-panel hidden={i !== 0}>
+        <div class="lg:col-span-5">
+          <h3 class="text-2xl text-white sm:text-3xl">{g.label}</h3>
+          <p class="mt-3 text-lg text-white/65">{g.description}</p>
+          <ul class="mt-6 space-y-3">
+            {highlights[g.key]?.map((h) => (
+              <li class="flex items-center gap-3 text-white/85">
+                <span class="grid size-5 place-items-center rounded bg-leaf-400 text-brand-950">
+                  <Check size={13} stroke-width={3} aria-hidden="true" />
+                </span>
+                {h}
+              </li>
+            ))}
+          </ul>
+          <a href={`/servicos/?area=${g.key}`} class="btn btn-on-dark mt-8">
+            Ver serviços de {g.label.toLowerCase()} <ArrowUpRight size={17} aria-hidden="true" />
+          </a>
+        </div>
+        <ul class="grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 sm:grid-cols-2 lg:col-span-7">
+          {g.services.map((s) => (
+            <li class="bg-brand-950">
+              <a href={serviceUrl(s)} class="group flex h-full flex-col gap-4 p-5 transition-colors hover:bg-white/[0.04]">
+                <span class="flex items-center justify-between">
+                  <span class="grid size-10 place-items-center rounded-lg border border-white/10 text-leaf-300">
+                    <Icon name={s.data.icon} size={20} />
+                  </span>
+                  <ArrowUpRight size={18} class="text-white/30 transition-colors group-hover:text-leaf-300" aria-hidden="true" />
+                </span>
+                <span>
+                  <span class="block font-semibold tracking-tight text-white">{s.data.title}</span>
+                  <span class="mt-1 block text-sm leading-relaxed text-white/55">{s.data.summary}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const select = (tab: HTMLButtonElement, focus = false) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')!)!.hidden = !on;
+      });
+      if (focus) tab.focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => select(t));
+      t.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (d) select(tabs[(i + d + tabs.length) % tabs.length], true);
+      });
+    });
+  });
+</script>

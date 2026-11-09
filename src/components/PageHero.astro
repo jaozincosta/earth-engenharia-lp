@@ -1,0 +1,29 @@
+---
+/** Cabeçalho das páginas internas: fundo claro com grade técnica. */
+import Breadcrumbs from './Breadcrumbs.astro';
+
+interface Props {
+  title: string;
+  lead?: string;
+  label?: string;
+  crumbs: { label: string; href: string }[];
+}
+const { title, lead, label, crumbs } = Astro.props;
+---
+
+<section class="relative overflow-hidden border-b border-line">
+  <div class="bg-grid-light pointer-events-none absolute inset-0" aria-hidden="true"></div>
+  <div class="container-x relative py-12 sm:py-16 lg:py-20">
+    <Breadcrumbs items={crumbs} />
+    <div class="mt-8 grid gap-8 lg:grid-cols-12 lg:items-end">
+      <div class="lg:col-span-8">
+        {label && <p class="label">{label}</p>}
+        <h1 class="mt-4 text-4xl leading-[1.05] sm:text-5xl lg:text-6xl" style="letter-spacing:-0.045em">{title}</h1>
+        {lead && <p class="lead mt-5 max-w-2xl">{lead}</p>}
+      </div>
+      <div class="lg:col-span-4 lg:justify-self-end">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>

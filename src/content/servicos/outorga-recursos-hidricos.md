@@ -1,7 +1,7 @@
 ---
 title: Outorga de Recursos Hídricos
-seoTitle: Outorga de Uso da Água – Poços e Captações
-seoDescription: Regularização do uso da água com outorga de direito de uso para poços, captações superficiais e lançamento de efluentes, incluindo cadastro e estudos.
+seoTitle: Outorga de Uso da Água em SP – Poços e Captações
+seoDescription: Regularização do uso da água em São Paulo com outorga para poços, captações e lançamento de efluentes junto à SP Águas (antigo DAEE), com cadastro e estudos.
 category: meio-ambiente
 icon: Droplets
 summary: Regularização de poços, captações superficiais e lançamento de efluentes com outorga de direito de uso da água.
@@ -20,7 +20,7 @@ benefits:
     text: Uso de água sem outorga pode gerar multa e lacração do poço.
   - title: Exigência do licenciamento
     text: A outorga é frequentemente condicionante para obter ou renovar a licença ambiental.
-keywords: [outorga, poço artesiano, captação de água, recursos hídricos, lançamento de efluentes, dispensa de outorga]
+keywords: [outorga, DAEE, SP Águas, poço artesiano, captação de água, recursos hídricos, lançamento de efluentes, dispensa de outorga]
 faq:
   - q: Poço artesiano precisa de outorga?
     a: Na maioria dos casos, sim. Alguns usos considerados insignificantes podem ser dispensados, mas mesmo nesses casos é necessário o cadastro. Verificamos o enquadramento do seu caso.

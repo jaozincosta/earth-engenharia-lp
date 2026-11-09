@@ -20,10 +20,10 @@ export const site = {
   lang: 'pt-BR',
 
   contact: {
-    // TODO: telefone e WhatsApp reais, só dígitos com DDI 55 + DDD
-    whatsapp: '5548999999999',
-    phoneDisplay: '(48) 99999-9999',
-    phoneHref: '+5548999999999',
+    // WhatsApp: só dígitos com DDI 55 + DDD
+    whatsapp: '5511974280016',
+    phoneDisplay: '(11) 97428-0016',
+    phoneHref: '+5511974280016',
     email: 'contato@earthengenharia.com.br', // TODO
     whatsappMessage: 'Olá! Vim pelo site e gostaria de um orçamento com a EARTH Engenharia.',
   },
@@ -32,15 +32,15 @@ export const site = {
     // TODO: endereço real (essencial para SEO local / Google Business Profile)
     street: '', // TODO: logradouro e número
     district: '', // TODO: bairro
-    city: 'Florianópolis',
-    state: 'SC',
+    city: 'São Paulo',
+    state: 'SP',
     postalCode: '', // TODO: CEP
     country: 'BR',
-    geo: { lat: -27.5954, lng: -48.548 },
+    geo: { lat: -23.5505, lng: -46.6333 }, // TODO: coordenadas exatas do escritório
   },
 
   /** Cidades/regiões atendidas — usadas em textos e no Schema.org (areaServed). */
-  areaServed: ['Florianópolis', 'São José', 'Palhoça', 'Biguaçu', 'Grande Florianópolis', 'Santa Catarina'],
+  areaServed: ['São Paulo', 'Guarulhos', 'Osasco', 'Barueri', 'Santo André', 'São Bernardo do Campo', 'Grande São Paulo'],
 
   hours: { days: 'Segunda a sexta', open: '08:00', close: '18:00' },
 

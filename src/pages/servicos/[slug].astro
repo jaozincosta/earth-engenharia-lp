@@ -1,9 +1,9 @@
 ---
 import type { GetStaticPaths } from 'astro';
 import { render } from 'astro:content';
-import { Check, CircleCheck, Users, ArrowRight, Phone } from '@lucide/astro';
+import { Check, Phone, ArrowUpRight } from '@lucide/astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import PageHero from '@/components/PageHero.astro';
 import Icon from '@/components/Icon.astro';
 import BrandIcon from '@/components/BrandIcon.astro';
 import Faq from '@/components/Faq.astro';
@@ -27,11 +27,12 @@ const { data } = service;
 const { Content } = await render(service);
 const cat = categories[data.category];
 const url = new URL(serviceUrl(service), Astro.site).href;
+const shortName = data.title.split(' – ')[0];
 
 const related = [
   ...all.filter((s) => s.id !== service.id && s.data.category === data.category),
   ...all.filter((s) => s.id !== service.id && s.data.category !== data.category),
-].slice(0, 3);
+].slice(0, 4);
 
 const message = `Olá! Vim pelo site e gostaria de um orçamento para: ${data.title}.`;
 
@@ -67,46 +68,55 @@ if (data.faq.length) {
 ---
 
 <BaseLayout title={data.seoTitle} description={data.seoDescription} schema={schema}>
-  <!-- Hero do serviço -->
-  <section class="bg-hero relative overflow-hidden text-white">
-    <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
-    <div class="container-x relative py-12 sm:py-16 lg:py-20">
-      <Breadcrumbs items={[{ label: 'Serviços', href: '/servicos/' }, { label: data.title, href: serviceUrl(service) }]} />
-      <div class="mt-6 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <div class="max-w-3xl">
-          <a href={`/servicos/?area=${data.category}`} class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold tracking-wide text-leaf-200 uppercase backdrop-blur hover:bg-white/20">
-            <Icon name={data.icon} size={14} />
-            {cat.label}
-          </a>
-          <h1 class="mt-4 text-[2rem] leading-tight text-white sm:text-5xl">{data.title}</h1>
-          <p class="mt-4 text-lg leading-relaxed text-white/80">{data.summary}</p>
-        </div>
-        <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
-          <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary" data-track="whatsapp-service">
-            <BrandIcon name="whatsapp" /> Pedir orçamento
-          </a>
-          <a href={`tel:${site.contact.phoneHref}`} class="btn btn-ghost"><Phone size={18} aria-hidden="true" /> Ligar agora</a>
-        </div>
-      </div>
+  <PageHero
+    label={cat.label}
+    title={data.title}
+    lead={data.summary}
+    crumbs={[{ label: 'Serviços', href: '/servicos/' }, { label: shortName, href: serviceUrl(service) }]}
+  >
+    <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+      <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary" data-track="whatsapp-service">
+        <BrandIcon name="whatsapp" class="size-[18px]" /> Pedir orçamento
+      </a>
+      <a href={`tel:${site.contact.phoneHref}`} class="btn btn-secondary"><Phone size={17} aria-hidden="true" /> {site.contact.phoneDisplay}</a>
     </div>
-  </section>
+  </PageHero>
 
   <div class="container-x grid gap-12 py-12 sm:py-16 lg:grid-cols-12 lg:gap-16">
-    <!-- Conteúdo principal -->
     <article class="lg:col-span-8">
       <div class="prose-earth" data-reveal>
         <Content />
       </div>
 
       {
+        data.deliverables.length > 0 && (
+          <section class="mt-14" aria-labelledby="entregas" data-reveal>
+            <p class="label">Escopo</p>
+            <h2 id="entregas" class="mt-3 text-2xl sm:text-3xl">O que está incluído</h2>
+            <ol class="mt-6 border-t border-line">
+              {data.deliverables.map((d, i) => (
+                <li class="flex gap-4 border-b border-line py-4">
+                  <span class="font-mono text-xs leading-6 text-brand-600">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="text-ink/90">{d}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )
+      }
+
+      {
         data.benefits.length > 0 && (
-          <section class="mt-12" aria-labelledby="beneficios">
-            <h2 id="beneficios" class="text-2xl sm:text-3xl" data-reveal>Por que fazer com a EARTH</h2>
-            <div class="mt-6 grid gap-4 sm:grid-cols-2">
-              {data.benefits.map((b, i) => (
-                <div class="card p-5" data-reveal style={`--reveal-delay:${i * 80}ms`}>
-                  <CircleCheck size={22} class="text-leaf-500" aria-hidden="true" />
-                  <h3 class="mt-3 text-base">{b.title}</h3>
+          <section class="mt-14" aria-labelledby="beneficios">
+            <p class="label" data-reveal>Benefícios</p>
+            <h2 id="beneficios" class="mt-3 text-2xl sm:text-3xl" data-reveal>Por que fazer com a EARTH</h2>
+            <div class="mt-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
+              {data.benefits.map((b) => (
+                <div class="bg-white p-5" data-reveal>
+                  <span class="grid size-6 place-items-center rounded bg-leaf-400 text-brand-950">
+                    <Check size={14} stroke-width={3} aria-hidden="true" />
+                  </span>
+                  <h3 class="mt-4 text-lg">{b.title}</h3>
                   <p class="mt-1 text-[15px] leading-relaxed text-muted">{b.text}</p>
                 </div>
               ))}
@@ -116,79 +126,72 @@ if (data.faq.length) {
       }
 
       {
-        data.deliverables.length > 0 && (
-          <section class="mt-12" aria-labelledby="entregas" data-reveal>
-            <h2 id="entregas" class="text-2xl sm:text-3xl">O que está incluído</h2>
-            <ul class="mt-6 space-y-3">
-              {data.deliverables.map((d) => (
-                <li class="flex gap-3 rounded-2xl bg-mist p-4">
-                  <span class="grid size-6 shrink-0 place-items-center rounded-full bg-leaf-400 text-brand-950">
-                    <Check size={14} stroke-width={3} aria-hidden="true" />
-                  </span>
-                  <span class="text-ink/90">{d}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )
-      }
-
-      {
         data.faq.length > 0 && (
-          <section class="mt-12" aria-labelledby="faq" data-reveal>
-            <h2 id="faq" class="text-2xl sm:text-3xl">Perguntas frequentes sobre {data.title.split(' – ')[0]}</h2>
-            <div class="mt-6">
-              <Faq items={data.faq} />
-            </div>
+          <section class="mt-14" aria-labelledby="faq" data-reveal>
+            <p class="label">FAQ</p>
+            <h2 id="faq" class="mt-3 mb-6 text-2xl sm:text-3xl">Perguntas frequentes sobre {shortName}</h2>
+            <Faq items={data.faq} />
           </section>
         )
       }
     </article>
 
-    <!-- Lateral -->
-    <aside class="space-y-6 lg:col-span-4">
-      <div class="lg:sticky lg:top-28 space-y-6">
-        {
-          data.audience.length > 0 && (
-            <div class="card p-6" data-reveal>
-              <p class="flex items-center gap-2 font-bold text-brand-900">
-                <Users size={20} class="text-leaf-500" aria-hidden="true" /> Para quem é
-              </p>
-              <ul class="mt-4 space-y-2.5 text-[15px] text-muted">
-                {data.audience.map((a) => (
-                  <li class="flex gap-2">
-                    <span class="mt-2 size-1.5 shrink-0 rounded-full bg-leaf-400" />
-                    {a}
-                  </li>
-                ))}
-              </ul>
+    <!-- Ficha técnica -->
+    <aside class="lg:col-span-4">
+      <div class="space-y-4 lg:sticky lg:top-28">
+        <div class="panel overflow-hidden" data-reveal>
+          <div class="flex items-center gap-3 border-b border-line bg-mist px-5 py-3">
+            <Icon name={data.icon} size={18} class="text-brand-600" />
+            <span class="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Ficha técnica</span>
+          </div>
+          <dl class="divide-y divide-line text-sm">
+            <div class="flex justify-between gap-4 px-5 py-3"><dt class="text-muted">Área</dt><dd class="text-right font-medium">{cat.label}</dd></div>
+            <div class="flex justify-between gap-4 px-5 py-3"><dt class="text-muted">Atendimento</dt><dd class="text-right font-medium">{site.address.city} e Grande SP</dd></div>
+            <div class="flex justify-between gap-4 px-5 py-3"><dt class="text-muted">Entregáveis</dt><dd class="text-right font-medium">{data.deliverables.length} itens</dd></div>
+            {
+              data.audience.length > 0 && (
+                <div class="px-5 py-3">
+                  <dt class="text-muted">Para quem é</dt>
+                  <dd class="mt-2 space-y-1.5">
+                    {data.audience.map((a) => (
+                      <span class="flex gap-2">
+                        <span class="mt-2 size-1 shrink-0 rounded-full bg-leaf-500" />
+                        {a}
+                      </span>
+                    ))}
+                  </dd>
+                </div>
+              )
+            }
+            <div class="px-5 py-3">
+              <dt class="text-muted">Termos relacionados</dt>
+              <dd class="mt-2 flex flex-wrap gap-1.5">{data.keywords.slice(0, 8).map((k) => <span class="chip">{k}</span>)}</dd>
             </div>
-          )
-        }
-        <div class="relative overflow-hidden rounded-3xl bg-brand-800 p-6 text-white" data-reveal>
-          <div class="absolute -top-10 -right-10 size-32 rounded-full bg-leaf-400/20" aria-hidden="true"></div>
-          <p class="relative text-lg font-bold">Precisa de {data.title.split(' – ')[0]}?</p>
-          <p class="relative mt-2 text-sm text-white/75">Atendemos {site.address.city} e região. Resposta rápida pelo WhatsApp.</p>
-          <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary relative mt-5 w-full">
-            <BrandIcon name="whatsapp" /> Falar com especialista
-          </a>
+          </dl>
+          <div class="border-t border-line p-4">
+            <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary w-full">
+              <BrandIcon name="whatsapp" class="size-[18px]" /> Falar com especialista
+            </a>
+          </div>
         </div>
       </div>
     </aside>
   </div>
 
-  <!-- Relacionados -->
-  <section class="bg-mist py-14 sm:py-20" aria-labelledby="relacionados">
+  <section class="border-t border-line bg-mist py-14 sm:py-20" aria-labelledby="relacionados">
     <div class="container-x">
       <div class="flex items-end justify-between gap-4">
-        <h2 id="relacionados" class="text-2xl sm:text-3xl">Serviços relacionados</h2>
-        <a href="/servicos/" class="hidden items-center gap-1 font-semibold text-brand-600 sm:inline-flex">Ver todos <ArrowRight size={16} aria-hidden="true" /></a>
+        <div>
+          <p class="label">Relacionados</p>
+          <h2 id="relacionados" class="mt-3 text-2xl sm:text-3xl">Outros serviços</h2>
+        </div>
+        <a href="/servicos/" class="hidden items-center gap-1 font-medium text-brand-600 sm:inline-flex">Ver catálogo <ArrowUpRight size={16} aria-hidden="true" /></a>
       </div>
-      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {related.map((s, i) => <ServiceCard service={s} delay={i * 80} />)}
+      <div class="mt-8 border-t border-line">
+        {related.map((s) => <ServiceCard service={s} />)}
       </div>
     </div>
   </section>
 
-  <CtaBanner title={`Fale com a EARTH sobre ${data.title.split(' – ')[0]}`} message={message} />
+  <CtaBanner title={`Fale com a EARTH sobre ${shortName}.`} message={message} />
 </BaseLayout>

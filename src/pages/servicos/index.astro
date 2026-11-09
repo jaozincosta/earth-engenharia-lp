@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import PageHero from '@/components/PageHero.astro';
 import ServiceFilter from '@/components/ServiceFilter.astro';
 import CtaBanner from '@/components/CtaBanner.astro';
-import { site } from '@/config/site';
+import BrandIcon from '@/components/BrandIcon.astro';
+import { site, whatsappUrl } from '@/config/site';
 import { getServices, serviceUrl } from '@/lib/services';
 
 const services = await getServices();
@@ -30,20 +31,20 @@ const breadcrumbSchema = {
 ---
 
 <BaseLayout
-  title="Serviços de Engenharia Ambiental e Segurança do Trabalho"
-  description={`Conheça os serviços da ${site.name}: licenciamento ambiental, PGRS, outorga, estudos ambientais, PGR, LTCAT, treinamentos de NRs, prevenção de incêndio e eSocial SST.`}
+  title="Serviços de Engenharia Ambiental e Segurança do Trabalho em SP"
+  description={`Serviços da ${site.name} em São Paulo: licenciamento CETESB, PGRS, outorga, estudos ambientais, PGR, LTCAT, treinamentos de NRs, AVCB/CLCB e eSocial SST.`}
   schema={[listSchema, breadcrumbSchema]}
 >
-  <section class="bg-hero relative overflow-hidden text-white">
-    <div class="bg-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
-    <div class="container-x relative py-12 sm:py-16 lg:py-20">
-      <Breadcrumbs items={[{ label: 'Serviços', href: '/servicos/' }]} />
-      <h1 class="mt-5 max-w-3xl text-4xl text-white sm:text-5xl">Serviços de engenharia ambiental e segurança do trabalho</h1>
-      <p class="mt-4 max-w-2xl text-lg text-white/80">
-        {site.slogans.partner} Escolha uma área ou busque pelo documento que você precisa.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    label="Catálogo de serviços"
+    title="Serviços de engenharia ambiental e segurança do trabalho"
+    lead={`${site.slogans.partner} Escolha uma área ou busque pelo documento que você precisa.`}
+    crumbs={[{ label: 'Serviços', href: '/servicos/' }]}
+  >
+    <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-primary">
+      <BrandIcon name="whatsapp" class="size-[18px]" /> Não sei qual preciso
+    </a>
+  </PageHero>
 
   <section class="section pt-10 sm:pt-12">
     <div class="container-x">

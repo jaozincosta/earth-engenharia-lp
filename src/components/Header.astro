@@ -1,5 +1,5 @@
 ---
-import { ChevronDown, Menu, X, ArrowRight } from '@lucide/astro';
+import { ChevronDown, Menu, X, ArrowRight, ArrowUpRight } from '@lucide/astro';
 import Logo from './Logo.astro';
 import Icon from './Icon.astro';
 import BrandIcon from './BrandIcon.astro';
@@ -11,59 +11,60 @@ const path = Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<header
-  id="site-header"
-  class="sticky top-0 z-50 border-b border-transparent transition-[border-color,box-shadow] duration-300 data-[scrolled=true]:border-brand-100 data-[scrolled=true]:shadow-[0_8px_30px_-20px_rgb(15_77_46/0.35)]"
->
-  <!-- O blur fica numa camada própria: backdrop-filter no <header> prenderia o menu mobile (position: fixed) dentro dele. -->
-  <div class="absolute inset-0 -z-10 bg-white/80 backdrop-blur-xl" aria-hidden="true"></div>
+<header id="site-header" class="sticky top-0 z-50 border-b border-line bg-white">
   <a
     href="#conteudo"
-    class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:rounded-full focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white"
+    class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white"
     >Pular para o conteúdo</a
   >
-  <div class="container-x flex h-16 items-center justify-between gap-4 lg:h-20">
-    <a href="/" class="shrink-0 text-brand-800" aria-label={`${site.name} — página inicial`}>
-      <Logo class="h-9 w-auto lg:h-10" />
+  <div class="container-x flex h-16 items-center justify-between gap-4 lg:h-[72px]">
+    <a href="/" class="shrink-0" aria-label={`${site.name} — página inicial`}>
+      <Logo class="h-10 w-auto lg:h-11" />
     </a>
 
     <!-- Navegação desktop -->
-    <nav class="hidden items-center gap-1 lg:flex" aria-label="Principal">
+    <nav class="hidden h-full items-stretch lg:flex" aria-label="Principal">
       {
         nav.map((item) =>
           item.href === '/servicos/' ? (
-            <div class="group relative">
+            <div class="group flex items-stretch">
               <a
                 href={item.href}
                 class:list={[
-                  'inline-flex items-center gap-1 rounded-full px-4 py-2 text-[15px] font-medium transition hover:bg-brand-50 hover:text-brand-700',
-                  isActive(item.href) ? 'text-brand-700' : 'text-ink/80',
+                  'inline-flex items-center gap-1 px-4 text-[15px] font-medium transition-colors hover:text-brand-600',
+                  isActive(item.href) ? 'text-brand-600' : 'text-ink/80',
                 ]}
                 aria-haspopup="true"
               >
                 {item.label}
-                <ChevronDown size={16} class="transition group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden="true" />
+                <ChevronDown size={15} class="transition group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden="true" />
               </a>
-              <div class="invisible absolute top-full left-1/2 w-[min(56rem,90vw)] -translate-x-1/2 translate-y-2 pt-3 opacity-0 transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                <div class="glass grid grid-cols-3 gap-6 rounded-3xl p-6">
+              <!-- Mega menu -->
+              <div class="invisible absolute inset-x-0 top-full border-b border-line bg-white opacity-0 shadow-[0_24px_48px_-24px_rgb(10_26_18/0.25)] transition-opacity duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <div class="container-x grid grid-cols-12 gap-8 py-8">
                   {groups.map((g) => (
-                    <div>
-                      <p class="mb-3 text-xs font-bold tracking-wider text-leaf-600 uppercase">{g.label}</p>
-                      <ul class="space-y-1">
+                    <div class="col-span-3">
+                      <p class="label">{g.label}</p>
+                      <ul class="mt-4 space-y-0.5">
                         {g.services.map((s) => (
                           <li>
-                            <a
-                              href={serviceUrl(s)}
-                              class="flex items-start gap-3 rounded-xl p-2 text-sm font-medium text-ink/85 transition hover:bg-brand-50 hover:text-brand-700"
-                            >
-                              <Icon name={s.data.icon} size={18} class="mt-0.5 shrink-0 text-brand-500" />
-                              <span>{s.data.title}</span>
+                            <a href={serviceUrl(s)} class="flex items-center gap-3 rounded-lg px-2 py-2 text-sm text-ink/85 transition-colors hover:bg-mist hover:text-brand-700">
+                              <Icon name={s.data.icon} size={17} class="shrink-0 text-brand-500" />
+                              {s.data.title}
                             </a>
                           </li>
                         ))}
                       </ul>
                     </div>
                   ))}
+                  <a href="/servicos/" class="col-span-3 flex flex-col justify-between rounded-xl bg-brand-950 p-6 text-white">
+                    <span class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">Catálogo</span>
+                    <span>
+                      <span class="block text-lg font-semibold tracking-tight">Ver todos os serviços</span>
+                      <span class="mt-1 block text-sm text-white/60">Filtre por área ou busque pelo documento.</span>
+                    </span>
+                    <ArrowUpRight size={20} class="text-leaf-400" aria-hidden="true" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -71,8 +72,8 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
             <a
               href={item.href}
               class:list={[
-                'rounded-full px-4 py-2 text-[15px] font-medium transition hover:bg-brand-50 hover:text-brand-700',
-                isActive(item.href) ? 'text-brand-700' : 'text-ink/80',
+                'inline-flex items-center px-4 text-[15px] font-medium transition-colors hover:text-brand-600',
+                isActive(item.href) ? 'text-brand-600' : 'text-ink/80',
               ]}
               aria-current={isActive(item.href) ? 'page' : undefined}
             >
@@ -84,19 +85,16 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     </nav>
 
     <div class="flex items-center gap-2">
-      <a
-        href={whatsappUrl()}
-        target="_blank"
-        rel="noopener"
-        class="btn btn-primary hidden min-h-11 px-5 text-sm sm:inline-flex"
-        data-track="whatsapp-header"
-      >
-        <BrandIcon name="whatsapp" class="size-4" /> Fale no WhatsApp
+      <a href={`tel:${site.contact.phoneHref}`} class="hidden px-3 font-mono text-sm text-ink/70 hover:text-brand-600 xl:inline">
+        {site.contact.phoneDisplay}
+      </a>
+      <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-primary hidden min-h-10 px-4 text-sm sm:inline-flex" data-track="whatsapp-header">
+        <BrandIcon name="whatsapp" class="size-4" /> Solicitar orçamento
       </a>
       <button
         type="button"
         id="menu-toggle"
-        class="grid size-11 place-items-center rounded-full border border-brand-100 bg-white text-brand-800 lg:hidden"
+        class="grid size-11 place-items-center rounded-lg border border-line text-ink lg:hidden"
         aria-controls="mobile-menu"
         aria-expanded="false"
         aria-label="Abrir menu"
@@ -108,16 +106,13 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   </div>
 
   <!-- Menu mobile -->
-  <div
-    id="mobile-menu"
-    class="fixed inset-x-0 top-16 bottom-0 hidden overflow-y-auto overscroll-contain bg-white lg:hidden"
-  >
-    <nav class="container-x flex flex-col gap-1 py-6" aria-label="Menu mobile">
+  <div id="mobile-menu" class="fixed inset-x-0 top-16 bottom-0 hidden overflow-y-auto overscroll-contain border-t border-line bg-white lg:hidden">
+    <nav class="container-x flex flex-col py-4" aria-label="Menu mobile">
       {
         nav.map((item) => (
           <a
             href={item.href}
-            class="flex items-center justify-between rounded-2xl px-4 py-3.5 text-lg font-semibold text-brand-900 active:bg-brand-50"
+            class="flex items-center justify-between border-b border-line py-4 text-lg font-medium tracking-tight"
             aria-current={isActive(item.href) ? 'page' : undefined}
           >
             {item.label}
@@ -126,18 +121,15 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
         ))
       }
 
-      <div class="mt-4 space-y-5 rounded-3xl bg-mist p-4">
+      <div class="mt-6 space-y-6">
         {
           groups.map((g) => (
             <div>
-              <p class="mb-1 px-2 text-xs font-bold tracking-wider text-leaf-600 uppercase">{g.label}</p>
-              <ul>
+              <p class="label">{g.label}</p>
+              <ul class="mt-2">
                 {g.services.map((s) => (
                   <li>
-                    <a
-                      href={serviceUrl(s)}
-                      class="flex items-center gap-3 rounded-xl px-2 py-2.5 text-[15px] font-medium text-ink/85 active:bg-white"
-                    >
+                    <a href={serviceUrl(s)} class="flex items-center gap-3 py-2.5 text-[15px] text-ink/85">
                       <Icon name={s.data.icon} size={18} class="shrink-0 text-brand-500" />
                       {s.data.title}
                     </a>
@@ -149,16 +141,16 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
         }
       </div>
 
-      <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-primary mt-6 w-full" data-track="whatsapp-menu">
-        <BrandIcon name="whatsapp" class="size-5" /> Falar no WhatsApp
-      </a>
-      <a href={`tel:${site.contact.phoneHref}`} class="btn btn-outline mt-2 w-full">Ligar: {site.contact.phoneDisplay}</a>
+      <div class="sticky bottom-0 -mx-4 mt-6 border-t border-line bg-white px-4 py-4">
+        <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-primary w-full" data-track="whatsapp-menu">
+          <BrandIcon name="whatsapp" class="size-5" /> Falar no WhatsApp
+        </a>
+      </div>
     </nav>
   </div>
 </header>
 
 <script>
-  const header = document.getElementById('site-header')!;
   const toggle = document.getElementById('menu-toggle')!;
   const menu = document.getElementById('mobile-menu')!;
 
@@ -182,8 +174,4 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
     }
   });
   matchMedia('(min-width: 1024px)').addEventListener('change', (e) => e.matches && setOpen(false));
-
-  const onScroll = () => (header.dataset.scrolled = String(window.scrollY > 8));
-  onScroll();
-  addEventListener('scroll', onScroll, { passive: true });
 </script>
