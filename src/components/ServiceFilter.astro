@@ -28,7 +28,7 @@ const chips = [
             type="button"
             data-filter={c.key}
             aria-pressed={i === 0 ? 'true' : 'false'}
-            class="inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap text-muted transition-colors hover:bg-mist hover:text-ink aria-pressed:bg-ink aria-pressed:text-white"
+            class="inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium whitespace-nowrap text-muted transition-colors hover:bg-white/5 hover:text-ink aria-pressed:bg-leaf-400 aria-pressed:text-brand-950"
           >
             {c.label}
             <span class="font-mono text-[11px] opacity-60">{c.count}</span>
@@ -45,7 +45,7 @@ const chips = [
             type="search"
             data-search-input
             placeholder="Buscar: licença, poço, PGR, NR 35…"
-            class="h-11 w-full rounded-lg border border-line bg-white pr-3 pl-10 text-base text-ink placeholder:text-muted/70 focus:border-brand-500 focus:outline-none"
+            class="h-11 w-full rounded-lg border border-line bg-white/5 pr-3 pl-10 text-base text-ink placeholder:text-muted/80 focus:border-leaf-400 focus:outline-none"
           />
         </label>
       )
@@ -56,7 +56,7 @@ const chips = [
     {services.map((s, i) => <ServiceCard service={s} index={i} as="h2" />)}
   </div>
   <p data-empty class="mt-6 hidden rounded-xl border border-dashed border-line p-6 text-center text-muted">
-    Nenhum serviço encontrado. <a href="/contato/" class="font-medium text-brand-600 underline">Fale com a gente</a> — provavelmente podemos ajudar.
+    Nenhum serviço encontrado. <a href="/contato/" class="font-medium text-accent underline">Fale com a gente</a> — provavelmente podemos ajudar.
   </p>
 </div>
 

@@ -1,25 +1,57 @@
 ---
-/** Cabeçalho das páginas internas: fundo claro com grade técnica. */
+/**
+ * Cabeçalho das páginas internas. Com `image`, vira hero full-bleed com foto,
+ * overlay em gradiente verde escuro e breadcrumb sobreposto.
+ */
+import { Picture } from 'astro:assets';
 import Breadcrumbs from './Breadcrumbs.astro';
+import type { MediaImage } from '@/config/media';
 
 interface Props {
   title: string;
   lead?: string;
   label?: string;
   crumbs: { label: string; href: string }[];
+  image?: MediaImage;
+  /** Dados técnicos exibidos em mono (ex.: normas, órgãos). */
+  tags?: string[];
 }
-const { title, lead, label, crumbs } = Astro.props;
+const { title, lead, label, crumbs, image, tags = [] } = Astro.props;
 ---
 
-<section class="relative overflow-hidden border-b border-line">
-  <div class="bg-grid-light pointer-events-none absolute inset-0" aria-hidden="true"></div>
-  <div class="container-x relative py-12 sm:py-16 lg:py-20">
+<section class="relative isolate overflow-hidden border-b border-line">
+  {
+    image ? (
+      <>
+        <Picture
+          src={image.src}
+          formats={['avif', 'webp']}
+          widths={[480, 768, 1080, 1440, 1920]}
+          sizes="100vw"
+          quality={50}
+          alt={image.alt}
+          loading="eager"
+          fetchpriority="high"
+          class="absolute inset-0 -z-20 size-full object-cover"
+          style={image.position ? `object-position:${image.position}` : undefined}
+        />
+        <div class="overlay-hero absolute inset-0 -z-10" aria-hidden="true" />
+      </>
+    ) : (
+      <>
+        <div class="bg-topo pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+        <div class="bg-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true" />
+      </>
+    )
+  }
+  <div class:list={['container-x relative', image ? 'pt-10 pb-14 sm:pt-14 sm:pb-20 lg:pt-20 lg:pb-28' : 'py-12 sm:py-16 lg:py-20']}>
     <Breadcrumbs items={crumbs} />
-    <div class="mt-8 grid gap-8 lg:grid-cols-12 lg:items-end">
+    <div class:list={['grid gap-8 lg:grid-cols-12 lg:items-end', image ? 'mt-16 sm:mt-24 lg:mt-32' : 'mt-8']}>
       <div class="lg:col-span-8">
         {label && <p class="label">{label}</p>}
-        <h1 class="mt-4 text-4xl leading-[1.05] sm:text-5xl lg:text-6xl" style="letter-spacing:-0.045em">{title}</h1>
-        {lead && <p class="lead mt-5 max-w-2xl">{lead}</p>}
+        <h1 class="mt-4 text-4xl leading-[1.04] sm:text-5xl lg:text-6xl" style="letter-spacing:-0.045em">{title}</h1>
+        {lead && <p class="lead mt-5 max-w-2xl text-ink/80">{lead}</p>}
+        {tags.length > 0 && <ul class="mt-6 flex flex-wrap gap-2">{tags.map((t) => <li class="chip">{t}</li>)}</ul>}
       </div>
       <div class="lg:col-span-4 lg:justify-self-end">
         <slot />

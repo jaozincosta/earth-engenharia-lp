@@ -1,7 +1,9 @@
 ---
+import { Picture } from 'astro:assets';
 import { Phone, ArrowRight } from '@lucide/astro';
 import BrandIcon from './BrandIcon.astro';
 import { site, whatsappUrl } from '@/config/site';
+import { sectionImages } from '@/config/media';
 
 interface Props {
   title?: string;
@@ -13,22 +15,25 @@ const {
   text = 'Fale com um especialista e receba uma orientação inicial sem compromisso. Respondemos rápido pelo WhatsApp.',
   message,
 } = Astro.props;
+const img = sectionImages.cta;
 ---
 
-<section class="relative overflow-hidden bg-brand-950 text-white">
-  <div class="bg-grid-dark pointer-events-none absolute inset-0" aria-hidden="true"></div>
-  <div class="container-x relative grid gap-10 py-16 sm:py-20 lg:grid-cols-12 lg:items-end lg:py-24">
-    <div class="lg:col-span-8" data-reveal>
-      <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">{site.slogans.future}</p>
-      <h2 class="h-section mt-4 text-white">{title}</h2>
-      <p class="mt-4 max-w-xl text-lg text-white/65">{text}</p>
+<section class="relative isolate overflow-hidden border-y border-line" aria-label="Solicitar orçamento">
+  <Picture src={img.src} formats={['avif', 'webp']} widths={[640, 1280, 1920]} sizes="100vw" alt="" class="absolute inset-0 -z-20 size-full object-cover" />
+  <div class="overlay-full absolute inset-0 -z-10" aria-hidden="true"></div>
+  <div class="bg-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+  <div class="container-x grid gap-10 py-20 sm:py-24 lg:grid-cols-12 lg:items-end lg:py-32">
+    <div class="lg:col-span-7" data-reveal>
+      <p class="label">{site.slogans.future}</p>
+      <h2 class="h-section mt-4">{title}</h2>
+      <p class="mt-4 max-w-xl text-lg text-ink/80">{text}</p>
     </div>
-    <div class="flex flex-col gap-3 lg:col-span-4" data-reveal>
-      <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-accent justify-between" data-track="whatsapp-cta">
-        <span class="inline-flex items-center gap-2"><BrandIcon name="whatsapp" /> Chamar no WhatsApp</span>
+    <div class="glow flex flex-col gap-3 lg:col-span-5 lg:pl-10" data-reveal>
+      <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-whatsapp min-h-14 justify-between px-6 text-base" data-track="whatsapp-cta">
+        <span class="inline-flex items-center gap-2"><BrandIcon name="whatsapp" class="size-6" /> Chamar no WhatsApp</span>
         <ArrowRight size={18} aria-hidden="true" />
       </a>
-      <a href={`tel:${site.contact.phoneHref}`} class="btn btn-on-dark justify-between">
+      <a href={`tel:${site.contact.phoneHref}`} class="btn btn-secondary min-h-14 justify-between px-6">
         <span class="inline-flex items-center gap-2"><Phone size={18} aria-hidden="true" /> {site.contact.phoneDisplay}</span>
         <ArrowRight size={18} aria-hidden="true" />
       </a>

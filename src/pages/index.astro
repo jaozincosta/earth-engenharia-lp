@@ -3,26 +3,26 @@ import { Picture, getImage } from 'astro:assets';
 import { ArrowRight, ArrowUpRight, Leaf, Scale, HeartHandshake, SlidersHorizontal, Search, ClipboardList, Wrench, ShieldCheck, Phone } from '@lucide/astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import BrandIcon from '@/components/BrandIcon.astro';
+import Icon from '@/components/Icon.astro';
 import ServiceGridCard from '@/components/ServiceGridCard.astro';
 import Faq from '@/components/Faq.astro';
 import CtaBanner from '@/components/CtaBanner.astro';
 import { pillars, site, whatsappUrl } from '@/config/site';
-import { getServices } from '@/lib/services';
+import { heroVideo, sectionImages } from '@/config/media';
+import { getServices, serviceUrl } from '@/lib/services';
 import { faqPage } from '@/lib/schema';
-import heroImg from '@/assets/fotos/equipe-campo.jpg';
 
 const services = await getServices();
+const heroChips = ['licenciamento-ambiental', 'outorga-de-uso-de-agua', 'pgr-engenharia-seguranca-do-trabalho', 'cursos-nr-33-e-nr-35']
+  .map((slug) => services.find((s) => s.id === slug))
+  .filter((s) => s !== undefined);
 
-// Imagem do hero (LCP): mesmos parâmetros no <Picture> e no preload.
-const heroWidths = [400, 640, 900, 1200];
-const heroSizes = '(min-width: 1024px) 45vw, 100vw';
-const heroAvif = await getImage({ src: heroImg, format: 'avif', widths: heroWidths });
-const preloadImage = {
-  src: heroAvif.src,
-  srcset: heroAvif.srcSet.attribute,
-  sizes: heroSizes,
-  type: 'image/avif',
-};
+// Poster do vídeo = elemento LCP: mesmos parâmetros no <Picture> e no preload.
+const heroWidths = [480, 768, 1080, 1440, 1920];
+const heroQuality = 50; // imagem fica sob overlay escuro: qualidade menor sem perda visível
+const heroSizes = '100vw';
+const heroAvif = await getImage({ src: heroVideo.poster.src, format: 'avif', widths: heroWidths, quality: heroQuality });
+const preloadImage = { src: heroAvif.src, srcset: heroAvif.srcSet.attribute, sizes: heroSizes, type: 'image/avif' };
 
 const pillarIcons = [Leaf, Scale, HeartHandshake, SlidersHorizontal];
 const pillarTexts = [
@@ -77,54 +77,67 @@ const faq = [
   schema={[faqPage(faq)]}
   preloadImage={preloadImage}
 >
-  <!-- 1. HERO -->
-  <section class="relative overflow-hidden border-b border-line" aria-labelledby="hero-title">
-    <div class="bg-grid-light pointer-events-none absolute inset-0" aria-hidden="true"></div>
-    <div class="container-x relative grid items-center gap-10 pt-10 pb-14 sm:pt-14 lg:grid-cols-12 lg:gap-12 lg:pt-20 lg:pb-24">
-      <div class="lg:col-span-6">
+  <!-- 1. HERO com vídeo -->
+  <section class="relative isolate flex min-h-[90vh] flex-col justify-end overflow-hidden" aria-labelledby="hero-title">
+    <Picture
+      src={heroVideo.poster.src}
+      formats={['avif', 'webp']}
+      widths={heroWidths}
+      sizes={heroSizes}
+      quality={heroQuality}
+      alt={heroVideo.poster.alt}
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 -z-30 size-full object-cover"
+    />
+    <!-- Vídeo: inserido via JS após o carregamento, só em telas ≥ 768px, sem reduced-motion e sem economia de dados -->
+    <div class="absolute inset-0 -z-20" data-hero-video data-webm={heroVideo.webm} data-mp4={heroVideo.mp4} aria-hidden="true"></div>
+    <div class="overlay-hero absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-60" aria-hidden="true"></div>
+
+    <div class="container-x relative pt-24 pb-10 sm:pt-32 lg:pt-40">
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
         <p class="label">Consultoria ambiental · {site.address.city}/{site.address.state}</p>
-        <h1 id="hero-title" class="h-display mt-5">Engenharia Ambiental e Segurança do Trabalho em São Paulo</h1>
-        <p class="lead mt-6 max-w-xl">{site.slogans.main}. {site.slogans.partner}</p>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="/contato/#orcamento" class="btn btn-primary">Solicitar orçamento <ArrowRight size={17} aria-hidden="true" /></a>
-          <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-secondary" data-track="whatsapp-hero">
-            <BrandIcon name="whatsapp" class="size-[18px] text-[#1da851]" /> Falar no WhatsApp
-          </a>
-        </div>
+        <p class="tech hidden sm:block">23°33′S · 46°38′W</p>
       </div>
-      <div class="relative lg:col-span-6">
-        <div class="relative overflow-hidden rounded-xl border border-line">
-          <Picture
-            src={heroImg}
-            formats={['avif', 'webp']}
-            widths={heroWidths}
-            sizes={heroSizes}
-            alt="Profissional da EARTH Engenharia em vistoria de campo para licenciamento ambiental em São Paulo"
-            loading="eager"
-            fetchpriority="high"
-            class="aspect-[4/3] w-full object-cover"
-          />
-        </div>
-        <div class="panel absolute right-3 -bottom-5 left-3 flex flex-wrap items-center gap-x-4 gap-y-1 px-4 py-3 shadow-[0_16px_32px_-20px_rgb(10_26_18/0.4)] sm:right-auto sm:left-6">
-          <span class="font-mono text-[10px] tracking-[0.14em] text-muted uppercase">Áreas</span>
-          <span class="text-sm font-medium">Meio Ambiente</span>
-          <span class="text-sm font-medium">Segurança do Trabalho</span>
-          <span class="text-sm font-medium">Treinamentos</span>
-        </div>
+      <h1 id="hero-title" class="h-display mt-6 max-w-4xl">Engenharia Ambiental e Segurança do Trabalho em São Paulo</h1>
+      <p class="lead mt-6 max-w-2xl text-ink/85">{site.slogans.main}. {site.slogans.partner}</p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <a href="/contato/#orcamento" class="btn btn-primary min-h-13 px-6">Solicitar orçamento <ArrowRight size={17} aria-hidden="true" /></a>
+        <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-secondary min-h-13 px-6" data-track="whatsapp-hero">
+          <BrandIcon name="whatsapp" class="size-[18px] text-[#25D366]" /> Falar no WhatsApp
+        </a>
+      </div>
+
+      <!-- Faixa glass com serviços -->
+      <nav class="glass mt-14 grid grid-cols-2 gap-px overflow-hidden p-0 lg:grid-cols-4" aria-label="Serviços em destaque">
+        {
+          heroChips.map((s) => (
+            <a href={serviceUrl(s)} class="group flex items-center gap-3 px-4 py-4 transition-colors hover:bg-white/[0.06] sm:px-5">
+              <Icon name={s.data.icon} size={20} class="shrink-0 text-leaf-400" />
+              <span class="min-w-0 flex-1 text-sm leading-snug font-medium">{s.data.title}</span>
+              <ArrowUpRight size={16} class="hidden shrink-0 text-ink/50 transition-colors group-hover:text-leaf-300 sm:block" aria-hidden="true" />
+            </a>
+          ))
+        }
+      </nav>
+      <div class="mt-4 flex justify-between">
+        <p class="tech">CETESB · SP Águas · NR 1 · NR 33 · NR 35</p>
+        <p class="tech hidden items-center gap-2 sm:flex"><span class="pulse-dot size-1.5 rounded-full bg-leaf-400"></span>Monitoramento contínuo</p>
       </div>
     </div>
   </section>
 
   <!-- 2. PILARES -->
-  <section aria-label="Pilares da EARTH Engenharia" class="border-b border-line">
+  <section aria-label="Pilares da EARTH Engenharia" class="border-y border-line bg-panel">
     <ul class="container-x grid grid-cols-2 lg:grid-cols-4">
       {
         pillars.map((p, i) => {
           const Ico = pillarIcons[i];
           return (
-            <li class:list={['py-7 pr-3 sm:py-9', i % 2 === 1 && 'border-l border-line pl-4 sm:pl-6', i >= 2 && 'border-t border-line lg:border-t-0', i === 2 && 'lg:border-l lg:pl-6']}>
-              <Ico size={22} class="text-brand-500" aria-hidden="true" />
-              <p class="mt-3 font-semibold tracking-tight">{p}</p>
+            <li class:list={['py-8 pr-3 sm:py-10', i % 2 === 1 && 'border-l border-line pl-4 sm:pl-6', i >= 2 && 'border-t border-line lg:border-t-0', i === 2 && 'lg:border-l lg:pl-6']} data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <Ico size={26} class="text-leaf-400 drop-shadow-[0_0_10px_rgb(122_201_67/0.7)]" aria-hidden="true" />
+              <p class="mt-4 font-semibold tracking-tight">{p}</p>
               <p class="mt-1 text-sm leading-relaxed text-muted">{pillarTexts[i]}</p>
             </li>
           );
@@ -134,7 +147,8 @@ const faq = [
   </section>
 
   <!-- 3. SERVIÇOS -->
-  <section id="servicos" class="section" aria-labelledby="servicos-title">
+  <section id="servicos" class="section relative isolate" aria-labelledby="servicos-title">
+    <div class="bg-topo pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
     <div class="container-x">
       <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div class="max-w-2xl">
@@ -144,83 +158,108 @@ const faq = [
         </div>
         <a href="/servicos/" class="btn btn-secondary self-start lg:self-auto">Ver todos os serviços <ArrowUpRight size={17} aria-hidden="true" /></a>
       </div>
-      <ul class="mt-10 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {services.map((s, i) => <ServiceGridCard service={s} index={i} />)}
       </ul>
     </div>
   </section>
 
-  <!-- 4. COMO TRABALHAMOS -->
-  <section class="section bg-mist" aria-labelledby="proc-title">
+  <!-- 4. COMO TRABALHAMOS — linha do tempo que acende no scroll -->
+  <section class="section relative border-y border-line bg-panel" aria-labelledby="proc-title" data-timeline>
     <div class="container-x">
       <div class="max-w-2xl">
         <p class="label">Como trabalhamos</p>
         <h2 id="proc-title" class="h-section mt-4">Do diagnóstico à conformidade, em 4 etapas</h2>
       </div>
-      <ol class="mt-12 grid border-t border-line sm:grid-cols-2 lg:grid-cols-4">
-        {
-          steps.map((s, i) => (
-            <li class:list={['border-b border-line py-8 sm:pr-6', i % 2 === 1 && 'sm:border-l sm:pl-6', i >= 1 && 'lg:border-l lg:pl-6']} data-reveal style={`--reveal-delay:${i * 80}ms`}>
-              <span class="flex items-center justify-between">
-                <span class="font-mono text-xs text-brand-600">Etapa 0{i + 1}</span>
-                <s.icon size={20} class="text-brand-500" aria-hidden="true" />
-              </span>
-              <h3 class="mt-4 text-xl">{s.title}</h3>
-              <p class="mt-2 text-muted">{s.text}</p>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
-
-  <!-- 5. SOBRE RESUMIDO -->
-  <section class="section" aria-labelledby="sobre-title">
-    <div class="container-x grid gap-10 lg:grid-cols-12">
-      <div class="lg:col-span-4">
-        <p class="label">Sobre a EARTH</p>
-        <h2 id="sobre-title" class="h-section mt-4">{site.slogans.signature}</h2>
-        <a href="/sobre/" class="btn btn-secondary mt-8">Conheça a empresa <ArrowUpRight size={17} aria-hidden="true" /></a>
-      </div>
-      <div class="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:col-span-8">
-        <div class="bg-white p-6 sm:p-8">
-          <h3 class="font-mono text-xs font-medium tracking-[0.14em] text-brand-600 uppercase">Missão</h3>
-          <p class="mt-4 text-lg leading-relaxed">{site.institutional.mission}</p>
+      <div class="relative mt-14">
+        <!-- trilho + preenchimento (horizontal no desktop, vertical no mobile) -->
+        <div class="absolute top-0 bottom-0 left-[19px] w-px bg-line lg:top-[19px] lg:right-0 lg:bottom-auto lg:left-0 lg:h-px lg:w-auto" aria-hidden="true">
+          <div class="h-[calc(var(--progress,1)*100%)] w-full bg-leaf-400 shadow-[0_0_12px_rgb(122_201_67/0.9)] lg:h-full lg:w-[calc(var(--progress,1)*100%)]" data-timeline-fill></div>
         </div>
-        <div class="bg-white p-6 sm:p-8">
-          <h3 class="font-mono text-xs font-medium tracking-[0.14em] text-brand-600 uppercase">Visão</h3>
-          <p class="mt-4 text-lg leading-relaxed">{site.institutional.vision}</p>
-        </div>
+        <ol class="grid gap-10 lg:grid-cols-4 lg:gap-8">
+          {
+            steps.map((s, i) => (
+              <li class="relative pl-14 lg:pt-14 lg:pl-0" data-step={i}>
+                <span class="absolute top-0 left-0 grid size-10 place-items-center rounded-full border border-line bg-surface text-muted transition duration-500 data-[on=true]:border-leaf-400 data-[on=true]:text-leaf-400 data-[on=true]:shadow-[0_0_20px_rgb(122_201_67/0.6)]" data-step-dot>
+                  <s.icon size={18} aria-hidden="true" />
+                </span>
+                <span class="tech text-accent">Etapa 0{i + 1}</span>
+                <h3 class="mt-2 text-xl">{s.title}</h3>
+                <p class="mt-2 text-muted">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
       </div>
     </div>
   </section>
 
-  <!-- 6. DIFERENCIAIS / NÚMEROS (placeholders editáveis em src/config/site.ts) -->
-  <section class="border-y border-line bg-mist" aria-labelledby="dif-title">
+  <!-- 5. SOBRE RESUMIDO — foto grande + texto -->
+  <section class="relative grid lg:grid-cols-2" aria-labelledby="sobre-title">
+    <div class="relative min-h-[320px] overflow-hidden sm:min-h-[420px]">
+      <Picture
+        src={sectionImages.natureza.src}
+        formats={['avif', 'webp']}
+        widths={[640, 960, 1280]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        alt={sectionImages.natureza.alt}
+        class="absolute inset-0 size-full object-cover"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-surface/80 via-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-surface" aria-hidden="true"></div>
+      <p class="tech absolute bottom-4 left-4 text-ink/80">Mata Atlântica · Bioma protegido</p>
+    </div>
+    <div class="container-x flex flex-col justify-center py-16 lg:mx-0 lg:max-w-none lg:px-16 lg:py-24">
+      <p class="label">Sobre a EARTH</p>
+      <h2 id="sobre-title" class="h-section mt-4">{site.slogans.signature}</h2>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2">
+        <div class="glass p-6">
+          <h3 class="tech text-accent">Missão</h3>
+          <p class="mt-3 leading-relaxed">{site.institutional.mission}</p>
+        </div>
+        <div class="glass p-6">
+          <h3 class="tech text-accent">Visão</h3>
+          <p class="mt-3 leading-relaxed">{site.institutional.vision}</p>
+        </div>
+      </div>
+      <a href="/sobre/" class="btn btn-secondary mt-8 self-start">Conheça a empresa <ArrowUpRight size={17} aria-hidden="true" /></a>
+    </div>
+  </section>
+
+  <!-- 6. DIFERENCIAIS / NÚMEROS sobre foto aérea (placeholders editáveis em src/config/site.ts) -->
+  <section class="relative isolate overflow-hidden border-y border-line" aria-labelledby="dif-title">
+    <Picture
+      src={sectionImages.aerea.src}
+      formats={['avif', 'webp']}
+      widths={[640, 1280, 1920]}
+      sizes="100vw"
+      alt={sectionImages.aerea.alt}
+      class="absolute inset-0 -z-20 size-full object-cover"
+    />
+    <div class="overlay-full absolute inset-0 -z-10" aria-hidden="true"></div>
     <div class="container-x section">
       <div class="max-w-2xl">
         <p class="label">Diferenciais</p>
         <h2 id="dif-title" class="h-section mt-4">Por que escolher a EARTH</h2>
       </div>
-      <dl class="mt-10 grid grid-cols-2 border-t border-line lg:grid-cols-4">
+      <dl class="mt-12 grid grid-cols-2 gap-4 lg:grid-cols-4">
         {
-          site.stats.map((s, i) => (
-            <div class:list={['border-b border-line py-6 pr-3', i % 2 === 1 && 'border-l pl-4 sm:pl-6', i === 2 && 'lg:border-l lg:pl-6']}>
+          site.stats.map((s) => (
+            <div class="glass p-5 sm:p-6">
               <dt class="sr-only">{s.label}</dt>
               <dd>
-                <span class="block text-4xl font-semibold tracking-tight">{s.value}</span>
-                <span class="mt-1 block text-sm text-muted">{s.label}</span>
+                <span class="block text-4xl font-semibold tracking-tight text-leaf-400 drop-shadow-[0_0_18px_rgb(122_201_67/0.45)] sm:text-5xl" data-count={s.value}>{s.value}</span>
+                <span class="mt-2 block text-sm text-ink/80">{s.label}</span>
               </dd>
             </div>
           ))
         }
       </dl>
-      <ul class="mt-8 grid gap-4 md:grid-cols-3">
+      <ul class="mt-4 grid gap-4 md:grid-cols-3">
         {
           site.differentials.map((d) => (
-            <li class="panel p-6">
+            <li class="glass p-6">
               <h3 class="text-lg">{d.title}</h3>
-              <p class="mt-2 text-muted">{d.text}</p>
+              <p class="mt-2 text-ink/75">{d.text}</p>
             </li>
           ))
         }
@@ -228,14 +267,14 @@ const faq = [
     </div>
   </section>
 
-  <!-- 7. FAQ -->
-  <section class="section" aria-labelledby="faq-title">
+  <!-- 7. FAQ (seção clara pontual) -->
+  <section class="theme-light section" aria-labelledby="faq-title">
     <div class="container-x grid gap-10 lg:grid-cols-12">
       <div class="lg:col-span-4">
         <p class="label">FAQ</p>
         <h2 id="faq-title" class="h-section mt-4">Perguntas frequentes</h2>
         <p class="mt-4 text-muted">
-          Não encontrou sua resposta? <a href="/contato/" class="font-medium text-brand-600 underline decoration-leaf-400 underline-offset-4">Fale com a gente</a>.
+          Não encontrou sua resposta? <a href="/contato/" class="font-medium text-accent underline decoration-leaf-500 underline-offset-4">Fale com a gente</a>.
         </p>
       </div>
       <div class="lg:col-span-8">
@@ -246,13 +285,84 @@ const faq = [
 
   <!-- 8. CTA FINAL + CONTATO -->
   <CtaBanner />
-  <section class="border-b border-line" aria-label="Contato rápido">
+  <section class="bg-panel" aria-label="Contato rápido">
     <div class="container-x flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
       <p class="font-medium">{site.name} · {site.address.city}/{site.address.state}</p>
       <div class="flex flex-wrap gap-x-6 gap-y-2 font-mono text-sm">
-        <a href={`tel:${site.contact.phoneHref}`} class="inline-flex items-center gap-2 hover:text-brand-600"><Phone size={15} aria-hidden="true" />{site.contact.phoneDisplay}</a>
-        <a href="/contato/" class="inline-flex items-center gap-2 hover:text-brand-600">Formulário de contato <ArrowRight size={15} aria-hidden="true" /></a>
+        <a href={`tel:${site.contact.phoneHref}`} class="inline-flex items-center gap-2 hover:text-leaf-300"><Phone size={15} aria-hidden="true" />{site.contact.phoneDisplay}</a>
+        <a href="/contato/" class="inline-flex items-center gap-2 hover:text-leaf-300">Formulário de contato <ArrowRight size={15} aria-hidden="true" /></a>
       </div>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // ── Vídeo do hero: só depois do load, em telas ≥ 768px, sem reduced-motion e sem economia de dados ──
+  const slot = document.querySelector<HTMLElement>('[data-hero-video]');
+  const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
+  const canPlay =
+    slot &&
+    matchMedia('(min-width: 768px)').matches &&
+    !matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !conn?.saveData;
+  const startVideo = () => {
+    if (!slot) return;
+    const v = document.createElement('video');
+    Object.assign(v, { muted: true, loop: true, playsInline: true, autoplay: true, preload: 'auto' });
+    v.setAttribute('muted', '');
+    v.setAttribute('playsinline', '');
+    v.className = 'size-full object-cover opacity-0 transition-opacity duration-1000';
+    for (const [src, type] of [[slot.dataset.webm!, 'video/webm'], [slot.dataset.mp4!, 'video/mp4']]) {
+      const s = document.createElement('source');
+      s.src = src;
+      s.type = type;
+      v.appendChild(s);
+    }
+    v.addEventListener('playing', () => v.classList.remove('opacity-0'), { once: true });
+    slot.appendChild(v);
+    v.play().catch(() => {});
+  };
+  if (canPlay) {
+    const later = () => ('requestIdleCallback' in window ? requestIdleCallback(startVideo, { timeout: 2500 }) : setTimeout(startVideo, 1200));
+    document.readyState === 'complete' ? later() : addEventListener('load', later, { once: true });
+  }
+
+  // ── Linha do tempo que acende conforme a rolagem ──
+  const tl = document.querySelector<HTMLElement>('[data-timeline]');
+  const fill = tl?.querySelector<HTMLElement>('[data-timeline-fill]');
+  const dots = tl ? [...tl.querySelectorAll<HTMLElement>('[data-step-dot]')] : [];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (tl && fill) {
+    const update = () => {
+      const r = tl.getBoundingClientRect();
+      const p = reduce ? 1 : Math.min(1, Math.max(0, (innerHeight * 0.75 - r.top) / (r.height * 0.6)));
+      tl.style.setProperty('--progress', p.toFixed(3));
+      dots.forEach((d, i) => (d.dataset.on = String(p >= i / dots.length + 0.05 || p === 1)));
+    };
+    update();
+    addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update, { passive: true });
+  }
+
+  // ── Contadores (só animam valores numéricos; placeholders como "[00]" ficam como estão) ──
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      io.unobserve(e.target);
+      const el = e.target as HTMLElement;
+      const m = (el.dataset.count ?? '').match(/^(\D*)(\d+(?:[.,]\d+)?)(.*)$/);
+      if (!m || reduce) continue;
+      const target = parseFloat(m[2].replace(',', '.'));
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / 1400);
+        const val = target * (1 - Math.pow(1 - k, 3));
+        el.textContent = `${m[1]}${Number.isInteger(target) ? Math.round(val) : val.toFixed(1)}${m[3]}`;
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  });
+  counters.forEach((c) => io.observe(c));
+</script>

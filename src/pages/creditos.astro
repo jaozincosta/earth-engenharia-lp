@@ -1,0 +1,35 @@
+---
+/** Créditos e licenças das imagens e do vídeo (exigido pelas licenças Creative Commons). */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHero from '@/components/PageHero.astro';
+import credits from '@/data/media-credits.json';
+
+const crumbs = [{ label: 'Créditos de imagens', href: '/creditos/' }];
+const licenseUrl = (lic: string) => {
+  const m = lic.match(/^CC (BY(?:-SA)?) (\d\.\d)/);
+  return m ? `https://creativecommons.org/licenses/${m[1].toLowerCase()}/${m[2]}/deed.pt-br` : null;
+};
+---
+
+<BaseLayout title="Créditos de imagens | EARTH Engenharia" description="Créditos e licenças das fotografias e do vídeo usados no site da EARTH Engenharia." noindex breadcrumbs={crumbs}>
+  <PageHero label="Licenças" title="Créditos de imagens" lead="Fotografias e vídeo obtidos no Wikimedia Commons, com licenças que permitem uso comercial." crumbs={crumbs} />
+  <section class="container-x py-12 sm:py-16">
+    <ul class="divide-y divide-line border-y border-line">
+      {
+        Object.entries(credits).map(([key, c]) => {
+          const lu = licenseUrl(c.license);
+          return (
+            <li class="grid gap-1 py-4 sm:grid-cols-[16rem_1fr] sm:gap-6">
+              <span class="tech">{key}</span>
+              <span class="text-sm">
+                <a href={c.source} class="font-medium text-accent underline underline-offset-4" target="_blank" rel="noopener">{c.title}</a>
+                <span class="text-muted"> — {c.author} · {lu ? <a href={lu} class="underline" target="_blank" rel="noopener license">{c.license}</a> : c.license}</span>
+              </span>
+            </li>
+          );
+        })
+      }
+    </ul>
+    <p class="mt-6 text-sm text-muted">Imagens redimensionadas e recortadas para o site; o vídeo do topo é um trecho recodificado do original, distribuído sob a mesma licença (CC BY-SA 4.0).</p>
+  </section>
+</BaseLayout>

@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero.astro';
 import BrandIcon from '@/components/BrandIcon.astro';
 import { filled, site, whatsappUrl } from '@/config/site';
 import { getServices } from '@/lib/services';
+import { sectionImages } from '@/config/media';
 
 const services = await getServices();
 const { contact: c, address: a, form } = site;
@@ -31,7 +32,7 @@ const contactPage = {
 };
 
 const field =
-  'mt-1.5 h-12 w-full rounded-lg border border-line bg-white px-3.5 text-base focus:border-brand-500 focus:outline-none aria-[invalid=true]:border-red-600';
+  'mt-1.5 h-12 w-full rounded-lg border border-line bg-panel px-3.5 text-base focus:border-leaf-400 focus:outline-none aria-[invalid=true]:border-danger';
 ---
 
 <BaseLayout
@@ -40,39 +41,39 @@ const field =
   schema={[contactPage]}
   breadcrumbs={crumbs}
 >
-  <PageHero label="Contato" title="Fale com a EARTH Engenharia" lead="Conte o que sua empresa precisa. O jeito mais rápido é pelo WhatsApp." crumbs={crumbs} />
+  <PageHero label="Contato" title="Fale com a EARTH Engenharia" lead="Conte o que sua empresa precisa. O jeito mais rápido é pelo WhatsApp." crumbs={crumbs} image={sectionImages.saoPaulo} />
 
   <section class="section pt-10 sm:pt-14" aria-label="Canais de contato e formulário">
     <div class="container-x grid gap-10 lg:grid-cols-12">
       <!-- Canais (NAP) -->
       <div class="space-y-6 lg:col-span-5">
         <div class="panel divide-y divide-line overflow-hidden">
-          <a href={whatsappUrl()} target="_blank" rel="noopener" class="group flex items-center gap-4 p-5 transition-colors hover:bg-mist" data-track="whatsapp-contato">
+          <a href={whatsappUrl()} target="_blank" rel="noopener" class="group flex items-center gap-4 p-5 transition-colors hover:bg-white/[0.04]" data-track="whatsapp-contato">
             <span class="grid size-11 shrink-0 place-items-center rounded-lg bg-[#25D366] text-white"><BrandIcon name="whatsapp" class="size-6" /></span>
             <span class="flex-1"><span class="block font-semibold">WhatsApp</span><span class="font-mono text-sm text-muted">{c.phoneDisplay}</span></span>
-            <ArrowUpRight size={18} class="text-brand-400 group-hover:text-brand-600" aria-hidden="true" />
+            <ArrowUpRight size={18} class="text-leaf-400 group-hover:text-leaf-300" aria-hidden="true" />
           </a>
-          <a href={`tel:${c.phoneHref}`} class="group flex items-center gap-4 p-5 transition-colors hover:bg-mist">
-            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-brand-600"><Phone size={20} aria-hidden="true" /></span>
+          <a href={`tel:${c.phoneHref}`} class="group flex items-center gap-4 p-5 transition-colors hover:bg-white/[0.04]">
+            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-leaf-400"><Phone size={20} aria-hidden="true" /></span>
             <span class="flex-1"><span class="block font-semibold">Telefone</span><span class="font-mono text-sm text-muted">{c.phoneDisplay}</span></span>
-            <ArrowUpRight size={18} class="text-brand-400 group-hover:text-brand-600" aria-hidden="true" />
+            <ArrowUpRight size={18} class="text-leaf-400 group-hover:text-leaf-300" aria-hidden="true" />
           </a>
           <div class="flex items-center gap-4 p-5">
-            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-brand-600"><Mail size={20} aria-hidden="true" /></span>
+            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-leaf-400"><Mail size={20} aria-hidden="true" /></span>
             <span class="min-w-0 flex-1">
               <span class="block font-semibold">E-mail</span>
-              {filled(c.email) ? <a href={`mailto:${c.email}`} class="block font-mono text-sm break-all text-muted hover:text-brand-600">{c.email}</a> : <span class="font-mono text-sm text-muted">{c.email}</span>}
+              {filled(c.email) ? <a href={`mailto:${c.email}`} class="block font-mono text-sm break-all text-muted hover:text-leaf-400">{c.email}</a> : <span class="font-mono text-sm text-muted">{c.email}</span>}
             </span>
           </div>
           <div class="flex items-start gap-4 p-5">
-            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-brand-600"><MapPin size={20} aria-hidden="true" /></span>
+            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-leaf-400"><MapPin size={20} aria-hidden="true" /></span>
             <address class="text-sm not-italic">
               <span class="block text-base font-semibold">{site.name}</span>
               <span class="text-muted">{a.street} – {a.district}<br />{a.city}/{a.state} · {a.postalCode}</span>
             </address>
           </div>
-          <div class="flex items-center gap-3 bg-mist px-5 py-4 text-sm text-muted">
-            <Clock size={16} class="text-brand-500" aria-hidden="true" /> {site.hours.label}
+          <div class="flex items-center gap-3 bg-panel px-5 py-4 text-sm text-muted">
+            <Clock size={16} class="text-leaf-400" aria-hidden="true" /> {site.hours.label}
           </div>
         </div>
 
@@ -109,7 +110,7 @@ const field =
             <label class="block">
               <span class="text-sm font-medium">Nome *</span>
               <input name="nome" required minlength="2" autocomplete="name" class={field} aria-describedby="erro-nome" />
-              <span id="erro-nome" class="mt-1 hidden text-sm text-red-700" data-error>Informe seu nome.</span>
+              <span id="erro-nome" class="mt-1 hidden text-sm text-danger" data-error>Informe seu nome.</span>
             </label>
             <label class="block">
               <span class="text-sm font-medium">Empresa</span>
@@ -120,12 +121,12 @@ const field =
             <label class="block">
               <span class="text-sm font-medium">E-mail *</span>
               <input name="email" type="email" required autocomplete="email" class={field} aria-describedby="erro-email" />
-              <span id="erro-email" class="mt-1 hidden text-sm text-red-700" data-error>Informe um e-mail válido.</span>
+              <span id="erro-email" class="mt-1 hidden text-sm text-danger" data-error>Informe um e-mail válido.</span>
             </label>
             <label class="block">
               <span class="text-sm font-medium">Telefone / WhatsApp *</span>
               <input name="telefone" type="tel" required inputmode="tel" pattern="[0-9()+\s-]{10,}" autocomplete="tel" class={field} aria-describedby="erro-tel" />
-              <span id="erro-tel" class="mt-1 hidden text-sm text-red-700" data-error>Informe um telefone com DDD.</span>
+              <span id="erro-tel" class="mt-1 hidden text-sm text-danger" data-error>Informe um telefone com DDD.</span>
             </label>
           </div>
           <label class="block">
@@ -135,23 +136,23 @@ const field =
               {services.map((s) => <option value={s.data.title} data-slug={s.id}>{s.data.title}</option>)}
               <option value="Outro / não sei">Outro / não sei qual preciso</option>
             </select>
-            <span id="erro-servico" class="mt-1 hidden text-sm text-red-700" data-error>Selecione um serviço.</span>
+            <span id="erro-servico" class="mt-1 hidden text-sm text-danger" data-error>Selecione um serviço.</span>
           </label>
           <label class="block">
             <span class="text-sm font-medium">Mensagem *</span>
-            <textarea name="mensagem" required minlength="10" rows="4" class="mt-1.5 w-full rounded-lg border border-line bg-white p-3.5 text-base focus:border-brand-500 focus:outline-none aria-[invalid=true]:border-red-600" placeholder="Conte um pouco sobre a sua atividade e a sua necessidade" aria-describedby="erro-msg"></textarea>
-            <span id="erro-msg" class="mt-1 hidden text-sm text-red-700" data-error>Escreva uma mensagem (mínimo de 10 caracteres).</span>
+            <textarea name="mensagem" required minlength="10" rows="4" class="mt-1.5 w-full rounded-lg border border-line bg-panel p-3.5 text-base focus:border-leaf-400 focus:outline-none aria-[invalid=true]:border-danger" placeholder="Conte um pouco sobre a sua atividade e a sua necessidade" aria-describedby="erro-msg"></textarea>
+            <span id="erro-msg" class="mt-1 hidden text-sm text-danger" data-error>Escreva uma mensagem (mínimo de 10 caracteres).</span>
           </label>
 
-          <div class="rounded-lg border border-line bg-mist p-4">
+          <div class="rounded-lg border border-line bg-panel p-4">
             <label class="flex items-start gap-3 text-sm">
-              <input type="checkbox" name="consentimento" value="sim" required class="mt-0.5 size-5 shrink-0 accent-brand-700" aria-describedby="erro-lgpd" />
+              <input type="checkbox" name="consentimento" value="sim" required class="mt-0.5 size-5 shrink-0 accent-leaf-500" aria-describedby="erro-lgpd" />
               <span>
                 Concordo que a {site.name} utilize os dados informados para responder ao meu contato e enviar a proposta, conforme a
-                <a href="/politica-de-privacidade/" class="font-medium text-brand-600 underline">Política de Privacidade</a> (LGPD – Lei nº 13.709/2018). *
+                <a href="/politica-de-privacidade/" class="font-medium text-leaf-400 underline">Política de Privacidade</a> (LGPD – Lei nº 13.709/2018). *
               </span>
             </label>
-            <span id="erro-lgpd" class="mt-2 hidden text-sm text-red-700" data-error>É necessário aceitar para enviar.</span>
+            <span id="erro-lgpd" class="mt-2 hidden text-sm text-danger" data-error>É necessário aceitar para enviar.</span>
           </div>
 
           <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -168,11 +169,11 @@ const field =
     <div class="container-x py-12">
       <div class="flex flex-wrap items-end justify-between gap-4">
         <h2 id="mapa-title" class="text-2xl">Onde estamos</h2>
-        <a href={mapLink} target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium text-brand-600">Abrir no Google Maps <ArrowUpRight size={15} aria-hidden="true" /></a>
+        <a href={mapLink} target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium text-leaf-400">Abrir no Google Maps <ArrowUpRight size={15} aria-hidden="true" /></a>
       </div>
-      <div class="relative mt-6 aspect-[4/3] overflow-hidden rounded-xl border border-line bg-mist sm:aspect-[21/9]" data-map={mapEmbed}>
+      <div class="relative mt-6 aspect-[4/3] overflow-hidden rounded-xl border border-line bg-panel sm:aspect-[21/9]" data-map={mapEmbed}>
         <button type="button" class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted" data-map-load>
-          <MapIcon size={28} class="text-brand-500" aria-hidden="true" />
+          <MapIcon size={28} class="text-leaf-400" aria-hidden="true" />
           <span class="font-medium">Carregar mapa</span>
           <span class="text-xs">{mapAddress}</span>
         </button>
@@ -224,7 +225,7 @@ const field =
 
   const setStatus = (msg: string, ok: boolean) => {
     status.textContent = msg;
-    status.className = `text-sm ${ok ? 'text-brand-600' : 'text-red-700'}`;
+    status.className = `text-sm ${ok ? 'text-leaf-400' : 'text-danger'}`;
   };
 
   form.addEventListener('submit', async (e) => {

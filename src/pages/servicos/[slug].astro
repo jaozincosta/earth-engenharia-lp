@@ -12,6 +12,7 @@ import CtaBanner from '@/components/CtaBanner.astro';
 import { categories, serviceWhatsappMessage, site, whatsappUrl } from '@/config/site';
 import { getRelated, getServices, serviceUrl, type Service } from '@/lib/services';
 import { course, faqPage, service as serviceSchema } from '@/lib/schema';
+import { serviceImage } from '@/config/media';
 
 export const getStaticPaths = (async () => {
   const services = await getServices();
@@ -43,7 +44,14 @@ const schema = [
 ---
 
 <BaseLayout title={data.seoTitle} description={data.seoDescription} schema={schema} breadcrumbs={crumbs} whatsappMessage={message}>
-  <PageHero label={data.categories.map((c) => categories[c].label).join(' · ')} title={data.h1} lead={data.summary} crumbs={crumbs}>
+  <PageHero
+    label={data.categories.map((c) => categories[c].label).join(' · ')}
+    title={data.h1}
+    lead={data.summary}
+    crumbs={crumbs}
+    image={serviceImage(service.id)}
+    tags={data.keywords.slice(0, 4)}
+  >
     <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
       <a href={whatsappUrl(message)} target="_blank" rel="noopener" class="btn btn-primary" data-track="whatsapp-service">
         <BrandIcon name="whatsapp" class="size-[18px]" /> Pedir orçamento no WhatsApp
@@ -66,7 +74,7 @@ const schema = [
         <ul class="mt-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
           {
             data.audience.map((a) => (
-              <li class="flex gap-3 bg-white p-4">
+              <li class="flex gap-3 bg-panel p-4">
                 <span class="mt-2 size-1.5 shrink-0 rounded-full bg-leaf-500" aria-hidden="true" />
                 <span>{a}</span>
               </li>
@@ -83,7 +91,7 @@ const schema = [
           {
             data.steps.map((s, i) => (
               <li class="grid grid-cols-[2.5rem_1fr] gap-x-3 border-b border-line py-5">
-                <span class="font-mono text-xs leading-7 text-brand-600">{String(i + 1).padStart(2, '0')}</span>
+                <span class="font-mono text-xs leading-7 text-leaf-400">{String(i + 1).padStart(2, '0')}</span>
                 <div>
                   <h3 class="text-lg">{s.title}</h3>
                   <p class="mt-1 text-muted">{s.text}</p>
@@ -102,7 +110,7 @@ const schema = [
           {
             data.legislation.map((l) => (
               <li class="panel flex gap-4 p-5">
-                <Scale size={20} class="mt-0.5 shrink-0 text-brand-500" aria-hidden="true" />
+                <Scale size={20} class="mt-0.5 shrink-0 text-leaf-400" aria-hidden="true" />
                 <div>
                   <p class="font-semibold tracking-tight">{l.name}</p>
                   <p class="mt-1 text-[15px] leading-relaxed text-muted">{l.text}</p>
@@ -119,7 +127,7 @@ const schema = [
         <p class="label">Por que fazer</p>
         <h2 id="beneficios" class="mt-3 text-2xl sm:text-3xl">Benefícios e riscos de não ter</h2>
         <div class="mt-6 grid gap-px overflow-hidden rounded-xl border border-line bg-line md:grid-cols-2">
-          <div class="bg-white p-6">
+          <div class="bg-panel p-6">
             <h3 class="text-lg">Benefícios</h3>
             <ul class="mt-4 space-y-3">
               {
@@ -132,13 +140,13 @@ const schema = [
               }
             </ul>
           </div>
-          <div class="bg-white p-6">
+          <div class="bg-panel p-6">
             <h3 class="text-lg">Riscos de não ter</h3>
             <ul class="mt-4 space-y-3">
               {
                 data.risks.map((r) => (
                   <li class="flex gap-3">
-                    <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded bg-warn-bg text-warn"><X size={13} stroke-width={3} aria-hidden="true" /></span>
+                    <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded bg-[#f2b45a]/15 text-warn"><X size={13} stroke-width={3} aria-hidden="true" /></span>
                     <span>{r}</span>
                   </li>
                 ))
@@ -159,8 +167,8 @@ const schema = [
     <!-- Lateral: CTA de orçamento -->
     <aside class="lg:col-span-4" aria-label="Solicitar orçamento">
       <div class="panel overflow-hidden lg:sticky lg:top-28">
-        <div class="flex items-center gap-3 border-b border-line bg-mist px-5 py-3">
-          <Icon name={data.icon} size={18} class="text-brand-600" />
+        <div class="flex items-center gap-3 border-b border-line bg-panel px-5 py-3">
+          <Icon name={data.icon} size={18} class="text-leaf-400" />
           <span class="font-mono text-[11px] tracking-[0.14em] text-muted uppercase">Orçamento</span>
         </div>
         <div class="p-5">
@@ -176,7 +184,7 @@ const schema = [
   </div>
 
   <!-- Serviços relacionados -->
-  <section class="border-t border-line bg-mist py-14 sm:py-20" aria-labelledby="relacionados">
+  <section class="border-t border-line bg-panel py-14 sm:py-20" aria-labelledby="relacionados">
     <div class="container-x">
       <p class="label">Relacionados</p>
       <h2 id="relacionados" class="mt-3 text-2xl sm:text-3xl">Serviços relacionados</h2>

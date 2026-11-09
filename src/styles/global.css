@@ -2,12 +2,14 @@
 @import '@fontsource-variable/geist-mono';
 @import 'tailwindcss';
 
-/* ───────────────────────── Design tokens (marca EARTH) ───────────────────────── */
+/* ───────────────────────── Design tokens (tema escuro EARTH) ─────────────────────────
+   Os tokens semânticos (surface, ink, muted, line…) são variáveis CSS: a classe
+   .theme-light os redefine localmente para as poucas seções claras. */
 @theme {
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'Geist Mono Variable', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Verde escuro — cor principal */
+  /* Verde da marca */
   --color-brand-50: #eef7f1;
   --color-brand-100: #d5ecdd;
   --color-brand-200: #aed9bf;
@@ -15,32 +17,43 @@
   --color-brand-400: #4c9f70;
   --color-brand-500: #2b8152;
   --color-brand-600: #1c6741;
-  --color-brand-700: #0f4d2e; /* principal */
+  --color-brand-700: #0f4d2e;
   --color-brand-800: #0b3c24;
-  --color-brand-900: #082c1b;
-  --color-brand-950: #06170e; /* seções escuras */
+  --color-brand-900: #0a1f14;
+  --color-brand-950: #05130c;
 
-  /* Verde-limão / folha — destaque (usar com parcimônia) */
-  --color-leaf-50: #f3fbec;
-  --color-leaf-100: #e3f5d3;
+  /* Verde-limão — destaque, glows */
   --color-leaf-200: #c8eba9;
   --color-leaf-300: #a5dc76;
-  --color-leaf-400: #7ac943; /* destaque */
+  --color-leaf-400: #7ac943;
   --color-leaf-500: #62ad2f;
   --color-leaf-600: #4b8a22;
-  --color-leaf-700: #3a6a1d;
 
-  /* Neutros */
-  --color-surface: #ffffff;
-  --color-mist: #f5f7f6; /* fundo de seções alternadas */
-  --color-line: #e2e8e4; /* bordas hairline */
-  --color-ink: #0a1a12; /* texto principal */
-  --color-muted: #4d5c54; /* texto secundário (AA) */
+  /* Semânticos (tema escuro) */
+  --color-surface: #05130c; /* fundo principal */
+  --color-panel: #0a1f14; /* fundo de seções alternadas / cards */
+  --color-ink: #ecf3ee; /* texto principal */
+  --color-muted: #a3b8ab; /* texto secundário (AA sobre surface/panel) */
+  --color-accent: #7ac943; /* texto/realce de destaque */
+  --color-line: rgb(122 201 67 / 0.16); /* bordas 1px em verde translúcido */
 
-  --color-warn: #b7791f;
-  --color-warn-bg: #fdf4e3;
+  --color-warn: #f2b45a;
+  --color-danger: #ff8a7a;
 
   --radius-xl: 0.875rem;
+  --radius-2xl: 1.25rem;
+}
+
+/* Seção clara pontual (off-white esverdeado) */
+.theme-light {
+  --color-surface: #eef4ef;
+  --color-panel: #ffffff;
+  --color-ink: #0a1a12;
+  --color-muted: #47584e;
+  --color-accent: #1c6741;
+  --color-line: rgb(15 77 46 / 0.14);
+  background-color: var(--color-surface);
+  color: var(--color-ink);
 }
 
 /* ───────────────────────── Base ───────────────────────── */
@@ -49,16 +62,28 @@
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: 5rem;
+    color-scheme: dark;
+    background: var(--color-surface);
   }
   body {
     @apply bg-surface font-sans text-ink antialiased;
     font-feature-settings: 'ss01', 'cv11';
   }
+  /* Textura de grain leve sobre todo o site */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
   ::selection {
-    @apply bg-leaf-300 text-brand-950;
+    @apply bg-leaf-400 text-brand-950;
   }
   :focus-visible {
-    @apply outline-2 outline-offset-2 outline-leaf-500;
+    @apply outline-2 outline-offset-2 outline-leaf-400;
   }
   h1, h2, h3, h4 {
     @apply font-semibold text-balance text-ink;
@@ -72,82 +97,113 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
   .section {
-    @apply py-16 sm:py-20 lg:py-24;
+    @apply py-16 sm:py-20 lg:py-28;
   }
 
-  /* Rótulo técnico em mono, ex.: "01 — SERVIÇOS" */
+  /* Rótulo técnico mono, ex.: "▪ SERVIÇOS" */
   .label {
-    @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.14em] text-brand-600 uppercase;
+    @apply inline-flex items-center gap-2 font-mono text-[11px] font-medium tracking-[0.16em] text-accent uppercase;
   }
   .label::before {
     content: '';
-    @apply size-1.5 rounded-[2px] bg-leaf-400;
+    @apply size-1.5 rounded-[2px] bg-leaf-400 shadow-[0_0_10px_rgb(122_201_67/0.9)];
+  }
+  /* Dado técnico (coordenadas, normas) */
+  .tech {
+    @apply font-mono text-[10px] tracking-[0.14em] text-muted uppercase;
   }
 
   .h-display {
-    @apply text-[2.35rem] leading-[1.04] font-semibold sm:text-6xl lg:text-[3.6rem] xl:text-[4rem];
+    @apply text-[2.4rem] leading-[1.03] font-semibold sm:text-6xl lg:text-7xl;
     letter-spacing: -0.045em;
   }
   .h-section {
-    @apply text-3xl leading-[1.1] sm:text-4xl lg:text-[2.75rem];
+    @apply text-3xl leading-[1.08] sm:text-4xl lg:text-5xl;
   }
   .lead {
     @apply text-lg leading-relaxed text-muted sm:text-xl;
   }
 
   .btn {
-    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 text-[15px] font-medium transition-colors duration-150 select-none;
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-5 text-[15px] font-medium transition duration-200 select-none;
   }
   .btn-primary {
-    @apply bg-brand-700 text-white hover:bg-brand-800;
-  }
-  .btn-accent {
-    @apply bg-leaf-400 text-brand-950 hover:bg-leaf-300;
+    @apply bg-leaf-400 text-brand-950 shadow-[0_0_0_1px_rgb(122_201_67/0.4),0_8px_30px_-6px_rgb(122_201_67/0.55)] hover:bg-leaf-300 hover:shadow-[0_0_0_1px_rgb(165_220_118/0.6),0_10px_40px_-4px_rgb(122_201_67/0.75)];
   }
   .btn-secondary {
-    @apply border border-line bg-white text-ink hover:border-brand-300 hover:bg-mist;
+    @apply border border-white/20 bg-white/5 text-ink backdrop-blur-md hover:border-leaf-400/60 hover:bg-white/10;
   }
-  .btn-on-dark {
-    @apply border border-white/15 bg-white/5 text-white hover:bg-white/10;
+  .theme-light .btn-secondary {
+    @apply border-brand-700/25 bg-white text-ink hover:border-brand-500 hover:bg-white;
+  }
+  .btn-whatsapp {
+    @apply bg-[#25D366] text-[#04140b] shadow-[0_0_0_1px_rgb(37_211_102/0.5),0_10px_40px_-6px_rgb(37_211_102/0.7)] hover:bg-[#3be07a];
   }
 
+  /* Cartões glass com borda 1px verde translúcida */
+  .glass {
+    @apply rounded-xl border border-line bg-white/[0.035] backdrop-blur-xl;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+  }
+  .theme-light .glass {
+    @apply bg-white/80;
+  }
+  .glass-hover {
+    @apply transition duration-300 hover:border-leaf-400/50 hover:bg-white/[0.06] hover:shadow-[0_0_0_1px_rgb(122_201_67/0.25),0_20px_50px_-20px_rgb(122_201_67/0.35)];
+  }
   .panel {
-    @apply rounded-xl border border-line bg-white;
-  }
-  .panel-hover {
-    @apply transition-colors duration-150 hover:border-brand-300;
+    @apply rounded-xl border border-line bg-panel;
   }
 
-  /* Fundo com grade técnica */
-  .bg-grid-light {
-    background-image:
-      linear-gradient(to right, rgb(10 26 18 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(10 26 18 / 0.05) 1px, transparent 1px);
-    background-size: 56px 56px;
-    mask-image: linear-gradient(to bottom, black 40%, transparent);
+  /* Glow verde atrás de elementos principais */
+  .glow {
+    position: relative;
+    isolation: isolate;
   }
-  .bg-grid-dark {
+  .glow::before {
+    content: '';
+    position: absolute;
+    inset: -20% -10%;
+    z-index: -1;
+    background: radial-gradient(closest-side, rgb(122 201 67 / 0.18), transparent 70%);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+
+  /* Fundos técnicos */
+  .bg-grid {
     background-image:
-      linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-    background-size: 56px 56px;
+      linear-gradient(to right, rgb(122 201 67 / 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(122 201 67 / 0.07) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 75%);
+  }
+  .bg-topo {
+    background-image: url('/patterns/topo.svg');
+    background-size: 1200px auto;
+    opacity: 0.09;
+    mask-image: linear-gradient(to bottom, transparent, black 25%, black 75%, transparent);
+  }
+
+  /* Overlays para texto sobre imagem (contraste AA) */
+  .overlay-hero {
+    background:
+      linear-gradient(90deg, rgb(5 19 12 / 0.92) 0%, rgb(5 19 12 / 0.7) 45%, rgb(5 19 12 / 0.25) 100%),
+      linear-gradient(0deg, rgb(5 19 12 / 1) 0%, rgb(5 19 12 / 0) 35%),
+      radial-gradient(ellipse at center, transparent 50%, rgb(0 0 0 / 0.45) 100%);
+  }
+  .overlay-bottom {
+    background: linear-gradient(0deg, rgb(5 19 12 / 0.97) 0%, rgb(5 19 12 / 0.75) 45%, rgb(5 19 12 / 0.35) 100%);
+  }
+  .overlay-full {
+    background: linear-gradient(180deg, rgb(5 19 12 / 0.88), rgb(5 19 12 / 0.78) 50%, rgb(5 19 12 / 0.92));
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-md border border-line bg-white px-2 py-0.5 font-mono text-[11px] tracking-wide text-muted uppercase;
+    @apply inline-flex items-center gap-1.5 rounded-md border border-line bg-white/[0.04] px-2 py-0.5 font-mono text-[11px] tracking-wide text-muted uppercase;
   }
   .status {
     @apply inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 font-mono text-[11px] font-medium;
-  }
-  .status::before {
-    content: '';
-    @apply size-1.5 rounded-full bg-current;
-  }
-  .status-ok {
-    @apply bg-brand-50 text-brand-600;
-  }
-  .status-warn {
-    @apply bg-warn-bg text-warn;
   }
 
   /* Conteúdo Markdown dos serviços */
@@ -164,41 +220,44 @@
     @apply list-disc space-y-2 pl-6;
   }
   .prose-earth a {
-    @apply font-medium text-brand-600 underline decoration-leaf-400 underline-offset-4;
+    @apply font-medium text-accent underline decoration-leaf-400/60 underline-offset-4;
   }
 }
 
-/* ───────────────────────── Microanimações no scroll ───────────────────────── */
+/* ───────────────────────── Animações (respeitam prefers-reduced-motion) ───────────────────────── */
 @media (prefers-reduced-motion: no-preference) {
   .js [data-reveal] {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(16px);
     transition:
-      opacity 0.5s ease-out,
-      transform 0.5s ease-out;
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
     transition-delay: var(--reveal-delay, 0ms);
   }
   .js [data-reveal].is-visible {
     opacity: 1;
     transform: none;
   }
-  .bar-grow {
-    animation: bar-grow 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    transform-origin: bottom;
+  .zoom-img img {
+    transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  @keyframes bar-grow {
-    from { transform: scaleY(0.1); }
+  .group:hover .zoom-img img,
+  .group:focus-visible .zoom-img img {
+    transform: scale(1.06);
   }
   .pulse-dot {
-    animation: pulse-dot 2s ease-in-out infinite;
+    animation: pulse-dot 2.2s ease-in-out infinite;
   }
   @keyframes pulse-dot {
-    50% { opacity: 0.35; }
+    50% { opacity: 0.3; }
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  [data-hero-video] {
+    display: none !important;
   }
 }

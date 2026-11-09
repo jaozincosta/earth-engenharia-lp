@@ -15,9 +15,9 @@ const { items } = Astro.props;
   {
     items.map((item) => (
       <details class="group border-b border-line">
-        <summary class="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-left text-[17px] font-medium tracking-tight text-ink transition-colors hover:text-brand-700 [&::-webkit-details-marker]:hidden">
+        <summary class="flex cursor-pointer list-none items-start justify-between gap-6 py-5 text-left text-[17px] font-medium tracking-tight text-ink transition-colors hover:text-leaf-300 [&::-webkit-details-marker]:hidden">
           <span>{item.q}</span>
-          <Plus size={20} class="mt-0.5 shrink-0 text-brand-500 transition-transform group-open:rotate-45" aria-hidden="true" />
+          <Plus size={20} class="mt-0.5 shrink-0 text-leaf-400 transition-transform group-open:rotate-45" aria-hidden="true" />
         </summary>
         <p class="max-w-3xl pb-6 leading-relaxed text-muted">{item.a}</p>
       </details>

@@ -9,17 +9,17 @@ const services = await getServices();
 
 <BaseLayout title="Página não encontrada (404) | EARTH Engenharia" description="A página que você procura não existe ou mudou de endereço. Veja os serviços de engenharia ambiental e segurança do trabalho da EARTH." noindex>
   <section class="container-x py-16 sm:py-24">
-    <p class="font-mono text-6xl font-semibold text-brand-600">404</p>
+    <p class="font-mono text-6xl font-semibold text-leaf-400">404</p>
     <h1 class="mt-4 text-3xl sm:text-4xl">Página não encontrada</h1>
     <p class="mt-3 max-w-md text-muted">O endereço pode ter mudado. Escolha um dos nossos serviços ou volte para o início.</p>
     <ul class="mt-8 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
       {
         services.map((s) => (
-          <li class="bg-white">
-            <a href={serviceUrl(s)} class="flex items-center gap-3 p-4 font-medium hover:bg-mist">
-              <Icon name={s.data.icon} size={18} class="text-brand-500" />
+          <li class="bg-panel">
+            <a href={serviceUrl(s)} class="flex items-center gap-3 p-4 font-medium hover:bg-white/[0.04]">
+              <Icon name={s.data.icon} size={18} class="text-leaf-400" />
               <span class="flex-1">{s.data.title}</span>
-              <ArrowRight size={17} class="text-brand-400" aria-hidden="true" />
+              <ArrowRight size={17} class="text-leaf-400" aria-hidden="true" />
             </a>
           </li>
         ))

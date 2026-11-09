@@ -13,6 +13,7 @@ npm run build        # astro check + build em dist/
 npm run check:seo    # audita o HTML de dist/ (title, meta, H1, JSON-LD, palavras)
 npm run preview      # serve dist/ localmente
 npm run build:logo   # regenera logo, favicons, ícones do manifest e imagem OG
+node scripts/build-patterns.mjs   # regenera o padrão topográfico (public/patterns/topo.svg)
 ```
 
 ## Estrutura
@@ -20,6 +21,9 @@ npm run build:logo   # regenera logo, favicons, ícones do manifest e imagem OG
 ```
 src/
   config/site.ts            ← TODOS os dados da empresa (NAP, WhatsApp, redes, formulário, números)
+  config/media.ts           ← mapa único de imagens/vídeo (serviço → foto, hero, seções)
+  assets/media/             ← fotos (otimizadas no build); vídeo do hero em public/media/
+  data/media-credits.json   ← créditos/licenças exibidos em /creditos/
   content/servicos/*.md     ← os 8 serviços (Content Collections, schema em src/content.config.ts)
   components/SEO.astro      ← <head>: title, description, canonical, OG, Twitter, preloads, JSON-LD
   lib/schema.ts             ← geradores de JSON-LD (LocalBusiness, Service, Course, FAQPage, Breadcrumb, Organization)
@@ -73,7 +77,7 @@ Todos ficam em **`src/config/site.ts`**. Enquanto um valor estiver entre colchet
 
 Outros itens a substituir:
 
-- **Fotos** em `src/assets/fotos/` (`equipe-campo.jpg` é a do hero, `sobre.jpg` a da página Sobre): troque por fotos reais da equipe em campo **mantendo os nomes**. O Astro gera AVIF/WebP automaticamente.
+- **Fotos e vídeo**: mapeados em um único arquivo, `src/config/media.ts`. Veja o **[MEDIA.md](MEDIA.md)** (lista de cada mídia, onde aparece, proporção, licença atual e sugestões de busca). Prefira trocar por fotos reais da equipe em campo.
 - **Textos institucionais complementares** em `src/pages/sobre.astro` (marcado com `TODO`) e revisão jurídica de `src/pages/politica-de-privacidade.astro`.
 - **Domínio**: quando houver domínio próprio, defina `SITE_URL` (ex.: `https://www.earthengenharia.com.br`) nas variáveis de ambiente da Vercel. Canonical, Open Graph, sitemap e robots.txt passam a usá-lo.
 
