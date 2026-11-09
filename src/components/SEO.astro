@@ -1,0 +1,81 @@
+---
+/**
+ * <SEO /> — tags de <head> reutilizáveis: title, description, canonical, robots,
+ * Open Graph, Twitter Card, preloads (fonte e imagem LCP), ícones e JSON-LD.
+ */
+import { site } from '@/config/site';
+import fontUrl from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+
+export interface PreloadImage {
+  src: string;
+  srcset?: string;
+  sizes?: string;
+  type?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
+  type?: 'website' | 'article';
+  jsonLd?: Record<string, unknown>[];
+  preloadImage?: PreloadImage;
+}
+
+const { title, description, image = '/og-default.jpg', imageAlt = `${site.name} — ${site.slogans.main}`, noindex = false, type = 'website', jsonLd = [], preloadImage } =
+  Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+<meta name="theme-color" content="#0F4D2E" />
+<meta name="format-detection" content="telephone=no" />
+
+<!-- Preloads (fonte principal e imagem LCP) -->
+<link rel="preload" href={fontUrl} as="font" type="font/woff2" crossorigin />
+{
+  preloadImage && (
+    <link rel="preload" as="image" href={preloadImage.src} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} type={preloadImage.type} fetchpriority="high" />
+  )
+}
+
+<!-- Ícones / PWA -->
+<link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/manifest.webmanifest" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<!-- Open Graph -->
+<meta property="og:type" content={type} />
+<meta property="og:locale" content={site.locale} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={imageAlt} />
+
+<!-- SEO local -->
+<meta name="geo.region" content={`${site.address.country}-${site.address.state}`} />
+<meta name="geo.placename" content={site.address.city} />
+
+{jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}

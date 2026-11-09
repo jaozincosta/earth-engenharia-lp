@@ -182,4 +182,24 @@ const og = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
 </svg>`;
 await sharp(Buffer.from(og)).composite([{ input: logoPng, top: 170, left: 80 }]).jpeg({ quality: 88 }).toFile(p('../public/og-default.jpg'));
 
+// Ícones do app/PWA e favicon.ico (PNG embutido em contêiner ICO)
+const iconPng = (size, pad = 0.08) =>
+  sharp(Buffer.from(mark), { density: 600 })
+    .resize(Math.round(size * (1 - pad * 2)), Math.round(size * (1 - pad * 2)), { fit: 'contain', background: '#ffffff00' })
+    .extend({ top: Math.round(size * pad), bottom: Math.round(size * pad), left: Math.round(size * pad), right: Math.round(size * pad), background: '#ffffff' })
+    .flatten({ background: '#ffffff' })
+    .resize(size, size)
+    .png()
+    .toBuffer();
+writeFileSync(p('../public/icon-192.png'), await iconPng(192));
+writeFileSync(p('../public/icon-512.png'), await iconPng(512));
+writeFileSync(p('../public/icon-maskable-512.png'), await iconPng(512, 0.18));
+const png32 = await iconPng(32, 0.02);
+writeFileSync(p('../public/favicon-32x32.png'), png32);
+const ico = Buffer.alloc(22);
+ico.writeUInt16LE(0, 0); ico.writeUInt16LE(1, 2); ico.writeUInt16LE(1, 4);
+ico.writeUInt8(32, 6); ico.writeUInt8(32, 7); ico.writeUInt8(0, 8); ico.writeUInt8(0, 9);
+ico.writeUInt16LE(1, 10); ico.writeUInt16LE(32, 12); ico.writeUInt32LE(png32.length, 14); ico.writeUInt32LE(22, 18);
+writeFileSync(p('../public/favicon.ico'), Buffer.concat([ico, png32]));
+
 console.log('Logo gerado.');

@@ -1,124 +1,37 @@
 ---
 import '@/styles/global.css';
+import SEO, { type PreloadImage } from '@/components/SEO.astro';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import WhatsAppFloat from '@/components/WhatsAppFloat.astro';
 import { site } from '@/config/site';
-import { getServices, serviceUrl } from '@/lib/services';
+import { breadcrumbs as breadcrumbSchema, localBusiness, website } from '@/lib/schema';
 
 interface Props {
+  /** <title> completo (50–60 caracteres). */
   title: string;
+  /** Meta description (140–160 caracteres). */
   description: string;
-  /** Imagem Open Graph (URL absoluta ou caminho a partir de /public). */
   image?: string;
   noindex?: boolean;
-  /** Objetos JSON-LD adicionais específicos da página. */
+  /** JSON-LD adicional da página. */
   schema?: Record<string, unknown>[];
-  type?: 'website' | 'article';
+  /** Breadcrumb (sem "Início") — gera o schema BreadcrumbList. */
+  breadcrumbs?: { label: string; href: string }[];
+  preloadImage?: PreloadImage;
+  /** Mensagem pré-preenchida do botão flutuante de WhatsApp. */
+  whatsappMessage?: string;
 }
 
-const { title, description, image = '/og-default.jpg', noindex = false, schema = [], type = 'website' } = Astro.props;
-
-const siteUrl = Astro.site!;
-const canonical = new URL(Astro.url.pathname, siteUrl).href;
-const ogImage = new URL(image, siteUrl).href;
-const fullTitle = title.includes(site.name) ? title : `${title} | ${site.name}`;
-
-const services = await getServices();
-const { address: a, contact: c } = site;
-
-// Schema.org — negócio local (base do SEO local)
-const orgId = new URL('/#organizacao', siteUrl).href;
-const localBusiness = {
-  '@context': 'https://schema.org',
-  '@type': 'ProfessionalService',
-  '@id': orgId,
-  name: site.name,
-  legalName: site.legalName,
-  description: site.description,
-  slogan: site.slogans.main,
-  url: siteUrl.href,
-  logo: new URL('/favicon.svg', siteUrl).href,
-  image: new URL('/og-default.jpg', siteUrl).href,
-  telephone: c.phoneHref,
-  email: c.email,
-  address: {
-    '@type': 'PostalAddress',
-    ...(a.street ? { streetAddress: a.street } : {}),
-    addressLocality: a.city,
-    addressRegion: a.state,
-    ...(a.postalCode ? { postalCode: a.postalCode } : {}),
-    addressCountry: a.country,
-  },
-  ...(a.street ? { geo: { '@type': 'GeoCoordinates', latitude: a.geo.lat, longitude: a.geo.lng } } : {}),
-  areaServed: site.areaServed.map((name) => ({ '@type': 'City', name })),
-  openingHoursSpecification: [
-    {
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-      opens: site.hours.open,
-      closes: site.hours.close,
-    },
-  ],
-  sameAs: Object.values(site.social).filter(Boolean),
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Serviços de engenharia ambiental e segurança do trabalho',
-    itemListElement: services.map((s) => ({
-      '@type': 'Offer',
-      itemOffered: { '@type': 'Service', name: s.data.title, url: new URL(serviceUrl(s), siteUrl).href },
-    })),
-  },
-};
-
-const website = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: site.name,
-  url: siteUrl.href,
-  inLanguage: site.lang,
-  publisher: { '@id': orgId },
-};
-
-const jsonLd = [localBusiness, website, ...schema];
+const { title, description, image, noindex, schema = [], breadcrumbs, preloadImage, whatsappMessage } = Astro.props;
+const base = Astro.site!;
+const jsonLd = [localBusiness(base), website(base), ...(breadcrumbs ? [breadcrumbSchema(breadcrumbs, base)] : []), ...schema];
 ---
 
 <!doctype html>
 <html lang={site.lang}>
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>{fullTitle}</title>
-    <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
-    <meta name="theme-color" content="#0F4D2E" />
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-
-    <!-- Open Graph / redes sociais -->
-    <meta property="og:type" content={type} />
-    <meta property="og:locale" content={site.locale} />
-    <meta property="og:site_name" content={site.name} />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={ogImage} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImage} />
-
-    <!-- SEO local -->
-    <meta name="geo.region" content={`${a.country}-${a.state}`} />
-    <meta name="geo.placename" content={a.city} />
-
-    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
-
+    <SEO title={title} description={description} image={image} noindex={noindex} jsonLd={jsonLd} preloadImage={preloadImage} />
     <script is:inline>
       document.documentElement.classList.add('js');
     </script>
@@ -129,10 +42,10 @@ const jsonLd = [localBusiness, website, ...schema];
       <slot />
     </main>
     <Footer />
-    <WhatsAppFloat />
+    <WhatsAppFloat message={whatsappMessage} />
 
     <script>
-      // Revela elementos [data-reveal] ao entrar na viewport (CSS respeita prefers-reduced-motion).
+      // Revela elementos [data-reveal] ao entrar na viewport (o CSS respeita prefers-reduced-motion).
       const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver(

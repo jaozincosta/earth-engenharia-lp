@@ -7,16 +7,80 @@
   "headers": [
     {
       "source": "/_astro/(.*)",
-      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     },
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/servicos/outorga-recursos-hidricos/",
+      "destination": "/servicos/outorga-de-uso-de-agua/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/pgrs-gerenciamento-de-residuos/",
+      "destination": "/servicos/pgrs-pgrcc/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/pgr-gerenciamento-de-riscos/",
+      "destination": "/servicos/pgr-engenharia-seguranca-do-trabalho/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/treinamentos-nrs/",
+      "destination": "/servicos/cursos-nr-33-e-nr-35/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/estudos-ambientais/",
+      "destination": "/servicos/licenciamento-ambiental/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/monitoramento-ambiental/",
+      "destination": "/servicos/licenciamento-ambiental/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/ltcat-laudos-tecnicos/",
+      "destination": "/servicos/pgr-engenharia-seguranca-do-trabalho/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/prevencao-incendio/",
+      "destination": "/servicos/",
+      "permanent": true
+    },
+    {
+      "source": "/servicos/esocial-sst/",
+      "destination": "/servicos/pgr-engenharia-seguranca-do-trabalho/",
+      "permanent": true
     }
   ]
 }

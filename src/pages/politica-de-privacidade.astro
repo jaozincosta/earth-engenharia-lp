@@ -1,24 +1,45 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import Breadcrumbs from '@/components/Breadcrumbs.astro';
-import { site } from '@/config/site';
+import PageHero from '@/components/PageHero.astro';
+import { filled, site } from '@/config/site';
+
+const crumbs = [{ label: 'Política de Privacidade', href: '/politica-de-privacidade/' }];
+const email = site.contact.email;
 ---
 
-<BaseLayout title="Política de Privacidade" description={`Saiba como a ${site.name} trata os dados pessoais enviados pelo site, em conformidade com a LGPD (Lei 13.709/2018).`}>
+<BaseLayout
+  title="Política de Privacidade e Proteção de Dados | EARTH"
+  description="Saiba como a EARTH Engenharia trata os dados pessoais enviados pelo site, em conformidade com a LGPD (Lei nº 13.709/2018). Tire suas dúvidas conosco."
+  breadcrumbs={crumbs}
+>
+  <PageHero label="LGPD" title="Política de Privacidade" crumbs={crumbs} />
   <section class="container-x max-w-3xl py-12 sm:py-16">
-    <Breadcrumbs items={[{ label: 'Política de Privacidade', href: '/politica-de-privacidade/' }]} />
-    <h1 class="mt-5 text-4xl">Política de Privacidade</h1>
-    <!-- TODO: revisar com o jurídico/DPO da empresa. -->
-    <div class="prose-earth mt-8">
-      <p>Esta política explica como a <strong>{site.legalName}</strong> trata os dados pessoais de quem acessa este site, conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
+    <!-- TODO: revisar com o jurídico/encarregado de dados da empresa. -->
+    <div class="prose-earth">
+      <p>
+        Esta política explica como a <strong>{site.name}</strong> ({site.legalName}, CNPJ {site.cnpj}) trata os dados pessoais de quem
+        acessa este site, conforme a Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018).
+      </p>
       <h2>Dados coletados</h2>
-      <p>Coletamos apenas os dados que você informa voluntariamente ao entrar em contato (nome, empresa, cidade, telefone, e-mail e mensagem). O formulário do site não armazena dados em servidor: ele abre uma conversa no WhatsApp com a mensagem preenchida.</p>
-      <h2>Finalidade</h2>
-      <p>Os dados são usados exclusivamente para responder ao seu contato, elaborar propostas e prestar os serviços contratados.</p>
+      <p>
+        Coletamos apenas os dados que você informa voluntariamente no formulário ou ao entrar em contato: nome, empresa, e-mail, telefone,
+        serviço de interesse e mensagem.
+      </p>
+      <h2>Finalidade e base legal</h2>
+      <p>
+        Os dados são usados para responder ao seu contato e elaborar propostas, com base no seu consentimento e em procedimentos
+        preliminares relacionados a um contrato, solicitados por você.
+      </p>
       <h2>Compartilhamento</h2>
-      <p>Não vendemos nem compartilhamos seus dados com terceiros, exceto quando necessário para cumprir obrigações legais ou prestar o serviço solicitado (por exemplo, protocolos junto a órgãos públicos).</p>
+      <p>
+        Não vendemos seus dados. Eles podem ser processados por fornecedores que viabilizam o envio do formulário e a comunicação (como o
+        serviço de formulários e o WhatsApp), somente para essa finalidade.
+      </p>
       <h2>Seus direitos</h2>
-      <p>Você pode solicitar acesso, correção ou exclusão dos seus dados a qualquer momento pelo e-mail <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a>.</p>
+      <p>
+        Você pode solicitar acesso, correção, eliminação dos dados ou revogação do consentimento a qualquer momento pelo e-mail
+        {filled(email) ? <a href={`mailto:${email}`}>{email}</a> : <strong>{email}</strong>} ou pelo telefone {site.contact.phoneDisplay}.
+      </p>
     </div>
   </section>
 </BaseLayout>

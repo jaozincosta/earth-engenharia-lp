@@ -20,37 +20,31 @@ const listSchema = {
     url: new URL(serviceUrl(s), Astro.site).href,
   })),
 };
-const breadcrumbSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Início', item: new URL('/', Astro.site).href },
-    { '@type': 'ListItem', position: 2, name: 'Serviços', item: new URL('/servicos/', Astro.site).href },
-  ],
-};
+const crumbs = [{ label: 'Serviços', href: '/servicos/' }];
 ---
 
 <BaseLayout
-  title="Serviços de Engenharia Ambiental e Segurança do Trabalho em SP"
-  description={`Serviços da ${site.name} em São Paulo: licenciamento CETESB, PGRS, outorga, estudos ambientais, PGR, LTCAT, treinamentos de NRs, AVCB/CLCB e eSocial SST.`}
-  schema={[listSchema, breadcrumbSchema]}
+  title="Serviços de Engenharia Ambiental e SST em SP | EARTH"
+  description="Conheça os serviços da EARTH em SP: licenciamento ambiental, outorga, PGRS, PGR, áreas contaminadas, cursos NR 33 e 35 e palestras. Solicite um orçamento."
+  schema={[listSchema]}
+  breadcrumbs={crumbs}
 >
   <PageHero
     label="Catálogo de serviços"
     title="Serviços de engenharia ambiental e segurança do trabalho"
-    lead={`${site.slogans.partner} Escolha uma área ou busque pelo documento que você precisa.`}
-    crumbs={[{ label: 'Serviços', href: '/servicos/' }]}
+    lead={`${site.slogans.partner} Filtre por categoria ou busque pelo serviço que você precisa.`}
+    crumbs={crumbs}
   >
-    <a href={whatsappUrl()} target="_blank" rel="noopener" class="btn btn-primary">
+    <a href={whatsappUrl('Olá! Vim pelo site da EARTH Engenharia e preciso de ajuda para saber qual serviço minha empresa precisa.')} target="_blank" rel="noopener" class="btn btn-primary">
       <BrandIcon name="whatsapp" class="size-[18px]" /> Não sei qual preciso
     </a>
   </PageHero>
 
-  <section class="section pt-10 sm:pt-12">
+  <section class="section pt-10 sm:pt-12" aria-label="Lista de serviços">
     <div class="container-x">
       <ServiceFilter services={services} />
     </div>
   </section>
 
-  <CtaBanner title="Não sabe qual serviço sua empresa precisa?" text="Conte sobre sua atividade e indicamos o caminho — licença, laudo, programa ou treinamento." />
+  <CtaBanner title="Não sabe qual serviço sua empresa precisa?" text="Conte sobre a sua atividade e indicamos o caminho — licença, plano, programa, investigação ou treinamento." />
 </BaseLayout>

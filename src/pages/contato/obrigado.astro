@@ -1,0 +1,13 @@
+---
+import { ArrowRight } from '@lucide/astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Mensagem enviada | EARTH Engenharia" description="Recebemos a sua mensagem. A equipe da EARTH Engenharia retornará o contato em breve." noindex>
+  <section class="container-x max-w-2xl py-20 text-center sm:py-28">
+    <p class="label">Contato</p>
+    <h1 class="mt-4 text-4xl">Mensagem enviada!</h1>
+    <p class="mt-4 text-lg text-muted">Obrigado pelo contato. Nossa equipe vai analisar a sua solicitação e retornar em breve.</p>
+    <a href="/servicos/" class="btn btn-primary mt-8">Ver serviços <ArrowRight size={17} aria-hidden="true" /></a>
+  </section>
+</BaseLayout>

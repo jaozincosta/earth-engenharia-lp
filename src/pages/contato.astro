@@ -1,15 +1,27 @@
 ---
-import { Mail, MapPin, Phone, Clock, Send, ArrowUpRight } from '@lucide/astro';
+import { Mail, MapPin, Phone, Clock, Send, ArrowUpRight, Map as MapIcon } from '@lucide/astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import BrandIcon from '@/components/BrandIcon.astro';
-import { site, whatsappUrl } from '@/config/site';
+import { filled, site, whatsappUrl } from '@/config/site';
 import { getServices } from '@/lib/services';
 
 const services = await getServices();
-const { contact: c, address: a } = site;
-const addressLine = [a.street, a.district].filter(Boolean).join(' – ');
-const mapQuery = encodeURIComponent([a.street, a.district, `${a.city} - ${a.state}`].filter(Boolean).join(', '));
+const { contact: c, address: a, form } = site;
+const crumbs = [{ label: 'Contato', href: '/contato/' }];
+
+// Endereço para o mapa: usa o endereço completo quando preenchido; senão, a cidade.
+const mapAddress = [a.street, a.district, a.postalCode].every(filled)
+  ? `${a.street}, ${a.district}, ${a.city} - ${a.state}, ${a.postalCode}`
+  : `${a.city} - ${a.state}`;
+const mapQuery = encodeURIComponent(mapAddress);
+const mapEmbed = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
+const mapLink = filled(site.social.googleBusiness) ? site.social.googleBusiness : `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+
+// Envio do formulário (configurável em src/config/site.ts → form)
+const useNetlify = form.provider === 'netlify';
+const formspreeReady = form.provider === 'formspree' && filled(form.formspreeId);
+const action = useNetlify ? '/contato/obrigado/' : formspreeReady ? `https://formspree.io/f/${form.formspreeId}` : '';
 
 const contactPage = {
   '@context': 'https://schema.org',
@@ -18,32 +30,26 @@ const contactPage = {
   url: new URL('/contato/', Astro.site).href,
 };
 
-const field = 'mt-1.5 h-12 w-full rounded-lg border border-line bg-white px-3.5 text-base focus:border-brand-500 focus:outline-none';
+const field =
+  'mt-1.5 h-12 w-full rounded-lg border border-line bg-white px-3.5 text-base focus:border-brand-500 focus:outline-none aria-[invalid=true]:border-red-600';
 ---
 
 <BaseLayout
-  title={`Contato e Orçamento — ${site.name}`}
-  description={`Fale com a ${site.name} pelo WhatsApp ${c.phoneDisplay}, telefone ou e-mail e solicite um orçamento de serviços ambientais e de segurança do trabalho em São Paulo/SP.`}
+  title="Contato e Orçamento – Engenharia Ambiental em SP | EARTH"
+  description="Fale com a EARTH Engenharia em São Paulo pelo WhatsApp, telefone ou formulário e solicite um orçamento de engenharia ambiental e segurança do trabalho."
   schema={[contactPage]}
+  breadcrumbs={crumbs}
 >
-  <PageHero
-    label="Contato"
-    title="Fale com a EARTH."
-    lead="Conte o que sua empresa precisa. O jeito mais rápido é pelo WhatsApp."
-    crumbs={[{ label: 'Contato', href: '/contato/' }]}
-  />
+  <PageHero label="Contato" title="Fale com a EARTH Engenharia" lead="Conte o que sua empresa precisa. O jeito mais rápido é pelo WhatsApp." crumbs={crumbs} />
 
-  <section class="section pt-10 sm:pt-14">
+  <section class="section pt-10 sm:pt-14" aria-label="Canais de contato e formulário">
     <div class="container-x grid gap-10 lg:grid-cols-12">
-      <!-- Canais -->
-      <div class="lg:col-span-5">
+      <!-- Canais (NAP) -->
+      <div class="space-y-6 lg:col-span-5">
         <div class="panel divide-y divide-line overflow-hidden">
           <a href={whatsappUrl()} target="_blank" rel="noopener" class="group flex items-center gap-4 p-5 transition-colors hover:bg-mist" data-track="whatsapp-contato">
             <span class="grid size-11 shrink-0 place-items-center rounded-lg bg-[#25D366] text-white"><BrandIcon name="whatsapp" class="size-6" /></span>
-            <span class="flex-1">
-              <span class="block font-semibold">WhatsApp</span>
-              <span class="font-mono text-sm text-muted">{c.phoneDisplay}</span>
-            </span>
+            <span class="flex-1"><span class="block font-semibold">WhatsApp</span><span class="font-mono text-sm text-muted">{c.phoneDisplay}</span></span>
             <ArrowUpRight size={18} class="text-brand-400 group-hover:text-brand-600" aria-hidden="true" />
           </a>
           <a href={`tel:${c.phoneHref}`} class="group flex items-center gap-4 p-5 transition-colors hover:bg-mist">
@@ -51,90 +57,220 @@ const field = 'mt-1.5 h-12 w-full rounded-lg border border-line bg-white px-3.5 
             <span class="flex-1"><span class="block font-semibold">Telefone</span><span class="font-mono text-sm text-muted">{c.phoneDisplay}</span></span>
             <ArrowUpRight size={18} class="text-brand-400 group-hover:text-brand-600" aria-hidden="true" />
           </a>
-          <a href={`mailto:${c.email}`} class="group flex items-center gap-4 p-5 transition-colors hover:bg-mist">
+          <div class="flex items-center gap-4 p-5">
             <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-brand-600"><Mail size={20} aria-hidden="true" /></span>
-            <span class="min-w-0 flex-1"><span class="block font-semibold">E-mail</span><span class="block font-mono text-sm break-all text-muted">{c.email}</span></span>
-            <ArrowUpRight size={18} class="text-brand-400 group-hover:text-brand-600" aria-hidden="true" />
-          </a>
-          <div class="flex items-start gap-4 p-5">
-            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-brand-600"><MapPin size={20} aria-hidden="true" /></span>
-            <span>
-              <span class="block font-semibold">Endereço</span>
-              <span class="text-sm text-muted">{addressLine && <>{addressLine}<br /></>}{a.city}/{a.state}</span>
-              <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noopener" class="mt-1 block text-sm font-medium text-brand-600 underline decoration-leaf-400 underline-offset-4">Abrir no Google Maps</a>
+            <span class="min-w-0 flex-1">
+              <span class="block font-semibold">E-mail</span>
+              {filled(c.email) ? <a href={`mailto:${c.email}`} class="block font-mono text-sm break-all text-muted hover:text-brand-600">{c.email}</a> : <span class="font-mono text-sm text-muted">{c.email}</span>}
             </span>
           </div>
-          <div class="flex items-center gap-3 bg-mist px-5 py-4 font-mono text-xs text-muted">
-            <Clock size={16} class="text-brand-500" aria-hidden="true" /> {site.hours.days}, {site.hours.open}–{site.hours.close}
+          <div class="flex items-start gap-4 p-5">
+            <span class="grid size-11 shrink-0 place-items-center rounded-lg border border-line text-brand-600"><MapPin size={20} aria-hidden="true" /></span>
+            <address class="text-sm not-italic">
+              <span class="block text-base font-semibold">{site.name}</span>
+              <span class="text-muted">{a.street} – {a.district}<br />{a.city}/{a.state} · {a.postalCode}</span>
+            </address>
           </div>
+          <div class="flex items-center gap-3 bg-mist px-5 py-4 text-sm text-muted">
+            <Clock size={16} class="text-brand-500" aria-hidden="true" /> {site.hours.label}
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-mono text-[11px] font-medium tracking-[0.14em] text-muted uppercase">Regiões atendidas</h2>
+          <ul class="mt-3 flex flex-wrap gap-2">{site.areaServed.map((r) => <li class="chip text-xs">{r}</li>)}</ul>
         </div>
       </div>
 
-      <!-- Formulário → envia a mensagem pronta para o WhatsApp (sem backend) -->
+      <!-- Formulário -->
       <div class="lg:col-span-7">
-        <form id="contact-form" class="panel space-y-5 p-6 sm:p-8" novalidate>
+        <form
+          id="orcamento"
+          class="panel scroll-mt-24 space-y-5 p-6 sm:p-8"
+          name="contato"
+          method="POST"
+          action={action || undefined}
+          data-provider={useNetlify ? 'netlify' : formspreeReady ? 'formspree' : 'whatsapp'}
+          data-whatsapp={c.whatsapp}
+          data-netlify={useNetlify ? 'true' : undefined}
+          netlify-honeypot={useNetlify ? 'empresa_site' : undefined}
+          novalidate
+        >
+          {useNetlify && <input type="hidden" name="form-name" value="contato" />}
           <div>
             <p class="label">Orçamento</p>
             <h2 class="mt-3 text-2xl">Solicite um orçamento</h2>
-            <p class="mt-1 text-sm text-muted">Preencha e enviaremos sua mensagem pelo WhatsApp.</p>
+            <p class="mt-1 text-sm text-muted">Campos com * são obrigatórios. Respondemos o mais rápido possível.</p>
           </div>
+          <!-- honeypot anti-spam -->
+          <p class="hidden" aria-hidden="true"><label>Não preencha: <input name="empresa_site" tabindex="-1" autocomplete="off" /></label></p>
+
           <div class="grid gap-5 sm:grid-cols-2">
             <label class="block">
               <span class="text-sm font-medium">Nome *</span>
-              <input name="nome" required autocomplete="name" class={field} />
+              <input name="nome" required minlength="2" autocomplete="name" class={field} aria-describedby="erro-nome" />
+              <span id="erro-nome" class="mt-1 hidden text-sm text-red-700" data-error>Informe seu nome.</span>
             </label>
             <label class="block">
               <span class="text-sm font-medium">Empresa</span>
               <input name="empresa" autocomplete="organization" class={field} />
             </label>
           </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="block">
+              <span class="text-sm font-medium">E-mail *</span>
+              <input name="email" type="email" required autocomplete="email" class={field} aria-describedby="erro-email" />
+              <span id="erro-email" class="mt-1 hidden text-sm text-red-700" data-error>Informe um e-mail válido.</span>
+            </label>
+            <label class="block">
+              <span class="text-sm font-medium">Telefone / WhatsApp *</span>
+              <input name="telefone" type="tel" required inputmode="tel" pattern="[0-9()+\s-]{10,}" autocomplete="tel" class={field} aria-describedby="erro-tel" />
+              <span id="erro-tel" class="mt-1 hidden text-sm text-red-700" data-error>Informe um telefone com DDD.</span>
+            </label>
+          </div>
           <label class="block">
-            <span class="text-sm font-medium">Cidade</span>
-            <input name="cidade" autocomplete="address-level2" class={field} />
-          </label>
-          <label class="block">
-            <span class="text-sm font-medium">Serviço de interesse</span>
-            <select name="servico" class={field}>
-              <option value="">Não sei / preciso de orientação</option>
-              {services.map((s) => <option value={s.data.title}>{s.data.title}</option>)}
+            <span class="text-sm font-medium">Serviço desejado *</span>
+            <select name="servico" required class={field} aria-describedby="erro-servico">
+              <option value="">Selecione…</option>
+              {services.map((s) => <option value={s.data.title} data-slug={s.id}>{s.data.title}</option>)}
+              <option value="Outro / não sei">Outro / não sei qual preciso</option>
             </select>
+            <span id="erro-servico" class="mt-1 hidden text-sm text-red-700" data-error>Selecione um serviço.</span>
           </label>
           <label class="block">
             <span class="text-sm font-medium">Mensagem *</span>
-            <textarea name="mensagem" required rows="4" class="mt-1.5 w-full rounded-lg border border-line bg-white p-3.5 text-base focus:border-brand-500 focus:outline-none" placeholder="Conte um pouco sobre sua atividade e necessidade"></textarea>
+            <textarea name="mensagem" required minlength="10" rows="4" class="mt-1.5 w-full rounded-lg border border-line bg-white p-3.5 text-base focus:border-brand-500 focus:outline-none aria-[invalid=true]:border-red-600" placeholder="Conte um pouco sobre a sua atividade e a sua necessidade" aria-describedby="erro-msg"></textarea>
+            <span id="erro-msg" class="mt-1 hidden text-sm text-red-700" data-error>Escreva uma mensagem (mínimo de 10 caracteres).</span>
           </label>
-          <p id="form-error" class="hidden text-sm font-medium text-red-700" role="alert">Preencha seu nome e a mensagem.</p>
-          <button type="submit" class="btn btn-primary w-full sm:w-auto">
-            <Send size={17} aria-hidden="true" /> Enviar pelo WhatsApp
-          </button>
-          <p class="text-xs text-muted">Seus dados são usados apenas para responder ao seu contato. Veja nossa <a href="/politica-de-privacidade/" class="underline">política de privacidade</a>.</p>
+
+          <div class="rounded-lg border border-line bg-mist p-4">
+            <label class="flex items-start gap-3 text-sm">
+              <input type="checkbox" name="consentimento" value="sim" required class="mt-0.5 size-5 shrink-0 accent-brand-700" aria-describedby="erro-lgpd" />
+              <span>
+                Concordo que a {site.name} utilize os dados informados para responder ao meu contato e enviar a proposta, conforme a
+                <a href="/politica-de-privacidade/" class="font-medium text-brand-600 underline">Política de Privacidade</a> (LGPD – Lei nº 13.709/2018). *
+              </span>
+            </label>
+            <span id="erro-lgpd" class="mt-2 hidden text-sm text-red-700" data-error>É necessário aceitar para enviar.</span>
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <button type="submit" class="btn btn-primary"><Send size={17} aria-hidden="true" /> Enviar solicitação</button>
+            <p id="form-status" class="text-sm" role="status" aria-live="polite"></p>
+          </div>
         </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapa: carregado somente ao entrar na viewport ou ao clicar -->
+  <section class="border-t border-line" aria-labelledby="mapa-title">
+    <div class="container-x py-12">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 id="mapa-title" class="text-2xl">Onde estamos</h2>
+        <a href={mapLink} target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium text-brand-600">Abrir no Google Maps <ArrowUpRight size={15} aria-hidden="true" /></a>
+      </div>
+      <div class="relative mt-6 aspect-[4/3] overflow-hidden rounded-xl border border-line bg-mist sm:aspect-[21/9]" data-map={mapEmbed}>
+        <button type="button" class="absolute inset-0 flex flex-col items-center justify-center gap-2 text-muted" data-map-load>
+          <MapIcon size={28} class="text-brand-500" aria-hidden="true" />
+          <span class="font-medium">Carregar mapa</span>
+          <span class="text-xs">{mapAddress}</span>
+        </button>
       </div>
     </div>
   </section>
 </BaseLayout>
 
-<script define:vars={{ phone: c.whatsapp }}>
-  const form = document.getElementById('contact-form');
-  const err = document.getElementById('form-error');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const d = new FormData(form);
-    const nome = String(d.get('nome') || '').trim();
-    const msg = String(d.get('mensagem') || '').trim();
-    if (!nome || !msg) {
-      err.classList.remove('hidden');
+<script>
+  // ── Mapa lazy ──
+  const mapBox = document.querySelector<HTMLElement>('[data-map]');
+  if (mapBox) {
+    const load = () => {
+      if (mapBox.querySelector('iframe')) return;
+      const f = document.createElement('iframe');
+      f.src = mapBox.dataset.map!;
+      f.title = 'Mapa de localização da EARTH Engenharia';
+      f.loading = 'lazy';
+      f.referrerPolicy = 'no-referrer-when-downgrade';
+      f.className = 'absolute inset-0 size-full border-0';
+      mapBox.appendChild(f);
+      mapBox.querySelector('[data-map-load]')?.remove();
+    };
+    mapBox.querySelector('[data-map-load]')?.addEventListener('click', load);
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => es.some((e) => e.isIntersecting) && (load(), io.disconnect()), { rootMargin: '200px' });
+      io.observe(mapBox);
+    }
+  }
+
+  // ── Formulário ──
+  const form = document.getElementById('orcamento') as HTMLFormElement;
+  const status = document.getElementById('form-status')!;
+
+  // Pré-seleciona o serviço vindo de /contato/?servico=<slug>
+  const slug = new URLSearchParams(location.search).get('servico');
+  if (slug) {
+    const opt = form.querySelector<HTMLOptionElement>(`option[data-slug="${CSS.escape(slug)}"]`);
+    if (opt) opt.selected = true;
+  }
+
+  const fields = form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]');
+  const showError = (el: Element, show: boolean) => {
+    el.setAttribute('aria-invalid', String(show));
+    const id = el.getAttribute('aria-describedby');
+    if (id) document.getElementById(id)?.classList.toggle('hidden', !show);
+  };
+  fields.forEach((el) => el.addEventListener('input', () => el.checkValidity() && showError(el, false)));
+
+  const setStatus = (msg: string, ok: boolean) => {
+    status.textContent = msg;
+    status.className = `text-sm ${ok ? 'text-brand-600' : 'text-red-700'}`;
+  };
+
+  form.addEventListener('submit', async (e) => {
+    let firstInvalid: HTMLElement | null = null;
+    fields.forEach((el) => {
+      const bad = !el.checkValidity();
+      showError(el, bad);
+      if (bad && !firstInvalid) firstInvalid = el;
+    });
+    if (firstInvalid) {
+      e.preventDefault();
+      (firstInvalid as HTMLElement).focus();
+      setStatus('Revise os campos destacados.', false);
       return;
     }
-    err.classList.add('hidden');
-    const lines = [
-      `Olá! Meu nome é ${nome}.`,
-      d.get('empresa') && `Empresa: ${d.get('empresa')}`,
-      d.get('cidade') && `Cidade: ${d.get('cidade')}`,
-      d.get('servico') && `Serviço: ${d.get('servico')}`,
+
+    const provider = form.dataset.provider;
+    if (provider === 'netlify') return; // envio nativo (Netlify Forms)
+
+    e.preventDefault();
+    const data = new FormData(form);
+    if (provider === 'formspree') {
+      setStatus('Enviando…', true);
+      try {
+        const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        setStatus('Mensagem enviada! Retornaremos em breve.', true);
+      } catch {
+        setStatus('Não foi possível enviar agora. Tente pelo WhatsApp.', false);
+      }
+      return;
+    }
+
+    // Sem serviço de formulário configurado: abre o WhatsApp com a mensagem pronta.
+    const text = [
+      `Olá! Meu nome é ${data.get('nome')}.`,
+      data.get('empresa') ? `Empresa: ${data.get('empresa')}` : '',
+      `E-mail: ${data.get('email')} · Telefone: ${data.get('telefone')}`,
+      `Serviço: ${data.get('servico')}`,
       '',
-      msg,
-    ].filter((l) => typeof l === 'string');
-    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener');
+      String(data.get('mensagem')),
+    ]
+      .filter((l, i) => l !== '' || i === 4)
+      .join('\n');
+    window.open(`https://wa.me/${form.dataset.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    setStatus('Abrimos o WhatsApp com a sua mensagem.', true);
   });
 </script>

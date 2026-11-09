@@ -2,73 +2,74 @@
 import { Mail, MapPin, Phone, Clock } from '@lucide/astro';
 import Logo from './Logo.astro';
 import BrandIcon from './BrandIcon.astro';
-import { nav, site, whatsappUrl } from '@/config/site';
-import { getServicesByCategory, serviceUrl } from '@/lib/services';
+import { filled, nav, site, whatsappUrl } from '@/config/site';
+import { getServices, serviceUrl } from '@/lib/services';
 
-const groups = await getServicesByCategory();
+const services = await getServices();
 const { address: a, contact: c } = site;
-const addressLine = [a.street, a.district].filter(Boolean).join(' – ');
+const addressLine = [a.street, a.district].join(' – ');
 const year = new Date().getFullYear();
+const socials = [
+  { key: 'instagram', label: 'Instagram', url: site.social.instagram },
+  { key: 'linkedin', label: 'LinkedIn', url: site.social.linkedin },
+] as const;
 ---
 
-<footer class="bg-brand-950 text-white/65">
+<footer class="bg-brand-950 text-white/70">
   <div class="container-x grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-12 lg:py-20">
     <div class="sm:col-span-2 lg:col-span-4">
       <Logo variant="dark" class="h-12 w-auto" />
-      <p class="mt-5 max-w-xs text-sm leading-relaxed">{site.slogans.main}. {site.slogans.partner}</p>
+      <p class="mt-5 max-w-xs text-sm leading-relaxed">{site.slogans.signature}</p>
       <div class="mt-6 flex gap-2">
-        <a href={whatsappUrl()} target="_blank" rel="noopener" aria-label="WhatsApp" class="grid size-10 place-items-center rounded-lg border border-white/10 transition-colors hover:border-leaf-400 hover:text-leaf-300">
+        <a href={whatsappUrl()} target="_blank" rel="noopener" aria-label="WhatsApp da EARTH Engenharia" class="grid size-11 place-items-center rounded-lg border border-white/15 transition-colors hover:border-leaf-400 hover:text-leaf-300">
           <BrandIcon name="whatsapp" />
         </a>
         {
-          site.social.instagram && (
-            <a href={site.social.instagram} target="_blank" rel="noopener" aria-label="Instagram" class="grid size-10 place-items-center rounded-lg border border-white/10 transition-colors hover:border-leaf-400 hover:text-leaf-300">
-              <BrandIcon name="instagram" />
+          // Redes sociais aparecem automaticamente quando a URL for preenchida em src/config/site.ts
+          socials.filter((s) => filled(s.url)).map((s) => (
+            <a href={s.url} target="_blank" rel="noopener" aria-label={`${s.label} da EARTH Engenharia`} class="grid size-11 place-items-center rounded-lg border border-white/15 transition-colors hover:border-leaf-400 hover:text-leaf-300">
+              <BrandIcon name={s.key} />
             </a>
-          )
-        }
-        {
-          site.social.linkedin && (
-            <a href={site.social.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" class="grid size-10 place-items-center rounded-lg border border-white/10 transition-colors hover:border-leaf-400 hover:text-leaf-300">
-              <BrandIcon name="linkedin" />
-            </a>
-          )
+          ))
         }
       </div>
     </div>
 
-    {
-      groups.map((g) => (
-        <div class="lg:col-span-2">
-          <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">{g.label}</p>
-          <ul class="mt-4 space-y-2.5 text-sm">
-            {g.services.map((s) => (
-              <li>
-                <a href={serviceUrl(s)} class="transition-colors hover:text-white">
-                  {s.data.title}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))
-    }
+    <nav class="lg:col-span-3" aria-label="Serviços">
+      <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">Serviços</p>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {services.map((s) => <li><a href={serviceUrl(s)} class="transition-colors hover:text-white">{s.data.title}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="lg:col-span-3">
+      <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">Contato</p>
+      <address class="mt-4 space-y-3 text-sm not-italic">
+        <a href={`tel:${c.phoneHref}`} class="flex gap-2 hover:text-white"><Phone size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.phoneDisplay}</a>
+        {
+          filled(c.email) ? (
+            <a href={`mailto:${c.email}`} class="flex gap-2 break-all hover:text-white"><Mail size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.email}</a>
+          ) : (
+            <span class="flex gap-2"><Mail size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.email}</span>
+          )
+        }
+        <span class="flex gap-2"><MapPin size={16} class="mt-0.5 shrink-0" aria-hidden="true" /><span>{addressLine}<br />{a.city}/{a.state} · {a.postalCode}</span></span>
+        <span class="flex gap-2"><Clock size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{site.hours.label}</span>
+      </address>
+    </div>
 
     <div class="lg:col-span-2">
-      <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">Contato</p>
-      <ul class="mt-4 space-y-3 text-sm">
-        <li><a href={`tel:${c.phoneHref}`} class="flex gap-2 hover:text-white"><Phone size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.phoneDisplay}</a></li>
-        <li><a href={`mailto:${c.email}`} class="flex gap-2 break-all hover:text-white"><Mail size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.email}</a></li>
-        <li class="flex gap-2"><MapPin size={16} class="mt-0.5 shrink-0" aria-hidden="true" /><span>{addressLine && <>{addressLine}<br /></>}{a.city}/{a.state}</span></li>
-        <li class="flex gap-2"><Clock size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{site.hours.days}, {site.hours.open}–{site.hours.close}</li>
+      <p class="font-mono text-[11px] tracking-[0.14em] text-leaf-300 uppercase">Regiões atendidas</p>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {site.areaServed.map((r) => <li>{r}</li>)}
       </ul>
     </div>
   </div>
 
   <div class="border-t border-white/10">
     <div class="container-x flex flex-col gap-3 py-6 font-mono text-[11px] tracking-wide sm:flex-row sm:items-center sm:justify-between">
-      <p>© {year} {site.legalName}{site.cnpj && ` · CNPJ ${site.cnpj}`}</p>
-      <nav class="flex flex-wrap gap-x-5 gap-y-2 uppercase" aria-label="Rodapé">
+      <p>© {year} {site.name} · {site.legalName} · CNPJ {site.cnpj}</p>
+      <nav class="flex flex-wrap gap-x-5 gap-y-2 uppercase" aria-label="Institucional">
         {nav.map((i) => <a href={i.href} class="hover:text-white">{i.label}</a>)}
         <a href="/politica-de-privacidade/" class="hover:text-white">Privacidade</a>
       </nav>

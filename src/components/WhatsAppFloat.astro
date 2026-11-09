@@ -1,13 +1,19 @@
 ---
 import BrandIcon from './BrandIcon.astro';
 import { whatsappUrl } from '@/config/site';
+
+interface Props {
+  /** Mensagem pré-preenchida (nas páginas de serviço, cita o serviço). */
+  message?: string;
+}
+const { message } = Astro.props;
 ---
 
 <a
-  href={whatsappUrl()}
+  href={whatsappUrl(message)}
   target="_blank"
   rel="noopener"
-  aria-label="Conversar no WhatsApp"
+  aria-label="Conversar com a EARTH Engenharia no WhatsApp"
   data-track="whatsapp-float"
   class="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 grid size-14 place-items-center rounded-full bg-[#25D366] text-white shadow-[0_8px_24px_-6px_rgb(10_26_18/0.45)] transition-transform hover:scale-105 motion-reduce:hover:scale-100 sm:right-6 sm:bottom-6"
 >

@@ -1,0 +1,30 @@
+---
+/** Card de serviço da home: ícone, título, uma linha de descrição e link. */
+import { ArrowUpRight } from '@lucide/astro';
+import Icon from './Icon.astro';
+import { serviceUrl, type Service } from '@/lib/services';
+
+interface Props {
+  service: Service;
+  index: number;
+}
+const { service, index } = Astro.props;
+const { data } = service;
+---
+
+<li class="bg-white" data-reveal style={`--reveal-delay:${(index % 4) * 60}ms`}>
+  <a href={serviceUrl(service)} class="group flex h-full flex-col p-6 transition-colors hover:bg-mist">
+    <span class="flex items-start justify-between">
+      <span class="grid size-11 place-items-center rounded-lg border border-line bg-white text-brand-600 transition-colors group-hover:border-brand-300">
+        <Icon name={data.icon} size={22} />
+      </span>
+      <span class="font-mono text-xs text-muted">{String(index + 1).padStart(2, '0')}</span>
+    </span>
+    <h3 class="mt-6 text-lg leading-snug">{data.title}</h3>
+    <p class="mt-2 flex-1 text-[15px] leading-relaxed text-muted">{data.summary}</p>
+    <span class="mt-5 inline-flex items-center gap-1 text-sm font-medium text-brand-600">
+      Saiba mais <span class="sr-only">sobre {data.title}</span>
+      <ArrowUpRight size={16} class="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+    </span>
+  </a>
+</li>

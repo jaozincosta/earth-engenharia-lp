@@ -1,5 +1,5 @@
 ---
-/** Linha de serviço em estilo "catálogo técnico" (lista com índice, área e seta). */
+/** Linha de serviço em estilo "catálogo técnico" (hub e relacionados). */
 import { ArrowUpRight } from '@lucide/astro';
 import Icon from './Icon.astro';
 import { categories } from '@/config/site';
@@ -8,17 +8,19 @@ import { serviceUrl, type Service } from '@/lib/services';
 interface Props {
   service: Service;
   index?: number;
+  /** Nível do título (h2 no hub, h3 em seções). */
+  as?: 'h2' | 'h3';
 }
-const { service, index } = Astro.props;
+const { service, index, as: Heading = 'h3' } = Astro.props;
 const { data } = service;
 const searchText = [data.title, data.summary, ...data.keywords].join(' ').toLowerCase();
 ---
 
 <a
   href={serviceUrl(service)}
-  class="group grid grid-cols-[auto_1fr_auto] items-start gap-x-4 gap-y-1 border-b border-line py-5 transition-colors hover:bg-mist sm:grid-cols-[3.5rem_2.5rem_1fr_11rem_auto] sm:items-center sm:gap-x-5 sm:px-3"
+  class="group grid grid-cols-[auto_1fr_auto] items-start gap-x-4 gap-y-1 border-b border-line py-5 transition-colors hover:bg-mist sm:grid-cols-[3rem_2.75rem_1fr_13rem_auto] sm:items-center sm:gap-x-5 sm:px-3"
   data-service
-  data-category={data.category}
+  data-categories={data.categories.join(' ')}
   data-search={searchText}
 >
   <span class="hidden font-mono text-xs text-muted sm:block">{index !== undefined && String(index + 1).padStart(2, '0')}</span>
@@ -26,9 +28,11 @@ const searchText = [data.title, data.summary, ...data.keywords].join(' ').toLowe
     <Icon name={data.icon} size={20} />
   </span>
   <span class="min-w-0">
-    <span class="block text-[17px] font-semibold tracking-tight text-ink group-hover:text-brand-700">{data.title}</span>
-    <span class="mt-0.5 block text-sm leading-relaxed text-muted sm:line-clamp-1">{data.summary}</span>
+    <Heading class="text-[17px] leading-snug font-semibold tracking-tight text-ink group-hover:text-brand-700">{data.title}</Heading>
+    <span class="mt-0.5 block text-sm leading-relaxed text-muted">{data.summary}</span>
   </span>
-  <span class="hidden font-mono text-[11px] tracking-[0.12em] text-muted uppercase sm:block">{categories[data.category].label}</span>
+  <span class="hidden font-mono text-[11px] leading-relaxed tracking-[0.1em] text-muted uppercase sm:block">
+    {data.categories.map((c) => categories[c].label).join(' · ')}
+  </span>
   <ArrowUpRight size={20} class="mt-2 text-brand-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-brand-600 sm:mt-0" aria-hidden="true" />
 </a>
