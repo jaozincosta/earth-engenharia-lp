@@ -11,8 +11,8 @@ As mídias atuais vieram do **Wikimedia Commons**, com licenças que permitem us
 
 | Arquivo | Onde aparece | Formato | Atual |
 | --- | --- | --- | --- |
-| `public/media/hero.webm` + `public/media/hero.mp4` | Fundo do topo da home (só desktop/tablet, sem `prefers-reduced-motion` e sem economia de dados) | 16:9, 1280×720, 12 s, sem áudio, < 3 MB cada | Drone sobre floresta — "Drone flyover video of Myoko-Togakushi Renzan National Park" (Benlisquare, CC BY-SA 4.0) |
-| `src/assets/media/hero-poster.jpg` | Imagem do topo (LCP, sempre carregada; é a única exibida no celular) | 16:9, 1920×1080 — **primeiro quadro do vídeo** | Quadro do mesmo vídeo |
+| `public/media/hero.webm` + `public/media/hero.mp4` (desktop/tablet) e `hero-mobile.webm` + `hero-mobile.mp4` (celular, 540p, ~1,2 MB) | Fundo do topo da home (não carrega com `prefers-reduced-motion` nem com economia de dados) | 16:9, 1280×720 / 960×540, 12 s, sem áudio | Drone sobre floresta — "Drone flyover video of Myoko-Togakushi Renzan National Park" (Benlisquare, CC BY-SA 4.0) |
+| `src/assets/media/hero-poster.jpg` | Imagem do topo (LCP, aparece até o vídeo começar) | 16:9, 1920×1080 — **primeiro quadro do vídeo** | Quadro do mesmo vídeo |
 
 Para gerar um vídeo novo a partir de um arquivo seu (`entrada.mp4`), com [ffmpeg](https://ffmpeg.org):
 

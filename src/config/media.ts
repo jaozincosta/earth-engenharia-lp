@@ -34,6 +34,9 @@ export interface MediaImage {
 export const heroVideo = {
   webm: '/media/hero.webm',
   mp4: '/media/hero.mp4',
+  /** Versão leve (540p, ~1,2 MB) usada em telas < 768px. */
+  webmMobile: '/media/hero-mobile.webm',
+  mp4Mobile: '/media/hero-mobile.mp4',
   poster: { src: heroPoster, alt: 'Vista aérea de drone sobre a copa de uma floresta preservada' } satisfies MediaImage,
 };
 

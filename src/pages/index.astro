@@ -90,8 +90,16 @@ const faq = [
       fetchpriority="high"
       class="absolute inset-0 -z-30 size-full object-cover"
     />
-    <!-- Vídeo: inserido via JS após o carregamento, só em telas ≥ 768px, sem reduced-motion e sem economia de dados -->
-    <div class="absolute inset-0 -z-20" data-hero-video data-webm={heroVideo.webm} data-mp4={heroVideo.mp4} aria-hidden="true"></div>
+    <!-- Vídeo: inserido via JS após o carregamento (versão leve no celular), sem reduced-motion e sem economia de dados -->
+    <div
+      class="absolute inset-0 -z-20"
+      data-hero-video
+      data-webm={heroVideo.webm}
+      data-mp4={heroVideo.mp4}
+      data-webm-mobile={heroVideo.webmMobile}
+      data-mp4-mobile={heroVideo.mp4Mobile}
+      aria-hidden="true"
+    ></div>
     <div class="overlay-hero absolute inset-0 -z-10" aria-hidden="true"></div>
     <div class="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-60" aria-hidden="true"></div>
 
@@ -100,7 +108,7 @@ const faq = [
         <p class="label">Consultoria ambiental · {site.address.city}/{site.address.state}</p>
         <p class="tech hidden sm:block">23°33′S · 46°38′W</p>
       </div>
-      <h1 id="hero-title" class="h-display mt-6 max-w-4xl">Engenharia Ambiental e Segurança do Trabalho em São Paulo</h1>
+      <h1 id="hero-title" class="h-display mt-6 max-w-4xl">Engenharia Ambiental e Segurança do Trabalho</h1>
       <p class="lead mt-6 max-w-2xl text-ink/85">{site.slogans.main}. {site.slogans.partner}</p>
       <div class="mt-9 flex flex-col gap-3 sm:flex-row">
         <a href="/contato/#orcamento" class="btn btn-primary min-h-13 px-6">Solicitar orçamento <ArrowRight size={17} aria-hidden="true" /></a>
@@ -297,22 +305,28 @@ const faq = [
 </BaseLayout>
 
 <script>
-  // ── Vídeo do hero: só depois do load, em telas ≥ 768px, sem reduced-motion e sem economia de dados ──
+  // ── Vídeo do hero: só depois do load, sem reduced-motion e sem economia de dados.
+  //    No celular (< 768px) usa a versão leve de 540p. ──
   const slot = document.querySelector<HTMLElement>('[data-hero-video]');
   const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-  const canPlay =
-    slot &&
-    matchMedia('(min-width: 768px)').matches &&
-    !matchMedia('(prefers-reduced-motion: reduce)').matches &&
-    !conn?.saveData;
+  const mobile = matchMedia('(max-width: 767px)').matches;
+  const canPlay = slot && !matchMedia('(prefers-reduced-motion: reduce)').matches && !conn?.saveData;
   const startVideo = () => {
     if (!slot) return;
     const v = document.createElement('video');
-    Object.assign(v, { muted: true, loop: true, playsInline: true, autoplay: true, preload: 'auto' });
-    v.setAttribute('muted', '');
-    v.setAttribute('playsinline', '');
+    // iOS/Android só fazem autoplay de vídeo mudo e inline: define propriedades E atributos antes das fontes.
+    v.muted = true;
+    v.defaultMuted = true;
+    v.loop = true;
+    v.playsInline = true;
+    v.autoplay = true;
+    v.preload = 'auto';
+    for (const a of ['muted', 'playsinline', 'webkit-playsinline', 'autoplay', 'loop']) v.setAttribute(a, '');
+    v.disablePictureInPicture = true;
     v.className = 'size-full object-cover opacity-0 transition-opacity duration-1000';
-    for (const [src, type] of [[slot.dataset.webm!, 'video/webm'], [slot.dataset.mp4!, 'video/mp4']]) {
+    const webm = mobile ? slot.dataset.webmMobile! : slot.dataset.webm!;
+    const mp4 = mobile ? slot.dataset.mp4Mobile! : slot.dataset.mp4!;
+    for (const [src, type] of [[webm, 'video/webm'], [mp4, 'video/mp4']]) {
       const s = document.createElement('source');
       s.src = src;
       s.type = type;
