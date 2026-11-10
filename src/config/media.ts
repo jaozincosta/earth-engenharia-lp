@@ -44,7 +44,6 @@ import campoAterroPipa from '@/assets/media/campo/aterro-caminhao-pipa.jpg';
 import campoAterroEncosta from '@/assets/media/campo/aterro-sanitario-encosta-drenos.jpg';
 import campoPinturaMetais from '@/assets/media/campo/industria-pintura-metais-talha.jpg';
 import campoGeomembrana from '@/assets/media/campo/aterro-celulas-geomembrana.jpg';
-import usina from '@/assets/media/usina-hidreletrica-vertedouro.jpg';
 
 export interface MediaImage {
   src: ImageMetadata;
@@ -171,21 +170,15 @@ export const serviceField = (slug: string): MediaImage[] => serviceMedia[slug]?.
  * Para adicionar um projeto: inclua um item; `image` é opcional.
  */
 export const projects: { title: string; tag: string; image?: MediaImage; icon: string; wide?: boolean }[] = [
+  // Ordem pensada para o grid de 4 colunas: cada card "wide" ocupa 2 colunas (3 linhas completas).
   { title: 'Gerenciamento de aterros sanitários', tag: 'Resíduos sólidos', image: fieldPhotos.aterroTalude, icon: 'Recycle', wide: true },
   { title: 'Licenciamento de aterros sanitários em Guarulhos', tag: 'Licenciamento', image: fieldPhotos.geomembrana, icon: 'FileCheck' },
   { title: 'Licenciamento ambiental e outorga do Braço Morto do Rio Tietê', tag: 'Meio Ambiente', image: fieldPhotos.tieteCanal, icon: 'Droplets' },
   { title: 'Sondagem a trado para gerenciamento de área contaminada (GAC)', tag: 'Áreas contaminadas', image: fieldPhotos.voc, icon: 'Layers' },
-  { title: 'Projeto de revitalização da Comunidade do Sabão, em Osasco', tag: 'Urbanismo e meio ambiente', image: fieldPhotos.sabao, icon: 'Map' },
   { title: 'R.I.T — Relatório de Impacto de Trânsito', tag: 'Estudos técnicos', image: fieldPhotos.rit, icon: 'TrafficCone' },
+  { title: 'Projeto de revitalização da Comunidade do Sabão, em Osasco', tag: 'Urbanismo e meio ambiente', image: fieldPhotos.sabao, icon: 'Map', wide: true },
   { title: 'PGR para empresas de pintura de metais', tag: 'Segurança do trabalho', image: fieldPhotos.pinturaMetais, icon: 'ShieldCheck' },
   { title: 'Sistema de drenagem de jardins e reúso de água de chuva', tag: 'Recursos hídricos', image: fieldPhotos.drenagem, icon: 'CloudRain' },
   { title: 'Jardins aquáticos', tag: 'Projetos e obras', image: fieldPhotos.jardim, icon: 'Sprout' },
-  {
-    title: 'Aumento de capacidade de usina hidrelétrica',
-    tag: 'Energia',
-    // Imagem ilustrativa (banco de imagens) — trocar por foto real do projeto quando houver
-    image: { src: usina, alt: 'Vista aérea de usina hidrelétrica com o vertedouro aberto (imagem ilustrativa)' },
-    icon: 'Zap',
-  },
   { title: 'Delegado da região Oeste — Conferência Nacional pelos ODS', tag: 'Atuação institucional', image: fieldPhotos.ods, icon: 'Globe' },
 ];
