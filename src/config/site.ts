@@ -119,7 +119,7 @@ export const site = {
   ],
 
   /** Clientes atendidos (informados pela empresa). Exibidos como nomes, sem logotipos. */
-  clients: ['Cury', 'Prefeitura de Osasco', 'Mineração Taboca', 'Novotel Morumbi', 'Watherloo', 'Egesolve'],
+  clients: ['Cury', 'Prefeitura de Osasco', 'Mineração Taboca', 'Novotel Morumbi', 'Waterloo', 'Egesolve'],
 } as const;
 
 export const whatsappUrl = (message: string = site.contact.whatsappMessage) =>
