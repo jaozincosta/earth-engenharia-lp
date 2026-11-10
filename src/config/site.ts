@@ -70,7 +70,7 @@ export const site = {
   areaServed: ['São Paulo', 'Grande São Paulo'], // TODO: confirmar/ampliar a lista de cidades atendidas
 
   hours: {
-    label: '[HORÁRIO DE ATENDIMENTO]', // ex.: "Segunda a sexta, 8h às 18h"
+    label: 'Das 08:00 às 18:00',
     /** Preencha para gerar openingHours no schema. Ex.: { days: ['Monday','Tuesday','Wednesday','Thursday','Friday'], opens: '08:00', closes: '18:00' } */
     schema: null as null | { days: string[]; opens: string; closes: string },
   },

@@ -1,13 +1,12 @@
 ---
-import { Mail, MapPin, Phone, Clock } from '@lucide/astro';
+import { Mail, Phone, Clock } from '@lucide/astro';
 import Logo from './Logo.astro';
 import BrandIcon from './BrandIcon.astro';
 import { filled, nav, site, whatsappUrl } from '@/config/site';
 import { getServices, serviceUrl } from '@/lib/services';
 
 const services = await getServices();
-const { address: a, contact: c } = site;
-const addressLine = [a.street, a.district].join(' – ');
+const { contact: c } = site;
 const year = new Date().getFullYear();
 const socials = [
   { key: 'instagram', label: 'Instagram', url: site.social.instagram },
@@ -55,7 +54,6 @@ const socials = [
             <span class="flex gap-2"><Mail size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{c.email}</span>
           )
         }
-        <span class="flex gap-2"><MapPin size={16} class="mt-0.5 shrink-0" aria-hidden="true" /><span>{addressLine}<br />{a.city}/{a.state} · {a.postalCode}</span></span>
         <span class="flex gap-2"><Clock size={16} class="mt-0.5 shrink-0" aria-hidden="true" />{site.hours.label}</span>
       </address>
     </div>

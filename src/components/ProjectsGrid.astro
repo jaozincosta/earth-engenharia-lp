@@ -15,14 +15,14 @@ const items = limit ? projects.slice(0, limit) : projects;
 <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
   {
     items.map((p, i) => (
-      <li class="group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl border border-line transition duration-300 hover:border-leaf-400/60 hover:shadow-[0_0_0_1px_rgb(122_201_67/0.3),0_24px_60px_-24px_rgb(122_201_67/0.4)]" data-reveal style={`--reveal-delay:${(i % 4) * 70}ms`}>
+      <li class:list={['group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl border border-line transition duration-300 hover:border-leaf-400/60 hover:shadow-[0_0_0_1px_rgb(122_201_67/0.3),0_24px_60px_-24px_rgb(122_201_67/0.4)]', p.wide && 'sm:col-span-2 sm:aspect-[8/5]']} data-reveal style={`--reveal-delay:${(i % 4) * 70}ms`}>
         {p.image ? (
           <div class="zoom-img absolute inset-0 -z-20">
             <Picture
               src={p.image.src}
               formats={['avif', 'webp']}
-              widths={[320, 480, 640]}
-              sizes="(min-width: 1024px) 24vw, (min-width: 640px) 46vw, 92vw"
+              widths={p.wide ? [480, 768, 1080] : [320, 480, 640]}
+              sizes={p.wide ? '(min-width: 640px) 50vw, 92vw' : '(min-width: 1024px) 24vw, (min-width: 640px) 46vw, 92vw'}
               alt={p.image.alt}
               class="size-full object-cover"
               style={p.image.position ? `object-position:${p.image.position}` : undefined}

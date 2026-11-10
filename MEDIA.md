@@ -65,3 +65,17 @@ Enviadas pela empresa (resolução de WhatsApp, ~517–1600 px). São usadas em 
 | `visita-tecnica-mineracao.jpg` | Galeria do Sobre |
 
 Projetos, clientes e números ficam em `src/config/media.ts` (`projects`) e `src/config/site.ts` (`clients`, `stats`, `differentials`). O projeto "Aumento de capacidade de usina hidrelétrica" ainda não tem foto — basta adicionar `image` quando houver.
+
+### Fotos de aterros e indústria (lote 2)
+
+| Arquivo (`campo/`) | Onde aparece |
+| --- | --- |
+| `aterro-talude-terraplenado.jpg` | Projeto "Gerenciamento de aterros sanitários" (card largo) |
+| `aterro-celulas-geomembrana.jpg` | Projeto "Licenciamento de aterros em Guarulhos", registro de campo de Licenciamento, galeria do Sobre |
+| `aterro-sanitario-encosta-drenos.jpg` | Card de PGRS, registro de campo de PGRS |
+| `aterro-escavadeiras-operacao.jpg` | Registro de campo de PGRS, galeria do Sobre |
+| `obra-drenagem-equipe-epi.jpg` | Card de PGR, registro de campo de PGR |
+| `industria-pintura-metais-talha.jpg` | Projeto "PGR para pintura de metais", registro de campo de PGR |
+| `equipe-visita-tecnica-aterro.jpg`, `aterro-caminhao-pipa.jpg` | Galeria do Sobre |
+
+`src/assets/media/usina-hidreletrica-vertedouro.jpg` — **imagem ilustrativa** (Itaipu, CC BY 2.0, Wikimedia Commons) no projeto de usina hidrelétrica; trocar por foto real do projeto quando houver.

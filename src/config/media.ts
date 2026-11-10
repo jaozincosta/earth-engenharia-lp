@@ -36,6 +36,15 @@ import campoTieteCanal from '@/assets/media/campo/rio-tiete-canal-viaduto.jpg';
 import campoConfCidades from '@/assets/media/campo/conferencia-cidades-meio-ambiente.jpg';
 import campoSabao from '@/assets/media/campo/comunidade-sabao-mapa-lotes.jpg';
 import campoMineracao from '@/assets/media/campo/visita-tecnica-mineracao.jpg';
+import campoAterroEscavadeiras from '@/assets/media/campo/aterro-escavadeiras-operacao.jpg';
+import campoAterroTalude from '@/assets/media/campo/aterro-talude-terraplenado.jpg';
+import campoDrenagemEpi from '@/assets/media/campo/obra-drenagem-equipe-epi.jpg';
+import campoEquipeAterro from '@/assets/media/campo/equipe-visita-tecnica-aterro.jpg';
+import campoAterroPipa from '@/assets/media/campo/aterro-caminhao-pipa.jpg';
+import campoAterroEncosta from '@/assets/media/campo/aterro-sanitario-encosta-drenos.jpg';
+import campoPinturaMetais from '@/assets/media/campo/industria-pintura-metais-talha.jpg';
+import campoGeomembrana from '@/assets/media/campo/aterro-celulas-geomembrana.jpg';
+import usina from '@/assets/media/usina-hidreletrica-vertedouro.jpg';
 
 export interface MediaImage {
   src: ImageMetadata;
@@ -76,6 +85,14 @@ export const fieldPhotos = {
   tieteCanal: { src: campoTieteCanal, alt: 'Canal do Braço Morto do Rio Tietê sob viadutos, área de licenciamento ambiental e outorga' },
   confCidades: { src: campoConfCidades, alt: 'Representante da EARTH na 7ª Conferência Estadual das Cidades Paulistas, eixo Meio Ambiente e Mudanças Climáticas', position: '50% 30%' },
   sabao: { src: campoSabao, alt: 'Mapa de lotes anotado à mão do projeto de revitalização da Comunidade do Sabão, junto ao Córrego Guardinha, em Osasco' },
+  aterroEscavadeiras: { src: campoAterroEscavadeiras, alt: 'Escavadeiras operando em frente de aterro sanitário com morros e vegetação ao fundo' },
+  aterroTalude: { src: campoAterroTalude, alt: 'Talude de aterro sanitário terraplenado com drenos de gás instalados' },
+  drenagemEpi: { src: campoDrenagemEpi, alt: 'Equipe com capacete e EPI executando dreno com pedras e manta em obra de aterro', position: '50% 60%' },
+  equipeAterro: { src: campoEquipeAterro, alt: 'Equipe da EARTH com colete refletivo e capacete em visita técnica a aterro' },
+  aterroPipa: { src: campoAterroPipa, alt: 'Caminhão-pipa aspergindo água para controle de poeira em aterro sanitário' },
+  aterroEncosta: { src: campoAterroEncosta, alt: 'Encosta de aterro sanitário com drenos de gás, área já revegetada e mata ao fundo' },
+  pinturaMetais: { src: campoPinturaMetais, alt: 'Talha e ponte rolante movimentando peças metálicas em indústria de pintura de metais' },
+  geomembrana: { src: campoGeomembrana, alt: 'Células de aterro sanitário impermeabilizadas com geomembrana e drenos de chorume' },
   mineracao: { src: campoMineracao, alt: 'Visita técnica de profissional da EARTH em área de mineração, com equipe usando EPI', position: '50% 35%' },
 } satisfies Record<string, MediaImage>;
 
@@ -91,7 +108,7 @@ export const serviceMedia: Record<string, { card: MediaImage; hero: MediaImage; 
     hero: { src: licenciamento, alt: 'Área industrial à beira de um rio, atividade sujeita a licenciamento ambiental' },
     field: [
       { ...fieldPhotos.tieteCanal, caption: 'Licenciamento ambiental e outorga — Braço Morto do Rio Tietê' },
-      { ...fieldPhotos.tieteObra, caption: 'Acompanhamento da obra no canal' },
+      { ...fieldPhotos.geomembrana, caption: 'Licenciamento de aterro sanitário em Guarulhos' },
     ],
   },
   'outorga-de-uso-de-agua': {
@@ -103,13 +120,20 @@ export const serviceMedia: Record<string, { card: MediaImage; hero: MediaImage; 
     ],
   },
   'pgrs-pgrcc': {
-    card: { src: pgrs, alt: 'Fardos de garrafas plásticas prensadas para reciclagem em central de triagem de resíduos' },
+    card: fieldPhotos.aterroEncosta,
     hero: { src: pgrs, alt: 'Fardos de garrafas plásticas prensadas para reciclagem em central de triagem de resíduos' },
+    field: [
+      { ...fieldPhotos.aterroEncosta, caption: 'Gerenciamento de aterro sanitário — drenos de gás e revegetação' },
+      { ...fieldPhotos.aterroEscavadeiras, caption: 'Acompanhamento da operação em aterro' },
+    ],
   },
   'pgr-engenharia-seguranca-do-trabalho': {
-    card: { src: pgr, alt: 'Equipe de obra com capacete e cinto de segurança, gerenciamento de riscos ocupacionais', position: '50% 35%' },
+    card: fieldPhotos.drenagemEpi,
     hero: { src: pgr, alt: 'Equipe de obra com capacete e cinto de segurança, gerenciamento de riscos ocupacionais', position: '50% 35%' },
-    field: [{ ...fieldPhotos.sondagem, caption: 'Equipe com EPI e área isolada durante serviço de campo' }],
+    field: [
+      { ...fieldPhotos.pinturaMetais, caption: 'PGR para indústria de pintura de metais' },
+      { ...fieldPhotos.drenagemEpi, caption: 'Equipe com EPI em obra de drenagem' },
+    ],
   },
   'gerenciamento-de-areas-contaminadas': {
     card: { ...fieldPhotos.voc, position: '35% 50%' },
@@ -146,13 +170,22 @@ export const serviceField = (slug: string): MediaImage[] => serviceMedia[slug]?.
  * Projetos e experiência (informados pela empresa).
  * Para adicionar um projeto: inclua um item; `image` é opcional.
  */
-export const projects: { title: string; tag: string; image?: MediaImage; icon: string }[] = [
+export const projects: { title: string; tag: string; image?: MediaImage; icon: string; wide?: boolean }[] = [
+  { title: 'Gerenciamento de aterros sanitários', tag: 'Resíduos sólidos', image: fieldPhotos.aterroTalude, icon: 'Recycle', wide: true },
+  { title: 'Licenciamento de aterros sanitários em Guarulhos', tag: 'Licenciamento', image: fieldPhotos.geomembrana, icon: 'FileCheck' },
   { title: 'Licenciamento ambiental e outorga do Braço Morto do Rio Tietê', tag: 'Meio Ambiente', image: fieldPhotos.tieteCanal, icon: 'Droplets' },
   { title: 'Sondagem a trado para gerenciamento de área contaminada (GAC)', tag: 'Áreas contaminadas', image: fieldPhotos.voc, icon: 'Layers' },
   { title: 'Projeto de revitalização da Comunidade do Sabão, em Osasco', tag: 'Urbanismo e meio ambiente', image: fieldPhotos.sabao, icon: 'Map' },
   { title: 'R.I.T — Relatório de Impacto de Trânsito', tag: 'Estudos técnicos', image: fieldPhotos.rit, icon: 'TrafficCone' },
+  { title: 'PGR para empresas de pintura de metais', tag: 'Segurança do trabalho', image: fieldPhotos.pinturaMetais, icon: 'ShieldCheck' },
   { title: 'Sistema de drenagem de jardins e reúso de água de chuva', tag: 'Recursos hídricos', image: fieldPhotos.drenagem, icon: 'CloudRain' },
   { title: 'Jardins aquáticos', tag: 'Projetos e obras', image: fieldPhotos.jardim, icon: 'Sprout' },
-  { title: 'Aumento de capacidade de usina hidrelétrica', tag: 'Energia', icon: 'Zap' },
+  {
+    title: 'Aumento de capacidade de usina hidrelétrica',
+    tag: 'Energia',
+    // Imagem ilustrativa (banco de imagens) — trocar por foto real do projeto quando houver
+    image: { src: usina, alt: 'Vista aérea de usina hidrelétrica com o vertedouro aberto (imagem ilustrativa)' },
+    icon: 'Zap',
+  },
   { title: 'Delegado da região Oeste — Conferência Nacional pelos ODS', tag: 'Atuação institucional', image: fieldPhotos.ods, icon: 'Globe' },
 ];
