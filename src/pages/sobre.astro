@@ -137,8 +137,8 @@ const { mission, vision, values } = site.institutional;
       <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
           gallery.map((g) => (
-            <li>
-              <figure class="group overflow-hidden rounded-2xl border border-line bg-panel">
+            <li class="h-full">
+              <figure class="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-panel">
                 <div class="zoom-img overflow-hidden">
                   <Picture
                     src={g.src}
@@ -150,7 +150,7 @@ const { mission, vision, values } = site.institutional;
                     style={g.position ? `object-position:${g.position}` : undefined}
                   />
                 </div>
-                <figcaption class="tech px-4 py-3 text-ink/75">{g.caption}</figcaption>
+                <figcaption class="tech flex-1 px-4 py-3 text-ink/75">{g.caption}</figcaption>
               </figure>
             </li>
           ))

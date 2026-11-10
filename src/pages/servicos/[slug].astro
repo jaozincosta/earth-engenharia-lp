@@ -77,7 +77,7 @@ const schema = [
             <h2 id="campo" class="mt-3 text-2xl sm:text-3xl">A EARTH em campo</h2>
             <div class:list={['mt-6 grid gap-4', field.length > 1 && 'sm:grid-cols-2']}>
               {field.map((ph) => (
-                <figure class="group overflow-hidden rounded-2xl border border-line bg-panel">
+                <figure class="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-panel">
                   <div class="zoom-img overflow-hidden">
                     <Picture
                       src={ph.src}
@@ -89,7 +89,7 @@ const schema = [
                       style={ph.position ? `object-position:${ph.position}` : undefined}
                     />
                   </div>
-                  {ph.caption && <figcaption class="tech px-4 py-3 text-ink/75">{ph.caption}</figcaption>}
+                  {ph.caption && <figcaption class="tech flex-1 px-4 py-3 text-ink/75">{ph.caption}</figcaption>}
                 </figure>
               ))}
             </div>
