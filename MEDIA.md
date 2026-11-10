@@ -44,3 +44,24 @@ Sugestões de busca (licença livre para uso comercial): Pexels / Pixabay / Mixk
 **Texto alternativo (alt):** fica junto de cada imagem em `src/config/media.ts` — atualize ao trocar a foto.
 
 **Não faça hotlink** de imagens externas: baixe o arquivo, coloque em `src/assets/media/` e deixe o Astro otimizar.
+
+## Fotos reais da EARTH (`src/assets/media/campo/`)
+
+Enviadas pela empresa (resolução de WhatsApp, ~517–1600 px). São usadas em **cards, galerias e "Registro de campo"** — não em fundos de tela cheia, onde ficariam borradas (exceto a sondagem, usada no topo de Áreas Contaminadas). Para fotos novas em alta resolução, envie o arquivo original da câmera (não pelo WhatsApp).
+
+| Arquivo | Onde aparece |
+| --- | --- |
+| `gac-medicao-voc-amostras.jpg` | Card de Áreas Contaminadas, registro de campo, projeto "Sondagem a trado (GAC)" — carimbo com endereço do cliente **recortado** |
+| `gac-sondagem-trado.jpg` | Topo de Áreas Contaminadas, registro de campo, PGR, galeria do Sobre — carimbo **recortado** |
+| `rio-tiete-canal-viaduto.jpg` | Card de Licenciamento, registro de campo, projeto Braço Morto do Rio Tietê |
+| `rio-tiete-obra-canal.jpg` | Card de Outorga, registros de campo |
+| `conferencia-cidades-meio-ambiente.jpg` | Card de Palestras, registro de campo, galeria do Sobre |
+| `conferencia-nacional-ods.jpg` | Registro de campo (Palestras), galeria do Sobre, projeto "Delegado ODS" |
+| `equipe-analise-projeto-obra.jpg` | Sobre — "Quem somos" |
+| `jardim-aquatico-obra.jpg` | Sobre — "Quem somos", projeto Jardins aquáticos |
+| `drenagem-reuso-agua-chuva.jpg` | Registro de campo (Outorga), projeto Drenagem e reúso |
+| `rit-levantamento-transito.jpg` | Projeto R.I.T |
+| `comunidade-sabao-mapa-lotes.jpg` | Projeto Comunidade do Sabão (Osasco) |
+| `visita-tecnica-mineracao.jpg` | Galeria do Sobre |
+
+Projetos, clientes e números ficam em `src/config/media.ts` (`projects`) e `src/config/site.ts` (`clients`, `stats`, `differentials`). O projeto "Aumento de capacidade de usina hidrelétrica" ainda não tem foto — basta adicionar `image` quando houver.

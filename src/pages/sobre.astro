@@ -4,9 +4,18 @@ import { Target, Eye, Check } from '@lucide/astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageHero from '@/components/PageHero.astro';
 import CtaBanner from '@/components/CtaBanner.astro';
+import ProjectsGrid from '@/components/ProjectsGrid.astro';
+import ClientsStrip from '@/components/ClientsStrip.astro';
 import { pillars, site } from '@/config/site';
 import { organizationAbout } from '@/lib/schema';
-import { sectionImages } from '@/config/media';
+import { fieldPhotos, sectionImages, type MediaImage } from '@/config/media';
+
+const gallery: MediaImage[] = [
+  { ...fieldPhotos.ods, caption: 'Conferência Nacional pelos ODS — delegado da região Oeste' },
+  { ...fieldPhotos.confCidades, caption: '7ª Conferência Estadual das Cidades — Meio Ambiente e Mudanças Climáticas' },
+  { ...fieldPhotos.mineracao, caption: 'Visita técnica em mineração' },
+  { ...fieldPhotos.sondagem, caption: 'Sondagem para gerenciamento de área contaminada' },
+];
 
 const crumbs = [{ label: 'Sobre', href: '/sobre/' }];
 const { mission, vision, values } = site.institutional;
@@ -25,25 +34,40 @@ const { mission, vision, values } = site.institutional;
       <div class="lg:col-span-6">
         <p class="label">Quem somos</p>
         <h2 id="quem-somos" class="h-section mt-4">Empresa de engenharia ambiental e segurança do trabalho em São Paulo</h2>
-        <!-- TODO: complementar com a história real da empresa, responsáveis técnicos e registros profissionais. -->
         <div class="prose-earth mt-6">
           <p>
-            A <strong>{site.name}</strong> oferece soluções em meio ambiente, segurança do trabalho e conformidade legal para empresas de
-            {site.address.city} e região — do licenciamento ambiental e da gestão de resíduos ao gerenciamento de riscos ocupacionais e à
-            capacitação das equipes.
+            A <strong>{site.name}</strong> nasceu em 2022, em {site.address.city}, reunindo profissionais com <strong>{site.yearsOfExperience} anos de experiência</strong>{' '}em engenharia ambiental, segurança do trabalho e obras. Oferecemos soluções em meio ambiente, segurança e conformidade legal — do
+            licenciamento ambiental e da gestão de resíduos ao gerenciamento de riscos ocupacionais e à capacitação das equipes.
           </p>
-          <p>Nosso trabalho une conhecimento técnico, presença em campo e atenção à realidade de cada cliente. {site.slogans.future}.</p>
+          <p>
+            Nossa equipe é <strong>multidisciplinar</strong>: projetistas, engenheiros eletricistas e civis, especialistas em drenagem e em segurança
+            contra incêndio (AVCB). Unimos conhecimento técnico, presença em campo e atenção à realidade de cada cliente. {site.slogans.future}.
+          </p>
         </div>
+        <ul class="mt-8 grid grid-cols-2 gap-3">
+          <li class="glass p-4"><span class="block text-3xl font-semibold text-leaf-400">{site.yearsOfExperience}+</span><span class="text-sm text-ink/80">anos de experiência</span></li>
+          <li class="glass p-4"><span class="block text-3xl font-semibold text-leaf-400">2022</span><span class="text-sm text-ink/80">fundação da EARTH</span></li>
+        </ul>
       </div>
       <div class="lg:col-span-6">
-        <Picture
-          src={sectionImages.saoPaulo.src}
-          formats={['avif', 'webp']}
-          widths={[400, 700, 1000]}
-          sizes="(min-width: 1024px) 45vw, 100vw"
-          alt={sectionImages.saoPaulo.alt}
-          class="aspect-[4/3] w-full rounded-2xl border border-line object-cover shadow-[0_30px_80px_-30px_rgb(122_201_67/0.35)]"
-        />
+        <div class="grid grid-cols-2 gap-4">
+          <Picture
+            src={fieldPhotos.equipe.src}
+            formats={['avif', 'webp']}
+            widths={[320, 517]}
+            sizes="(min-width: 1024px) 24vw, 46vw"
+            alt={fieldPhotos.equipe.alt}
+            class="aspect-[3/4] w-full rounded-2xl border border-line object-cover shadow-[0_30px_80px_-30px_rgb(122_201_67/0.35)]"
+          />
+          <Picture
+            src={fieldPhotos.jardim.src}
+            formats={['avif', 'webp']}
+            widths={[320, 517]}
+            sizes="(min-width: 1024px) 24vw, 46vw"
+            alt={fieldPhotos.jardim.alt}
+            class="mt-10 aspect-[3/4] w-full rounded-2xl border border-line object-cover"
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -87,7 +111,7 @@ const { mission, vision, values } = site.institutional;
       <ul class="mt-8 flex flex-wrap gap-2">
         {pillars.map((p) => <li class="chip text-xs"><Check size={12} aria-hidden="true" />{p}</li>)}
       </ul>
-      <!-- Diferenciais editáveis em src/config/site.ts (placeholders) -->
+      <!-- Diferenciais editáveis em src/config/site.ts -->
       <ul class="mt-8 grid gap-4 md:grid-cols-3">
         {
           site.differentials.map((d) => (
@@ -98,6 +122,51 @@ const { mission, vision, values } = site.institutional;
           ))
         }
       </ul>
+    </div>
+  </section>
+
+  <!-- Atuação institucional e em campo -->
+  <section class="section" aria-labelledby="atuacao">
+    <div class="container-x">
+      <p class="label">Atuação</p>
+      <h2 id="atuacao" class="h-section mt-4">Em campo e nos debates sobre o futuro das cidades</h2>
+      <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          gallery.map((g) => (
+            <li>
+              <figure class="group overflow-hidden rounded-2xl border border-line bg-panel">
+                <div class="zoom-img overflow-hidden">
+                  <Picture
+                    src={g.src}
+                    formats={['avif', 'webp']}
+                    widths={[320, 517]}
+                    sizes="(min-width: 1024px) 24vw, (min-width: 640px) 46vw, 92vw"
+                    alt={g.alt}
+                    class="aspect-[3/4] w-full object-cover"
+                    style={g.position ? `object-position:${g.position}` : undefined}
+                  />
+                </div>
+                <figcaption class="tech px-4 py-3 text-ink/75">{g.caption}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Projetos -->
+  <section class="section relative isolate border-t border-line" aria-labelledby="projetos">
+    <div class="bg-topo pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="container-x">
+      <p class="label">Projetos</p>
+      <h2 id="projetos" class="h-section mt-4">Projetos e experiência</h2>
+      <div class="mt-10">
+        <ProjectsGrid />
+      </div>
+      <div class="mt-6">
+        <ClientsStrip />
+      </div>
     </div>
   </section>
 

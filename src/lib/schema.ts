@@ -21,6 +21,7 @@ export function localBusiness(base: URL): Json {
     ...(filled(site.cnpj) && { taxID: site.cnpj }),
     description: site.description,
     slogan: site.slogans.main,
+    foundingDate: site.foundingDate,
     url: base.href,
     logo: abs('/icon-512.png', base),
     image: abs('/og-default.jpg', base),
@@ -125,6 +126,7 @@ export function organizationAbout(base: URL): Json {
     url: base.href,
     logo: abs('/icon-512.png', base),
     slogan: site.slogans.signature,
+    foundingDate: site.foundingDate,
     description: `Missão: ${site.institutional.mission} Visão: ${site.institutional.vision}`,
     knowsAbout: ['Engenharia ambiental', 'Segurança do trabalho', 'Licenciamento ambiental', 'Gerenciamento de resíduos', 'Gerenciamento de riscos ocupacionais'],
   };

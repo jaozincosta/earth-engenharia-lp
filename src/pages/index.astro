@@ -7,6 +7,8 @@ import Icon from '@/components/Icon.astro';
 import ServiceGridCard from '@/components/ServiceGridCard.astro';
 import Faq from '@/components/Faq.astro';
 import CtaBanner from '@/components/CtaBanner.astro';
+import ProjectsGrid from '@/components/ProjectsGrid.astro';
+import ClientsStrip from '@/components/ClientsStrip.astro';
 import { pillars, site, whatsappUrl } from '@/config/site';
 import { heroVideo, sectionImages } from '@/config/media';
 import { getServices, serviceUrl } from '@/lib/services';
@@ -233,7 +235,25 @@ const faq = [
     </div>
   </section>
 
-  <!-- 6. DIFERENCIAIS / NÚMEROS sobre foto aérea (placeholders editáveis em src/config/site.ts) -->
+  <!-- PROJETOS E EXPERIÊNCIA (fotos reais da EARTH) -->
+  <section class="section relative isolate" aria-labelledby="projetos-title">
+    <div class="bg-topo pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+    <div class="container-x">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-2xl">
+          <p class="label">Projetos</p>
+          <h2 id="projetos-title" class="h-section mt-4">Experiência em campo, do rio à cidade</h2>
+          <p class="lead mt-4">Alguns dos trabalhos conduzidos pela equipe da EARTH em licenciamento, recursos hídricos, áreas contaminadas e projetos urbanos.</p>
+        </div>
+        <a href="/sobre/" class="btn btn-secondary self-start lg:self-auto">Conheça a equipe <ArrowUpRight size={17} aria-hidden="true" /></a>
+      </div>
+      <div class="mt-12">
+        <ProjectsGrid />
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. DIFERENCIAIS / NÚMEROS sobre foto aérea (editáveis em src/config/site.ts) -->
   <section class="relative isolate overflow-hidden border-y border-line" aria-labelledby="dif-title">
     <Picture
       src={sectionImages.aerea.src}
@@ -255,7 +275,7 @@ const faq = [
             <div class="glass p-5 sm:p-6">
               <dt class="sr-only">{s.label}</dt>
               <dd>
-                <span class="block text-4xl font-semibold tracking-tight text-leaf-400 drop-shadow-[0_0_18px_rgb(122_201_67/0.45)] sm:text-5xl" data-count={s.value}>{s.value}</span>
+                <span class="block text-4xl font-semibold tracking-tight text-leaf-400 drop-shadow-[0_0_18px_rgb(122_201_67/0.45)] sm:text-5xl" data-count={'animate' in s && s.animate === false ? undefined : s.value}>{s.value}</span>
                 <span class="mt-2 block text-sm text-ink/80">{s.label}</span>
               </dd>
             </div>
@@ -272,6 +292,9 @@ const faq = [
           ))
         }
       </ul>
+      <div class="mt-4">
+        <ClientsStrip />
+      </div>
     </div>
   </section>
 

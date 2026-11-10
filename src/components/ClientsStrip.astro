@@ -1,0 +1,16 @@
+---
+/** Faixa de clientes atendidos (nomes, sem logotipos). Dados em src/config/site.ts → clients. */
+import { site } from '@/config/site';
+
+interface Props {
+  title?: string;
+}
+const { title = 'Clientes que confiaram na EARTH' } = Astro.props;
+---
+
+<div class="glass flex flex-col gap-5 p-6 sm:p-8 lg:flex-row lg:items-center lg:gap-10">
+  <p class="label shrink-0">{title}</p>
+  <ul class="flex flex-wrap items-center gap-x-8 gap-y-3">
+    {site.clients.map((c) => <li class="text-lg font-semibold tracking-tight text-ink/85 sm:text-xl">{c}</li>)}
+  </ul>
+</div>

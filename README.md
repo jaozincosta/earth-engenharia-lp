@@ -62,9 +62,6 @@ Todos ficam em **`src/config/site.ts`**. Enquanto um valor estiver entre colchet
 
 | Placeholder | Onde aparece |
 | --- | --- |
-| `[RAZÃO SOCIAL]` | rodapé, política de privacidade, schema |
-| `[CNPJ]` | rodapé, política de privacidade, schema (`taxID`) |
-| `[E-MAIL]` | rodapé, contato, política de privacidade, schema |
 | `[ENDEREÇO]`, `[BAIRRO]`, `[CEP]` | rodapé, contato, mapa, schema (NAP) |
 | `[LATITUDE]`, `[LONGITUDE]` | schema (`geo`) |
 | `[HORÁRIO DE ATENDIMENTO]` + `hours.schema` | rodapé, contato, schema (`openingHours`) |

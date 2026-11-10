@@ -14,8 +14,12 @@ export const filled = (v: string | undefined | null): v is string => !isPlacehol
 
 export const site = {
   name: 'EARTH Engenharia',
-  legalName: '[RAZÃO SOCIAL]',
-  cnpj: '[CNPJ]',
+  legalName: 'Reginaldo Cirino da Silva – ME',
+  cnpj: '45.678.610/0001-87',
+  /** Data de abertura do CNPJ (schema foundingDate). */
+  foundingDate: '2022-03-16',
+  /** Experiência acumulada do responsável técnico/equipe. */
+  yearsOfExperience: 16,
 
   slogans: {
     main: 'Soluções técnicas para um futuro sustentável',
@@ -47,7 +51,7 @@ export const site = {
     whatsapp: '5511974280016',
     phoneDisplay: '(11) 97428-0016',
     phoneHref: '+5511974280016',
-    email: '[E-MAIL]',
+    email: 'reginaldocirino77@gmail.com',
     whatsappMessage: 'Olá! Vim pelo site da EARTH Engenharia e gostaria de solicitar um orçamento.',
   },
 
@@ -89,20 +93,33 @@ export const site = {
   },
 
   /**
-   * Diferenciais e números da home — PLACEHOLDERS EDITÁVEIS.
+   * Números e diferenciais da home (informados pela empresa).
+   * `animate: false` evita o contador animado (ex.: anos como "2022").
    * Não publique números, clientes ou certificações que não possam ser comprovados.
    */
   stats: [
-    { value: '[00]', label: '[anos de experiência]' },
-    { value: '[000]', label: '[projetos entregues]' },
-    { value: '[00]', label: '[empresas atendidas]' },
-    { value: '[00]', label: '[profissionais na equipe]' },
+    { value: '16+', label: 'anos de experiência em engenharia' },
+    { value: '2022', label: 'fundação da EARTH Engenharia', animate: false },
+    { value: '8', label: 'serviços em meio ambiente e segurança' },
+    { value: '5', label: 'disciplinas na equipe técnica' },
   ],
   differentials: [
-    { title: '[Diferencial 1]', text: '[Descreva um diferencial real da EARTH — ex.: equipe, metodologia, atendimento.]' },
-    { title: '[Diferencial 2]', text: '[Descreva um diferencial real da EARTH.]' },
-    { title: '[Diferencial 3]', text: '[Descreva um diferencial real da EARTH.]' },
+    {
+      title: '16 anos de experiência',
+      text: 'Fundada em 2022, a EARTH reúne profissionais com 16 anos de atuação em engenharia ambiental, segurança e obras.',
+    },
+    {
+      title: 'Equipe multidisciplinar',
+      text: 'Projetistas, engenheiros eletricistas e civis, especialistas em drenagem e em segurança contra incêndio (AVCB) trabalhando juntos.',
+    },
+    {
+      title: 'Atuação institucional',
+      text: 'Delegado da região Oeste na Conferência Nacional pelos ODS e participação na Conferência Estadual das Cidades — Meio Ambiente e Mudanças Climáticas.',
+    },
   ],
+
+  /** Clientes atendidos (informados pela empresa). Exibidos como nomes, sem logotipos. */
+  clients: ['Cury', 'Prefeitura de Osasco', 'Mineração Taboca', 'Novotel Morumbi', 'Watherloo', 'Egesolve'],
 } as const;
 
 export const whatsappUrl = (message: string = site.contact.whatsappMessage) =>

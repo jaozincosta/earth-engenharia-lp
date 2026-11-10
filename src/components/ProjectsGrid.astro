@@ -1,0 +1,48 @@
+---
+/** Grade de projetos e experiência (dados em src/config/media.ts → projects). */
+import { Picture } from 'astro:assets';
+import Icon from './Icon.astro';
+import { projects } from '@/config/media';
+
+interface Props {
+  /** Limita a quantidade exibida (ex.: home). */
+  limit?: number;
+}
+const { limit } = Astro.props;
+const items = limit ? projects.slice(0, limit) : projects;
+---
+
+<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  {
+    items.map((p, i) => (
+      <li class="group relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-2xl border border-line transition duration-300 hover:border-leaf-400/60 hover:shadow-[0_0_0_1px_rgb(122_201_67/0.3),0_24px_60px_-24px_rgb(122_201_67/0.4)]" data-reveal style={`--reveal-delay:${(i % 4) * 70}ms`}>
+        {p.image ? (
+          <div class="zoom-img absolute inset-0 -z-20">
+            <Picture
+              src={p.image.src}
+              formats={['avif', 'webp']}
+              widths={[320, 480, 640]}
+              sizes="(min-width: 1024px) 24vw, (min-width: 640px) 46vw, 92vw"
+              alt={p.image.alt}
+              class="size-full object-cover"
+              style={p.image.position ? `object-position:${p.image.position}` : undefined}
+            />
+          </div>
+        ) : (
+          <div class="absolute inset-0 -z-20 bg-panel" aria-hidden="true">
+            <div class="bg-topo absolute inset-0 opacity-20" />
+            <div class="bg-grid absolute inset-0" />
+          </div>
+        )}
+        <div class="overlay-bottom absolute inset-0 -z-10" aria-hidden="true" />
+        <span class="absolute top-4 left-4 grid size-10 place-items-center rounded-lg border border-line bg-surface/60 text-leaf-400 backdrop-blur-md">
+          <Icon name={p.icon} size={19} />
+        </span>
+        <div class="p-5">
+          <p class="tech text-leaf-300">{p.tag}</p>
+          <h3 class="mt-2 text-lg leading-snug">{p.title}</h3>
+        </div>
+      </li>
+    ))
+  }
+</ul>
